@@ -16,8 +16,9 @@ public class Consulting {
     @Column(name="consulting_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private Long consultingId;
+    private int consultingId;
     @ManyToOne
+    @JoinColumn(name="reservation_id")
     private Reservation reservationId;
     @Column(name="start_time")
     private Timestamp startTime;
