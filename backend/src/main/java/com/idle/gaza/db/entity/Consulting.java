@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -14,14 +15,14 @@ public class Consulting {
     @Id
     @Column(name="consulting_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    private Long consultingId;
     @ManyToOne
-    private Reservation rid;
+    private Reservation reservationId;
     @Column(name="start_time")
-    private Date startTime;
+    private Timestamp startTime;
     @Column(name="end_time")
-    private Date endTime;
+    private Timestamp endTime;
     private String url;
     @Column(name="is_activate", columnDefinition = "TINYINT", length=1)
     private int isActivate;
