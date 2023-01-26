@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -25,13 +26,13 @@ public class Reservation {
     private String stateCode;
 
     @Column(name="consulting_date")
-    private Date consultingDate;
+    private Timestamp consultingDate;
 
     @Column(name="reservation_date")
-    private Date reservationDate;
+    private Timestamp reservationDate;
 
     @Column(name="travle_start_date")
-    private Date travleStartDate;
+    private Timestamp travleStartDate;
 
     @Column(name="travle_end_date")
     private Date travleEndDate;
