@@ -6,7 +6,7 @@ spring:
     password: ssafy
   jpa:
     database: mysql
-    database-platform: MySQL8InnoDBDialect
+
     hibernate:
       ddl-auto: validate
     properties:
