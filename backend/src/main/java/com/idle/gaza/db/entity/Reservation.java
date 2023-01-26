@@ -14,13 +14,15 @@ public class Reservation {
     @Id
     @Column(name="reservation_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int reservationId;
 
     @ManyToOne
-    private User user;
+    @JoinColumn(name="user_id")
+    private User userId;
 
     @ManyToOne
-    private Guide guide;
+    @JoinColumn(name="guide_id")
+    private Guide guideId;
 
     @Column(name="state_code")
     private String stateCode;
