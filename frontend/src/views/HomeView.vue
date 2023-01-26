@@ -52,7 +52,6 @@ import Destinations from '@/components/home/Destinations.vue'
 import News from '@/components/home/News.vue'
 import Partners from '@/components/home/Partners.vue'
 import Cta from '@/components/home/Cta.vue'
-import HotelDetailBanner from '@/components/hotel/HotelDetailBanner.vue'
 
 
 export default {
