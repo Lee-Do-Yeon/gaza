@@ -1,5 +1,9 @@
 package com.idle.gaza.db.entity;
 
+class User {
+
+}
+/*
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -45,3 +49,4 @@ public class User {
 
     String state;
 }
+*/
