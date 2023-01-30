@@ -1,5 +1,9 @@
 package com.idle.gaza.db.entity;
 
+class User {
+
+}
+/*
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -43,3 +47,4 @@ public class User {
     @Column(name="state_code")
     String state;
 }
+*/
