@@ -1,6 +1,6 @@
 package com.idle.gaza.common.util;
 
-import com.idle.gaza.db.entity.UserDto;
+import com.idle.gaza.db.entity.User;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
 
@@ -31,12 +31,12 @@ public class TokenUtils {
      * @param userDto UserDto : 사용자 정보
      * @return String : 토큰
      */
-    public static String generateJwtToken(UserDto userDto) {
+    public static String generateJwtToken(User user) {
         // 사용자 시퀀스를 기준으로 JWT 토큰을 발급하여 반환해줍니다.
         JwtBuilder builder = Jwts.builder()
                 .setHeader(createHeader())                              // Header 구성
-                .setClaims(createClaims(userDto))                       // Payload - Claims 구성
-                .setSubject(String.valueOf(userDto.getUserSq()))        // Payload - Subject 구성
+                .setClaims(createClaims(user))                       // Payload - Claims 구성
+                .setSubject(String.valueOf(user.getId()))        // Payload - Subject 구성
                 .signWith(SignatureAlgorithm.HS256, createSignature())  // Signature 구성
                 .setExpiration(createExpiredDate());                    // Expired Date 구성
         return builder.compact();
@@ -126,15 +126,15 @@ public class TokenUtils {
      * @param userDto 사용자 정보
      * @return Map<String, Object>
      */
-    private static Map<String, Object> createClaims(UserDto userDto) {
+    private static Map<String, Object> createClaims(User user) {
         // 공개 클레임에 사용자의 이름과 이메일을 설정하여 정보를 조회할 수 있다.
         Map<String, Object> claims = new HashMap<>();
 
-        log.info("userId :" + userDto.getUserId());
-        log.info("userNm :" + userDto.getUserNm());
+        log.info("userId :" + user.getId());
+        log.info("userNm :" + user.getName());
 
-        claims.put("userId", userDto.getUserId());
-        claims.put("userNm", userDto.getUserNm());
+        claims.put("userId", user.getId());
+        claims.put("userNm", user.getName());
         return claims;
     }
 
