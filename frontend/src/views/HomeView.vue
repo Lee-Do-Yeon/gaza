@@ -24,9 +24,10 @@
 
   <!--Promotional Tours Area -->
   <PromotionalTours />
+  <PromotionalToursRecommand />
 
   <!-- Destinations Area -->
-  <Destinations />
+  <!-- <Destinations /> -->
 
   <!-- News Area -->
   <!-- <News /> -->
@@ -35,7 +36,7 @@
   <!-- <Partners /> -->
 
   <!-- Cta Area -->
-  <!-- <Cta /> -->
+
 
 </template>
 
@@ -48,17 +49,16 @@ import TopDestinations from '@/components/home/TopDestinations.vue'
 import ExploreDeals from '@/components/home/ExploreDeals.vue'
 import Offer from '@/components/home/Offer.vue'
 import PromotionalTours from '@/components/home/PromotionalTours.vue'
+import PromotionalToursRecommand from '@/components/home/PromotionalToursRecommand.vue'
 import Destinations from '@/components/home/Destinations.vue'
 import News from '@/components/home/News.vue'
 import Partners from '@/components/home/Partners.vue'
-import Cta from '@/components/home/Cta.vue'
-import HotelDetailBanner from '@/components/hotel/HotelDetailBanner.vue'
 
 
 export default {
   name: 'HomeView',
   components: {
-    Banner, Form, Imagination, TopDestinations, ExploreDeals, Offer, PromotionalTours, Destinations, News, Partners, Cta
+    Banner, Form, Imagination, TopDestinations, ExploreDeals, Offer, PromotionalTours, Destinations, News, Partners, PromotionalToursRecommand
   }
 }
 </script>
