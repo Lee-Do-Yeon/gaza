@@ -4,6 +4,10 @@ import lombok.*;
 
 import javax.persistence.*;
 
+
+/**
+ * 가이드 추천 장소 엔티티
+ */
 @Entity
 @Table(name = "recommend")
 @Getter

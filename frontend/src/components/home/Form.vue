@@ -11,10 +11,9 @@
                                         <div class="tour_search_form">
                                             <form action="#!">
                                                 <div class="row">
-                                                    <div class="col-lg-10 col-md-12 col-sm-12 col-12">
-                                                        <div class="flight_Search_boxed">
-                                                            <input type="text" class="d-inline" placeholder="Where are you going?">
-                                                        </div>
+                                                    <div class="col-lg-10 col-md-12 col-sm-12 col-12 flight_Search_boxed d-flex">
+                                                        <img src="../../assets/img/icon/Icon.png" class="d-inline m-auto pe-2" alt="">
+                                                        <input type="text" class="d-inline" placeholder="Where are you going?">
                                                     </div>
                                                     <div class="top_form_search_button col-lg-2 col-md-12 col-sm-12 col-12">
                                                         <button class="btn btn_theme btn_md">Search</button>
@@ -33,20 +32,8 @@
     </section>
 </template>
 <script>
-
-import CountDropdown from '@/components/home/CountDropdown.vue'
-import CountDropdownRound from '@/components/home/CountDropdownRound.vue'
-import CountDropdownMulti from '@/components/home/CountDropdownMulti.vue'
-import CountDropdownTour from '@/components/home/CountDropdownTour.vue'
-import CountDropdownHotel from '@/components/home/CountDropdownHotel.vue'
-
 export default {
     name: "Form",
-
-    components: {
-        CountDropdown, CountDropdownRound, CountDropdownMulti, CountDropdownTour, CountDropdownHotel
-    },
-
     data() {
         return {
             isHidden: false,
