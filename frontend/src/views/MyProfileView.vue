@@ -1,7 +1,7 @@
 <template>
 
     <!-- Common Banner Area -->
-    <MyProfileBanner />
+    <!-- <MyProfileBanner /> -->
 
     <!-- Dashboard Area -->
     <ProfileDashboard />
@@ -12,14 +12,14 @@
 </template>
 <script>
 
-import MyProfileBanner from '@/components/dashboard/MyProfileBanner.vue'
+// import MyProfileBanner from '@/components/dashboard/MyProfileBanner.vue'
 import ProfileDashboard from '@/components/dashboard/ProfileDashboard.vue'
 import Cta from '@/components/home/Cta.vue'
 
 export default {
     name: "MyProfileView",
     components: {
-        MyProfileBanner, ProfileDashboard, Cta
+        ProfileDashboard, Cta
     }
 };
 </script>
