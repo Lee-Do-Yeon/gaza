@@ -13,11 +13,11 @@ public class Reservation {
     @Id
     @Column(name="reservation_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int reservationId;
+    private Integer reservationId;
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    private UserDto userId;
+    private User userId;
 
     @ManyToOne
     @JoinColumn(name="guide_id")
@@ -32,34 +32,34 @@ public class Reservation {
     @Column(name="reservation_date")
     private Timestamp reservationDate;
 
-    @Column(name="travle_start_date")
-    private Timestamp travleStartDate;
+    @Column(name="travel_start_date")
+    private Timestamp travelStartDate;
 
-    @Column(name="travle_end_date")
-    private Timestamp travleEndDate;
+    @Column(name="travel_end_date")
+    private Timestamp travelEndDate;
 
     @Column(name="number_of_people")
-    private int numberOfPeople;
+    private Integer numberOfPeople;
 
     @Column(name="with_children", columnDefinition = "TINYINT", length=1)
-    private int withChildren;
+    private Integer withChildren;
 
     @Column(name="with_elderly", columnDefinition = "TINYINT", length=1)
-    private int withElderly;
+    private Integer withElderly;
 
     @Column(name="with_disabled", columnDefinition = "TINYINT", length=1)
-    private int withDisabled;
+    private Integer withDisabled;
 
     private String note;
 
     @Builder
-    public Reservation(UserDto userId, Guide guideId, Timestamp consultingDate, Timestamp reservationDate, Timestamp travleStartDate, Timestamp travleEndDate, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note) {
+    public Reservation(User userId, Guide guideId, Timestamp consultingDate, Timestamp reservationDate, Timestamp travelStartDate, Timestamp travelEndDate, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note) {
         this.userId = userId;
         this.guideId = guideId;
         this.consultingDate = consultingDate;
         this.reservationDate = reservationDate;
-        this.travleStartDate = travleStartDate;
-        this.travleEndDate = travleEndDate;
+        this.travelStartDate = travelStartDate;
+        this.travelEndDate = travelEndDate;
         this.numberOfPeople = numberOfPeople;
         this.withChildren = withChildren;
         this.withElderly = withElderly;
