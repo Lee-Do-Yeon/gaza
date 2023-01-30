@@ -7,10 +7,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(value = "가이드 API", tags = {"Guide"})
 @RestController
@@ -29,21 +28,20 @@ public class GuideController {
 
     //가이드 조회
     @GetMapping("/")
-    public ResponseEntity<?> localGuideSearch(){
+    public ResponseEntity<?> localGuideSearch() {
 
         return null;
     }
 
     //인기 가이드 조회
-    public ResponseEntity<?> famousGuideSearch(){
+    public ResponseEntity<?> famousGuideSearch() {
         return null;
     }
 
     //가이드 프로필 조회
-    public ResponseEntity<?> guideProfileSearch(){
+    public ResponseEntity<?> guideProfileSearch() {
         return null;
     }
-
 
 
     @PostMapping()
@@ -52,17 +50,17 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> locationRegister(){
+    public ResponseEntity<?> locationRegister() {
         return null;
     }
 
- @DeleteMapping("/location/{userId}/{recommendId}")
+    @DeleteMapping("/location/{userId}/{recommendId}")
     @ApiOperation(value = "추천 장소 삭제", notes = "추천 장소를 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> locationDelete(@PathVariable String userId, @PathVariable String recommendId){
+    public ResponseEntity<?> locationDelete(@PathVariable String userId, @PathVariable String recommendId) {
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -73,7 +71,7 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> locationUpdate(@PathVariable String userId, @PathVariable String recommendId){
+    public ResponseEntity<?> locationUpdate(@PathVariable String userId, @PathVariable String recommendId) {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -86,7 +84,7 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> travelThemeRegister(){
+    public ResponseEntity<?> travelThemeRegister() {
         return null;
     }
 
@@ -96,10 +94,9 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> travelThemeDelete(){
+    public ResponseEntity<?> travelThemeDelete() {
         return null;
     }
-
 
 
 }

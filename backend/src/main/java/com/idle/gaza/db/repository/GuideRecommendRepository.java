@@ -13,6 +13,6 @@ import java.util.Optional;
 @Repository
 public interface GuideRecommendRepository extends JpaRepository<GuideRecommendLocation, Integer>{
 
-    Optional<Guide> findByGuideId(Integer guideId);
+    Optional<Guide> findByGuideId(int guideId);
 
 }
