@@ -44,26 +44,30 @@
           <div class="dashboard_common_table">
             <div class="dashboard_main_top">
               <div class="d-flex align-items-center justify-content-between">
-                <div>
-                  From
-                  <Datepicker
-                    v-model="picked"
-                    :locale="locale"
-                    :weekStartsOn="0"
-                    :inputFormat="inputFormat"
-                  />
+                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                  <div class="form_search_date">
+                    <div class="flight_Search_boxed date_flex_area">
+                      <div class="Journey_date">
+                        <p>From</p>
+                        <input type="date" value="2023-01-10" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  To
-                  <Datepicker
-                    v-model="picked"
-                    :locale="locale"
-                    :weekStartsOn="0"
-                    :inputFormat="inputFormat"
-                  />
+                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                  <div class="form_search_date">
+                    <div class="flight_Search_boxed date_flex_area">
+                      <div class="Journey_date">
+                        <p>To</p>
+                        <input type="date" value="2023-01-30" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+
                 <div>
-                    <button class="btn btn_theme">Filter</button>
+                  <button class="btn btn_theme btn-lg">Filter</button>
                 </div>
               </div>
             </div>
@@ -73,65 +77,65 @@
           <div class="dashboard_common_table">
             <h3>내가 쓴 후기</h3>
             <div class="table-responsive-lg table_common_area">
-              <table class="table">
+              <table class="table" >
                 <thead>
                   <tr>
-                    <th>Sl no.</th>
-                    <th>Booking ID</th>
-                    <th>Booking type</th>
-                    <th>Booking amount</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                    <th>별점</th>
+                    <th>내용</th>
+                    <!-- <th>Status</th>
+                    <th>Action</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>01.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
+                    <td>CAB</td>
+                    <td>10 Aug 2023</td>
+                    <td><i class="fas fa-sharp fa-solid fa-star" style="color:yellow"></i></td>
+                    <td>Good Morning</td>
+                    <!-- <td class="complete">Completed</td>
+                    <td><i class="fas fa-eye"></i></td> -->
                   </tr>
                   <tr>
-                    <td>02.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
+                    <td>CAB</td>
+                    <td>10 Aug 2023</td>
+                    <td><i class="fas fa-sharp fa-solid fa-star" style="color:yellow"></i></td>
+                    <td>Good Morning</td>
+                    <!-- <td class="complete">Completed</td>
+                    <td><i class="fas fa-eye"></i></td> -->
                   </tr>
                   <tr>
-                    <td>03.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
+                    <td>CAB</td>
+                    <td>10 Aug 2023</td>
+                    <td><i class="fas fa-sharp fa-solid fa-star" style="color:yellow"></i></td>
+                    <td>Good Morning</td>
+                    <!-- <td class="complete">Completed</td>
+                    <td><i class="fas fa-eye"></i></td> -->
                   </tr>
                   <tr>
-                    <td>04.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
+                    <td>CAB</td>
+                    <td>10 Aug 2023</td>
+                    <td><i class="fas fa-sharp fa-solid fa-star" style="color:yellow"></i></td>
+                    <td>Good Morning</td>
+                    <!-- <td class="complete">Completed</td>
+                    <td><i class="fas fa-eye"></i></td> -->
                   </tr>
                   <tr>
-                    <td>05.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="cancele">Canceled</td>
-                    <td><i class="fas fa-eye"></i></td>
+                    <td>CAB</td>
+                    <td>10 Aug 2023</td>
+                    <td ><i class="fas fa-sharp fa-solid fa-star" style="color:yellow"></i></td>
+                    <td>Good Morning</td>
+                    <!-- <td class="cancele">Canceled</td>
+                    <td><i class="fas fa-eye"></i></td> -->
                   </tr>
                   <tr>
-                    <td>06.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
+                    <td>CAB</td>
+                    <td>10 Aug 2023</td>
+                    <td><i class="fas fa-sharp fa-solid fa-star" style="color:yellow"></i></td>
+                    <td>Good Morning</td>
+                    <!-- <td class="complete">Completed</td>
+                    <td><i class="fas fa-eye"></i></td> -->
                   </tr>
                 </tbody>
               </table>
@@ -162,9 +166,6 @@
   </section>
 </template>
 <script>
-import { ref, reactive, defineCom } from "vue";
-import Datepicker from "vue3-datepicker";
-import { ko } from "date-fns/locale";
 
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
@@ -175,18 +176,8 @@ export default {
     LogoutBtn,
     MyBookingOption,
     picturemodalVue,
-    Datepicker,
   },
-  setup() {
-    const picked = ref(new Date());
-    const locale = reactive(ko);
-    const inputFormat = ref("yyyy-MM-dd");
 
-    return {
-      picked,
-      locale,
-      inputFormat,
-    };
-  },
 };
 </script>
+
