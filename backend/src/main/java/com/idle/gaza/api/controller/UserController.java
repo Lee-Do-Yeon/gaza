@@ -29,14 +29,14 @@ public class UserController {
     public ResponseEntity<ApiResponse<Object>> join(@RequestBody JoinReq joinReq) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        joinReq.setPw(bCryptPasswordEncoder.encode(joinReq.getPw()));
+        joinReq.setPassword(bCryptPasswordEncoder.encode(joinReq.getPassword()));
 
         User user = User.userBuilder()
                 .userId(joinReq.getUserId())
                 .name(joinReq.getName())
                 .phone_number(joinReq.getPhone_number())
                 .id(joinReq.getId())
-                .pw(joinReq.getPw())
+                .pw(joinReq.getPassword())
                 .gender(joinReq.getGender())
                 .birthday(joinReq.getBirthday())
                 .picture(joinReq.getPicture())

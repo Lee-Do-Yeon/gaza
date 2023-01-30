@@ -3,6 +3,8 @@ package com.idle.gaza.common.util;
 import com.idle.gaza.db.entity.User;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -15,30 +17,45 @@ import java.util.Map;
 /**
  * JWT 관련된 토큰 Util
  *
- * @author lee
- * @fileName TokenUtils
+ * @author choe
+ * @fileName TokenUtil
  * @since 2022.12.23
  */
 @Log4j2
-public class TokenUtils {
+@Component
+public class TokenUtil {
 
-    //    @Value(value = "${custom.jwt-secret-key}")
-    private static final String jwtSecretKey = "gazagazagazagazagazagazagazagazagazagazagazagaza";
+    public final static long TOKEN_VALIDATION_SECOND = 1000L * 10;
+    public final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 24 * 2;
+
+    final static public String ACCESS_TOKEN_NAME = "accessToken";
+    final static public String REFRESH_TOKEN_NAME = "refreshToken";
+
+    @Value("${spring.jwt.secret}")
+    private static String SECRET_KEY = "gazagazagazagazagazagazagazagazagazagazagazagazagaza";
+
+    public String generateToken(User user) {
+        return generateJwtToken(user, TOKEN_VALIDATION_SECOND);
+    }
+
+    public String generateRefreshToken(User user) {
+        return generateJwtToken(user, REFRESH_TOKEN_VALIDATION_SECOND);
+    }
 
     /**
      * 사용자 정보를 기반으로 토큰을 생성하여 반환 해주는 메서드
      *
-     * @param userDto UserDto : 사용자 정보
+     * @param user User : 사용자 정보
      * @return String : 토큰
      */
-    public static String generateJwtToken(User user) {
+    public static String generateJwtToken(User user, long expireTime) {
         // 사용자 시퀀스를 기준으로 JWT 토큰을 발급하여 반환해줍니다.
         JwtBuilder builder = Jwts.builder()
                 .setHeader(createHeader())                              // Header 구성
                 .setClaims(createClaims(user))                       // Payload - Claims 구성
                 .setSubject(String.valueOf(user.getId()))        // Payload - Subject 구성
                 .signWith(SignatureAlgorithm.HS256, createSignature())  // Signature 구성
-                .setExpiration(createExpiredDate());                    // Expired Date 구성
+                .setExpiration(createExpiredDate(expireTime));                    // Expired Date 구성
         return builder.compact();
     }
 
@@ -50,7 +67,7 @@ public class TokenUtils {
      */
     public static String parseTokenToUserInfo(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtSecretKey)
+                .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -98,12 +115,8 @@ public class TokenUtils {
      *
      * @return Calendar
      */
-    private static Date createExpiredDate() {
-        // 토큰 만료시간은 30일으로 설정
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR, 8);     // 8시간
-        // c.add(Calendar.DATE, 1);         // 1일
-        return c.getTime();
+    private static Date createExpiredDate(long expireTime) {
+        return new Date(System.currentTimeMillis() + expireTime);
     }
 
     /**
@@ -123,7 +136,7 @@ public class TokenUtils {
     /**
      * 사용자 정보를 기반으로 클래임을 생성해주는 메서드
      *
-     * @param userDto 사용자 정보
+     * @param user User 사용자 정보
      * @return Map<String, Object>
      */
     private static Map<String, Object> createClaims(User user) {
@@ -144,7 +157,7 @@ public class TokenUtils {
      * @return Key
      */
     private static Key createSignature() {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(jwtSecretKey);
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
@@ -156,7 +169,7 @@ public class TokenUtils {
      * @return Claims : Claims
      */
     private static Claims getClaimsFormToken(String token) {
-        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(jwtSecretKey))
+        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(token).getBody();
     }
 

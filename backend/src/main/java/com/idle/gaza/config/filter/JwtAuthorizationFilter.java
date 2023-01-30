@@ -3,18 +3,23 @@ package com.idle.gaza.config.filter;
 import com.idle.gaza.common.codes.AuthConstants;
 import com.idle.gaza.common.codes.ErrorCode;
 import com.idle.gaza.common.exception.BusinessExceptionHandler;
-import com.idle.gaza.common.util.TokenUtils;
+import com.idle.gaza.common.util.CookieUtil;
+import com.idle.gaza.common.util.RedisUtil;
+import com.idle.gaza.common.util.TokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,6 +39,18 @@ import java.util.List;
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private TokenUtil tokenUtils;
+
+    @Autowired
+    private CookieUtil cookieUtil;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain)
             throws IOException, ServletException {
@@ -42,7 +59,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         List<String> list = Arrays.asList(
                 "/users/join",
                 "/auth/generateToken",
-                "/api/v1/token/generateToken"
+                "/swagger-io"
         );
 
         // 2. 토큰이 필요하지 않은 API URL의 경우 => 로직 처리 없이 다음 필터로 이동
@@ -66,13 +83,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (header != null && !header.equalsIgnoreCase("")) {
 
                 // [STEP2] Header 내에 토큰을 추출합니다.
-                String token = TokenUtils.getTokenFromHeader(header);
+                String token = TokenUtil.getTokenFromHeader(header);
 
                 // [STEP3] 추출한 토큰이 유효한지 여부를 체크합니다.
-                if (TokenUtils.isValidToken(token)) {
+                if (TokenUtil.isValidToken(token)) {
 
                     // [STEP4] 토큰을 기반으로 사용자 아이디를 반환 받는 메서드
-                    String userId = TokenUtils.getUserIdFromToken(token);
+                    String userId = TokenUtil.getUserIdFromToken(token);
                     logger.debug("[+] userId Check: " + userId);
 
                     // [STEP5] 사용자 아이디가 존재하는지 여부 체크
