@@ -2,7 +2,7 @@ package com.idle.gaza.config.filter;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idle.gaza.db.entity.UserDto;
+import com.idle.gaza.db.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,11 +57,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
-            UserDto user = objectMapper.readValue(request.getInputStream(), UserDto.class);
-            log.debug("1.CustomAuthenticationFilter :: userId:" + user.getUserId() + " userPw:" + user.getUserPw());
+            User user = objectMapper.readValue(request.getInputStream(), User.class);
+            log.debug("1.CustomAuthenticationFilter :: userId:" + user.getUserId() + " userPw:" + user.getPw());
 
             // ID와 패스워드를 기반으로 토큰 발급
-            return new UsernamePasswordAuthenticationToken(user.getUserId(), user.getUserPw());
+            return new UsernamePasswordAuthenticationToken(user.getUserId(), user.getPw());
         } catch (UsernameNotFoundException ae) {
             throw new UsernameNotFoundException(ae.getMessage());
         } catch (Exception e) {

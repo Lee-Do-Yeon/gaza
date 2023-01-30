@@ -1,8 +1,8 @@
 package com.idle.gaza.config.handler;
 
 import com.idle.gaza.common.util.ConvertUtil;
+import com.idle.gaza.db.entity.User;
 import com.idle.gaza.db.entity.UserDetailsDto;
-import com.idle.gaza.db.entity.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Configuration;
@@ -28,18 +28,17 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
         log.debug("3.CustomLoginSuccessHandler");
 
         // [STEP1] 사용자와 관련된 정보를 모두 조회합니다.
-        UserDto userDto = ((UserDetailsDto) authentication.getPrincipal()).getUserDto();
+        User user = ((UserDetailsDto) authentication.getPrincipal()).getUser();
 
         // [STEP2] 조회한 데이터를 JSONObject 형태로 파싱을 수행합니다.
-        JSONObject userVoObj = (JSONObject) ConvertUtil.convertObjectToJsonObject(userDto);
-
+        JSONObject userVoObj = (JSONObject) ConvertUtil.convertObjectToJsonObject(user);
 
         HashMap<String, Object> responseMap = new HashMap<>();
 
         JSONObject jsonObject;
 
         // [STEP3-1] 사용자의 상태가 '휴면 상태' 인 경우 응답 값으로 전달 할 데이터
-        if (userDto.getUserSt().equals("D")) {
+        if (user.getState().equals("D")) {
             responseMap.put("userInfo", userVoObj);
             responseMap.put("resultCode", 9001);
             responseMap.put("token", null);

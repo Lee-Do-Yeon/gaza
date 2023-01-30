@@ -1,6 +1,6 @@
 package com.idle.gaza.api.service;
 
-import com.idle.gaza.db.entity.UserDto;
+import com.idle.gaza.db.entity.User;
 import com.idle.gaza.db.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,8 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserRepository userRepository;
 
-    public UserDto join(UserDto userDto) {
-        return userRepository.save(userDto);
+    public User join(User user) {
+        return userRepository.save(user);
     }
 
     /**
@@ -27,12 +27,12 @@ public class UserServiceImpl implements UserService{
      * @return Optional<UserDto>
      */
     @Override
-    public Optional<UserDto> login(String userId) {
+    public Optional<User> login(String userId) {
         return userRepository.findByUserId(userId);
     }
 
     @Override
-    public List<UserDto> selectUserList(UserDto userDto) {
+    public List<User> selectUserList(User user) {
         return null;
     }
 }
