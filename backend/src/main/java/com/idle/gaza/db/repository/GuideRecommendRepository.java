@@ -13,6 +13,10 @@ import java.util.Optional;
 @Repository
 public interface GuideRecommendRepository extends JpaRepository<GuideRecommendLocation, Integer>{
 
-    Optional<Guide> findByGuideId(int guideId);
+
+    /* 해당 가이드의 추천 장소를 조회 */
+    Optional<GuideRecommendLocation> findBy(int guideId);
+
+
 
 }

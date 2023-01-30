@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,9 +22,10 @@ public class Guide{
     @Column(name="guide_id")
     private Integer guideId;
 
-//    @OneToOne
-//    @JoinColumn(name="user_id")
-//    User user;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    User user;
+
 
     @Column(name="oneline_introduction")
     private String onlineIntroduction;
@@ -51,10 +50,106 @@ public class Guide{
     private Integer license;
 
     @OneToMany(mappedBy = "guide")
+    @JoinColumn(name = "guide_id")
     private List<GuideRecommendLocation> guideLocationList = new ArrayList<>();
 
     public void addguideLocation(GuideRecommendLocation guideLocationList){
         this.guideLocationList.add(guideLocationList);
     }
 
+    public Integer getGuideId() {
+        return guideId;
+    }
+
+    public void setGuideId(Integer guideId) {
+        this.guideId = guideId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getOnlineIntroduction() {
+        return onlineIntroduction;
+    }
+
+    public void setOnlineIntroduction(String onlineIntroduction) {
+        this.onlineIntroduction = onlineIntroduction;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public LocalTime getCloseTimeStart() {
+        return closeTimeStart;
+    }
+
+    public void setCloseTimeStart(LocalTime closeTimeStart) {
+        this.closeTimeStart = closeTimeStart;
+    }
+
+    public LocalTime getCloseTimeEnd() {
+        return closeTimeEnd;
+    }
+
+    public void setCloseTimeEnd(LocalTime closeTimeEnd) {
+        this.closeTimeEnd = closeTimeEnd;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public Integer getLicense() {
+        return license;
+    }
+
+    public void setLicense(Integer license) {
+        this.license = license;
+    }
+
+    public List<GuideRecommendLocation> getGuideLocationList() {
+        return guideLocationList;
+    }
+
+    public void setGuideLocationList(List<GuideRecommendLocation> guideLocationList) {
+        this.guideLocationList = guideLocationList;
+    }
 }
