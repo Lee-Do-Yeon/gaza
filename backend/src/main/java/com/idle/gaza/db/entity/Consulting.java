@@ -16,7 +16,7 @@ public class Consulting {
     @Column(name="consulting_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private int consultingId;
+    private Integer consultingId;
     @ManyToOne
     @JoinColumn(name="reservation_id")
     private Reservation reservationId;
@@ -26,7 +26,7 @@ public class Consulting {
     private Timestamp endTime;
     private String url;
     @Column(name="is_activate", columnDefinition = "TINYINT", length=1)
-    private int isActivate;
+    private Integer isActivate;
 
 
 }
