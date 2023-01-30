@@ -1,15 +1,14 @@
 package com.idle.gaza.db.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import io.jsonwebtoken.lang.Assert;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 public class Reservation {
     @Id
     @Column(name="reservation_id")
@@ -18,7 +17,7 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    private User userId;
+    private UserDto userId;
 
     @ManyToOne
     @JoinColumn(name="guide_id")
@@ -37,7 +36,7 @@ public class Reservation {
     private Timestamp travleStartDate;
 
     @Column(name="travle_end_date")
-    private Date travleEndDate;
+    private Timestamp travleEndDate;
 
     @Column(name="number_of_people")
     private int numberOfPeople;
@@ -52,4 +51,19 @@ public class Reservation {
     private int withDisabled;
 
     private String note;
+
+    @Builder
+    public Reservation(UserDto userId, Guide guideId, Timestamp consultingDate, Timestamp reservationDate, Timestamp travleStartDate, Timestamp travleEndDate, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note) {
+        this.userId = userId;
+        this.guideId = guideId;
+        this.consultingDate = consultingDate;
+        this.reservationDate = reservationDate;
+        this.travleStartDate = travleStartDate;
+        this.travleEndDate = travleEndDate;
+        this.numberOfPeople = numberOfPeople;
+        this.withChildren = withChildren;
+        this.withElderly = withElderly;
+        this.withDisabled = withDisabled;
+        this.note = note;
+    }
 }
