@@ -15,7 +15,7 @@ import java.util.Collection;
 public class UserDetailsDto implements UserDetails {
 
     @Delegate
-    private UserDto userDto;
+    private User user;
     private Collection<? extends GrantedAuthority> authorities;
 
     @Override
@@ -24,13 +24,11 @@ public class UserDetailsDto implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return null;
-    }
+    public String getPassword() { return getPw(); }
 
     @Override
     public String getUsername() {
-        return null;
+        return getId();
     }
 
     @Override
