@@ -41,7 +41,12 @@ public class GuideController {
 
     //가이드 전체 조회
     @GetMapping("/")
-    public ResponseEntity<?> localGuideSearch() {
+    @ApiOperation(value = "가이드 전체 조회", notes = "가이드 전체 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> guideSearch() {
 
         return null;
     }
