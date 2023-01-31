@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /*
 * 가이드 관련 JPA Query Method 인터페이스 정의
@@ -16,5 +17,8 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     List<Guide> findBy();
 
     /* 가이드 상세 조회 */
+    Optional<Guide> findByGuideId(int guideId);
+
+
 
 }
