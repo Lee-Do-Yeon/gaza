@@ -20,6 +20,9 @@ spring:
     secret: secretcode
   main:
     allow-bean-definition-overriding: true
+  mvc:
+    pathmatch:
+      matching-strategy:
 logging:
   pattern:
     file: "%-4relative [%thread] %-5level %logger{35} - %msg%n"
@@ -28,3 +31,4 @@ logging:
   level:
     root: info
     com.idel.gaza: Debug
+
