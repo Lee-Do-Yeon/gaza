@@ -18,13 +18,10 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class GuideController {
 
-
-    private final GuideService guideService;
-
     @Autowired
-    private GuideController(GuideService guideService) {
-        this.guideService = guideService;
-    }
+    GuideService guideService;
+
+
 
     //가이드 등록
     @PostMapping()

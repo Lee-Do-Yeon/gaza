@@ -14,12 +14,12 @@ import java.util.Optional;
 /*
 * Guide 관련 비스니스 로직 처리를 위한 서비스 클래스
 * */
-@Service
+@Service("guideService")
 @Log4j2
 public class GuideServiceImpl implements GuideService {
 
     @Autowired
-    GuideRecommendRepository recommendRepository;
+    GuideRecommendRepository guideRecommendRepository;
 
     @Autowired
     GuideRepository guideRepository;
@@ -53,7 +53,7 @@ public class GuideServiceImpl implements GuideService {
                 .categoryCode(locations.getCategoryCode())
                 .picture(locations.getPicture())
                 .build();
-        recommendRepository.save(loc);
+        guideRecommendRepository.save(loc);
     }
 
     @Override

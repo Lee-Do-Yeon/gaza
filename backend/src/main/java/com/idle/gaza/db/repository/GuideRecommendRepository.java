@@ -2,9 +2,12 @@ package com.idle.gaza.db.repository;
 
 import com.idle.gaza.db.entity.Guide;
 import com.idle.gaza.db.entity.GuideRecommendLocation;
+import org.graalvm.compiler.nodes.calc.IntegerDivRemNode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import sun.jvm.hotspot.oops.Oop;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,7 +18,7 @@ public interface GuideRecommendRepository extends JpaRepository<GuideRecommendLo
 
 
     /* 해당 가이드의 추천 장소를 조회 */
-    Optional<GuideRecommendLocation> findBy(int guideId);
+    //Optional<GuideRecommendLocation> findBy();
 
 
 

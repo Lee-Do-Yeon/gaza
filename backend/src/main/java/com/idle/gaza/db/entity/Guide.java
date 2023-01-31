@@ -49,13 +49,13 @@ public class Guide{
     @Column(columnDefinition = "TINYINT", length=1)
     private Integer license;
 
-    @OneToMany(mappedBy = "guide")
-    @JoinColumn(name = "guide_id")
-    private List<GuideRecommendLocation> guideLocationList = new ArrayList<>();
-
-    public void addguideLocation(GuideRecommendLocation guideLocationList){
-        this.guideLocationList.add(guideLocationList);
-    }
+//    @OneToMany(mappedBy = "guide")
+//    @JoinColumn(name = "guide_id")
+//    private List<GuideRecommendLocation> guideLocationList = new ArrayList<>();
+//
+//    public void addguideLocation(GuideRecommendLocation guideLocationList){
+//        this.guideLocationList.add(guideLocationList);
+//    }
 
     public Integer getGuideId() {
         return guideId;
@@ -145,11 +145,5 @@ public class Guide{
         this.license = license;
     }
 
-    public List<GuideRecommendLocation> getGuideLocationList() {
-        return guideLocationList;
-    }
 
-    public void setGuideLocationList(List<GuideRecommendLocation> guideLocationList) {
-        this.guideLocationList = guideLocationList;
-    }
 }
