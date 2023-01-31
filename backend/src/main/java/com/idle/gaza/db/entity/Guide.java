@@ -24,7 +24,7 @@ public class Guide{
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    User user;
+    private User user;
 
 
     @Column(name="oneline_introduction")
@@ -49,13 +49,23 @@ public class Guide{
     @Column(columnDefinition = "TINYINT", length=1)
     private Integer license;
 
-//    @OneToMany(mappedBy = "guide")
-//    @JoinColumn(name = "guide_id")
-//    private List<GuideRecommendLocation> guideLocationList = new ArrayList<>();
-//
-//    public void addguideLocation(GuideRecommendLocation guideLocationList){
-//        this.guideLocationList.add(guideLocationList);
-//    }
+    @OneToMany(mappedBy = "guide")
+    private List<GuideRecommendLocation> guideLocationList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "guide")
+    private List<DayOff> dayOffList = new ArrayList<>();
+
+    public void addGuideLocation(GuideRecommendLocation guideLocationList){
+        this.guideLocationList.add(guideLocationList);
+    }
+
+    public List<GuideRecommendLocation> getGuideLocationList() {
+        return guideLocationList;
+    }
+
+    public List<DayOff> getDayOffList() {
+        return dayOffList;
+    }
 
     public Integer getGuideId() {
         return guideId;
@@ -144,6 +154,7 @@ public class Guide{
     public void setLicense(Integer license) {
         this.license = license;
     }
+
 
 
 }
