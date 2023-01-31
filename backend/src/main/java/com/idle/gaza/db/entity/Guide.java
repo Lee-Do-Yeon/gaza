@@ -22,9 +22,9 @@ public class Guide{
     @Column(name="guide_id")
     private Integer guideId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User user;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="user_id")
+//    private User user;
 
 
     @Column(name="oneline_introduction")
@@ -73,14 +73,6 @@ public class Guide{
 
     public void setGuideId(Integer guideId) {
         this.guideId = guideId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getOnlineIntroduction() {
