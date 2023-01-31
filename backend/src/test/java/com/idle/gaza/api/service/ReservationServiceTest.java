@@ -28,7 +28,6 @@ class ReservationServiceTest {
 
         reservation.setUserId(1);
         reservation.setGuideId(1);
-        reservation.setReservationDate(new Timestamp(System.currentTimeMillis()));
         reservation.setConsultingDate(new Timestamp(System.currentTimeMillis()));
         reservation.setTravelStartDate(new Timestamp(System.currentTimeMillis()));
         reservation.setTravelEndDate(new Timestamp(System.currentTimeMillis()));
@@ -42,8 +41,6 @@ class ReservationServiceTest {
         Reservation result = reservationService.createReservation(reservation);
 
         //then
-
-
     }
 
     @Test
