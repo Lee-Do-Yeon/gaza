@@ -4,6 +4,7 @@ import com.idle.gaza.api.request.ReservationCreatePostRequest;
 import com.idle.gaza.db.entity.Guide;
 import com.idle.gaza.db.entity.Reservation;
 import com.idle.gaza.db.entity.User;
+import com.idle.gaza.db.repository.GuideRepository;
 import com.idle.gaza.db.repository.ReservationRepository;
 import com.idle.gaza.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,18 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     UserRepository userRepository;
 
-    /*
+
     @Autowired
     GuideRepository guideRepository;
-*/
+
     @Override
     public Reservation createReservation(ReservationCreatePostRequest reservationInfo) {
-        //User user = userRepository.findByUserId(reservationInfo.getUserId());
-        //Guide guide = guideRepository.findByGuideId(reservationInfo.getGuideId());
+        User user = userRepository.findByUserId(reservationInfo.getUserId());
+        Guide guide = guideRepository.findByGuideId(reservationInfo.getGuideId());
 
         Reservation reservation = Reservation.builder()
-                //.userId(user)
-                //.guideId(guide)
+                .userId(user)
+                .guideId(guide)
                 .consultingDate(reservationInfo.getConsultingDate())
                 .reservationDate(reservationInfo.getReservationDate())
                 .travelStartDate(reservationInfo.getTravelStartDate())

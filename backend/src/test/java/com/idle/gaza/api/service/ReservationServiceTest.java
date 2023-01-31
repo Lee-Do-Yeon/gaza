@@ -26,8 +26,8 @@ class ReservationServiceTest {
         //given
         ReservationCreatePostRequest reservation = new ReservationCreatePostRequest();
 
-        //reservation.setUserId(user);
-        //reservation.setGuideId(guide);
+        reservation.setUserId(1);
+        reservation.setGuideId(1);
         reservation.setReservationDate(new Timestamp(System.currentTimeMillis()));
         reservation.setConsultingDate(new Timestamp(System.currentTimeMillis()));
         reservation.setTravelStartDate(new Timestamp(System.currentTimeMillis()));
