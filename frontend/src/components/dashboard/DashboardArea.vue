@@ -91,8 +91,8 @@
                   <tr>
                     <td>{{ rev.reservation_id }}</td>
                     <td>{{ rev.created_date }}</td>
-                    <td>
-                      <i
+                    <td >
+                      <i v-for="score in rev.score" :key="score"
                         class="fas fa-sharp fa-solid fa-star"
                         style="color: yellow"
                       ></i>
