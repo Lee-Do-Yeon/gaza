@@ -1,0 +1,40 @@
+{
+  "review": [
+    {
+      "reservation_id": "jisung",
+      "created_date": 230123,
+      "score": 4,
+      "content": "it was very great"
+    },
+    {
+      "reservation_id": "doji",
+      "created_date": 221203,
+      "score": 4,
+      "content": "good"
+    },
+    {
+      "reservation_id": "kim",
+      "created_date": 220123,
+      "score": 4,
+      "content": "No~~t"
+    },
+    {
+      "reservation_id": "choi",
+      "created_date": 230101,
+      "score": 4,
+      "content": "Great"
+    },
+    {
+      "reservation_id": "jaehun",
+      "created_date": 230201,
+      "score": 3,
+      "content": "Sad"
+    },
+    {
+      "reservation_id": "gong",
+      "created_date": 230406,
+      "score": 5,
+      "content": "very Good"
+    }
+  ]
+}

@@ -176,6 +176,8 @@
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
+import axios from 'axios';
+
 
 export default {
   name: "NotificationDashboard",
@@ -183,6 +185,7 @@ export default {
     LogoutBtn,
     MyBookingOption,
     picturemodalVue
-  },
+  }
+
 };
 </script>
