@@ -2,8 +2,6 @@ package com.idle.gaza.db.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name="dayoff")
 public class DayOff {

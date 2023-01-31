@@ -17,6 +17,6 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     List<Guide> findBy();
 
     /* 가이드 상세 조회 */
-    Optional<Guide> findByGuideId(int guideId);
+    Optional<Guide> findGuideByGuideId(int guideId);
 
 }
