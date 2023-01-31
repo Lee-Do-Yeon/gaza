@@ -39,6 +39,7 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public Guide guideDetailSearch() {
         return null;
+
     }
 
     ////////////////////////추천 장소 기능//////////////////////
@@ -59,7 +60,8 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public void locationDelete(int guideId, Long recommendId) {
         //해당 가이드가 존재하는 지 확인함
-
+        Optional<Guide> existGuide = guideRepository.findGuideByGuideId(guideId);
+        //추천 장소를 삭제한다.
     }
 
     @Override
