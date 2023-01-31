@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalTime;
+import java.util.List;
 
 @Api(value = "가이드 API", tags = {"Guide"})
 @RestController
@@ -22,7 +26,6 @@ public class GuideController {
     GuideService guideService;
 
 
-
     //가이드 등록
     @PostMapping()
     @ApiOperation(value = "가이드 등록", notes = "가이드를 등록한다.")
@@ -30,13 +33,13 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> guideRegister(@RequestBody Guide guide){
+    public ResponseEntity<?> guideRegister(@RequestBody Guide guide, @RequestParam MultipartFile uploadFile){
         return null;
     }
 
     //////////////////////가이드 조회///////////////////////////
 
-    //가이드 조회
+    //가이드 전체 조회
     @GetMapping("/")
     public ResponseEntity<?> localGuideSearch() {
 
@@ -54,14 +57,15 @@ public class GuideController {
         return null;
     }
 
-    //가이드 프로필 조회
+
+    //가이드 상세 프로필 조회
     @GetMapping("/{guideId}")
-    @ApiOperation(value = "가이드 프로필 조회", notes = "가이드 프로필을 조회한다.")
+    @ApiOperation(value = "가이드 상세 프로필 조회", notes = "가이드 프로필을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> guideProfileSearch() {
+    public ResponseEntity<?> guideProfileSearch(@PathVariable int guideId) {
         return null;
     }
 
@@ -72,7 +76,7 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> locationRegister() {
+    public ResponseEntity<?> locationRegister(@PathVariable String userId, @RequestParam MultipartFile uploadFile) {
         return null;
     }
 
@@ -82,7 +86,7 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> locationDelete(@PathVariable String userId, @PathVariable String recommendId) {
+    public ResponseEntity<?> locationDelete(@PathVariable String userId, @PathVariable int recommendId) {
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -93,7 +97,7 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> locationUpdate(@PathVariable String userId, @PathVariable String recommendId) {
+    public ResponseEntity<?> locationUpdate(@PathVariable String userId, @PathVariable int recommendId, @RequestParam MultipartFile uploadFile) {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -106,7 +110,7 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> travelThemeRegister() {
+    public ResponseEntity<?> tourThemeRegister(@PathVariable String userId, @RequestParam(name = "tourTheme" ,required = false) List<String> travelList) {
         return null;
     }
 
@@ -116,7 +120,7 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> travelThemeDelete() {
+    public ResponseEntity<?> tourThemeDelete(@PathVariable String userId, @RequestParam int tourId) {
         return null;
     }
 
@@ -129,7 +133,7 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> dayRegister(){
+    public ResponseEntity<?> dayRegister(@PathVariable String userId, @RequestParam("date") List<LocalTime> timeList){
         return null;
     }
 
@@ -139,9 +143,10 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> dayWithdraw(){
+    public ResponseEntity<?> dayWithdraw(@PathVariable String userId){
         return null;
     }
+
 
 
 
