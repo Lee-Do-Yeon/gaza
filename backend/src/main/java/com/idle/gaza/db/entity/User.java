@@ -16,10 +16,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int userId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="guide_id")
-    Guide guide;
-
     String name;
 
     String phone_number;
