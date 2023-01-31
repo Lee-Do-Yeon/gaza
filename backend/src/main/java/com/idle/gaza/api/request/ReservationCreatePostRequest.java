@@ -11,7 +11,6 @@ public class ReservationCreatePostRequest {
     private int userId;
     private int guideId;
     private Timestamp consultingDate;
-    private Timestamp reservationDate;
     private Timestamp travelStartDate;
     private Timestamp travelEndDate;
     private int numberOfPeople;

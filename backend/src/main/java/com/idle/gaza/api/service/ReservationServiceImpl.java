@@ -10,7 +10,10 @@ import com.idle.gaza.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *  예약 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -21,21 +24,28 @@ public class ReservationServiceImpl implements ReservationService {
     ReservationRepository reservationRepository;
     @Autowired
     UserRepository userRepository;
-
-
     @Autowired
     GuideRepository guideRepository;
 
     @Override
     public Reservation createReservation(ReservationCreatePostRequest reservationInfo) {
-        User user = userRepository.findByUserId(reservationInfo.getUserId());
-        Guide guide = guideRepository.findByGuideId(reservationInfo.getGuideId());
+        Optional<User> userOptional = userRepository.findByUserId(reservationInfo.getUserId());
+        User user = null;
+        if(userOptional.isPresent()){
+            user = userOptional.get();
+        }
+
+        Optional<Guide> guideOptional = guideRepository.findGuideByGuideId(reservationInfo.getGuideId());
+        Guide guide = null;
+        if(guideOptional.isPresent()){
+            guide = guideOptional.get();
+        }
 
         Reservation reservation = Reservation.builder()
                 .userId(user)
                 .guideId(guide)
                 .consultingDate(reservationInfo.getConsultingDate())
-                .reservationDate(reservationInfo.getReservationDate())
+                .reservationDate(new Timestamp(System.currentTimeMillis()))
                 .travelStartDate(reservationInfo.getTravelStartDate())
                 .travelEndDate(reservationInfo.getTravelEndDate())
                 .numberOfPeople(reservationInfo.getNumberOfPeople())
@@ -43,6 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .withElderly(reservationInfo.getWithElderly())
                 .withDisabled(reservationInfo.getWithDisabled())
                 .note(reservationInfo.getNote())
+                .stateCode("RE02")
                 .build();
 
         return reservationRepository.save(reservation);

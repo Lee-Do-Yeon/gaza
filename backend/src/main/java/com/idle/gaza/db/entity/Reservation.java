@@ -53,7 +53,7 @@ public class Reservation {
     private String note;
 
     @Builder
-    public Reservation(User userId, Guide guideId, Timestamp consultingDate, Timestamp reservationDate, Timestamp travelStartDate, Timestamp travelEndDate, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note) {
+    public Reservation(User userId, Guide guideId, Timestamp consultingDate, Timestamp reservationDate, Timestamp travelStartDate, Timestamp travelEndDate, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, String stateCode) {
         this.userId = userId;
         this.guideId = guideId;
         this.consultingDate = consultingDate;
@@ -65,5 +65,6 @@ public class Reservation {
         this.withElderly = withElderly;
         this.withDisabled = withDisabled;
         this.note = note;
+        this.stateCode = stateCode;
     }
 }
