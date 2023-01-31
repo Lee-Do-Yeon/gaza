@@ -10,12 +10,14 @@ public interface GuideService {
     //가이드 조회 기능
     List<Guide> guideSearch();
     List<Guide> famousGuideSearch();
+    Guide guideDetailSearch();
 
 
     //가이드 추천 장소 기능
     void locationRegister(GuideRecommendLocation locations);
     void locationDelete(int guideId, Long recommendId);
     int locationUpdate(GuideRecommendLocation locations);
+
 
 
 }

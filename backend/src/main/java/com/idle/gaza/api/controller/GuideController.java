@@ -1,6 +1,7 @@
 package com.idle.gaza.api.controller;
 
 import com.idle.gaza.api.service.GuideService;
+import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -17,11 +18,20 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class GuideController {
 
-    private GuideService guideService;
-
     @Autowired
-    public GuideController(GuideService guideService) {
-        this.guideService = guideService;
+    GuideService guideService;
+
+
+
+    //가이드 등록
+    @PostMapping()
+    @ApiOperation(value = "가이드 등록", notes = "가이드를 등록한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> guideRegister(@RequestBody Guide guide){
+        return null;
     }
 
     //////////////////////가이드 조회///////////////////////////
@@ -34,17 +44,29 @@ public class GuideController {
     }
 
     //인기 가이드 조회
-    public ResponseEntity<?> famousGuideSearch() {
+    @PostMapping("/popular")
+    @ApiOperation(value = "인기 가이드 조회", notes = "인기 가이드 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> popularGuideSearch() {
         return null;
     }
 
     //가이드 프로필 조회
+    @GetMapping("/{guideId}")
+    @ApiOperation(value = "가이드 프로필 조회", notes = "가이드 프로필을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
     public ResponseEntity<?> guideProfileSearch() {
         return null;
     }
 
 
-    @PostMapping()
+    @PostMapping("/location/{userId}")
     @ApiOperation(value = "추천 장소 등록", notes = "추천 장소를 등록한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -97,6 +119,31 @@ public class GuideController {
     public ResponseEntity<?> travelThemeDelete() {
         return null;
     }
+
+
+    //////////////////상담 시간 관리////////////////////////
+
+    @PostMapping("/day/{userId}")
+    @ApiOperation(value = "상담 불가능한 날짜 등록", notes = "가이드는 상담 불가능한 날짜를 등록한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> dayRegister(){
+        return null;
+    }
+
+    @DeleteMapping("/day/{userId}")
+    @ApiOperation(value = "상담 불가능한 날짜 취소", notes = "가이드는 상담 불가능한 날짜를 취소한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> dayWithdraw(){
+        return null;
+    }
+
+
 
 
 }
