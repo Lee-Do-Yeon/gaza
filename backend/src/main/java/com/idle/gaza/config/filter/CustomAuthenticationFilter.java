@@ -58,10 +58,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
             User user = objectMapper.readValue(request.getInputStream(), User.class);
-            log.debug("1.CustomAuthenticationFilter :: userId:" + user.getUserId() + " userPw:" + user.getPw());
+            log.debug("1.CustomAuthenticationFilter :: userId:" + user.getId() + " userPw:" + user.getPw());
 
             // ID와 패스워드를 기반으로 토큰 발급
-            return new UsernamePasswordAuthenticationToken(user.getUserId(), user.getPw());
+            return new UsernamePasswordAuthenticationToken(user.getId(), user.getPw());
         } catch (UsernameNotFoundException ae) {
             throw new UsernameNotFoundException(ae.getMessage());
         } catch (Exception e) {
