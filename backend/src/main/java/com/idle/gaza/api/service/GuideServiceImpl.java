@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 /*
-* Guide 관련 비스니스 로직 처리를 위한 서비스 클래스
-* */
+ * Guide 관련 비스니스 로직 처리를 위한 서비스 클래스
+ * */
 @Service("guideService")
 @Log4j2
 public class GuideServiceImpl implements GuideService {
@@ -50,19 +50,11 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public Guide guideDetailSearch(int userId) {
-        //먼저 회원이 존재하는지 확인
-        Optional<User> user = userRepository.findById(userId);
-        if(!user.isPresent()) return null;
+    public Guide guideDetailSearch(int guideId) {
 
-        //해당 회원이 가이드인지 확인 후 가이드 정보 리턴
-        Optional<Guide> guide = guideRepository.findGuideByUser(userId);
-
-        if(!guide.isPresent()) System.out.println("guide is not exist");
-        else System.out.println("guide is exist");
-
+        //가이드 정보 리턴
+        Optional<Guide> guide = guideRepository.findGuideByGuideId(guideId);
         return guide.orElse(null);
-
     }
 
 
@@ -75,32 +67,32 @@ public class GuideServiceImpl implements GuideService {
 
         if(guide.isPresent()) {
             GuideRecommendLocation loc = GuideRecommendLocation
-                .builder()
-                .guide(guide.get())
-                .address(locations.getAddress())
-                .latitude(locations.getLatitude())
-                .longitude(locations.getLongitude())
-                .categoryCode(locations.getCategoryCode())
-                .picture(locations.getPicture())
-                .build();
+                    .builder()
+                    .guide(guide.get())
+                    .address(locations.getAddress())
+                    .latitude(locations.getLatitude())
+                    .longitude(locations.getLongitude())
+                    .categoryCode(locations.getCategoryCode())
+                    .picture(locations.getPicture())
+                    .build();
             guideRecommendRepository.save(loc);
         }
 
     }
 
     @Override
-    public void locationDelete(int guideId, int recommendId) {
-        //해당 가이드가 존재하는 지 확인함
+    public int locationDelete(int guideId, int recommendId) {
         Optional<Guide> existGuide = guideRepository.findGuideByGuideId(guideId);
 
-        //해당 가이드의 추천 장소가 있는지 확인함
-        if(existGuide.isPresent()){
-            Optional<GuideRecommendLocation> location = guideRecommendRepository.findGuideRecommendLocationByRecommendId(recommendId);
-            if(location.isPresent()){
-                //추천 장소를 삭제한다.
-                guideRecommendRepository.deleteGuideRecommendLocationByRecommendId(recommendId);
-            }
-        }
+        if(!existGuide.isPresent()) return 0;
+
+        Optional<GuideRecommendLocation> location = guideRecommendRepository.findByRecommendId(recommendId);
+
+        if(!location.isPresent()) return 0;
+
+        //추천 장소를 삭제한다.
+        guideRecommendRepository.deleteByRecommendId(recommendId);
+        return 1;
     }
 
     @Override
@@ -110,7 +102,7 @@ public class GuideServiceImpl implements GuideService {
         if(!guide.isPresent()) return 0;
 
         //해당 가이드 추천장소가 존재하는 경우에만 수행
-        Optional<GuideRecommendLocation> existLocation = guideRecommendRepository.findGuideRecommendLocationByRecommendId(locations.getRecommendId());
+        Optional<GuideRecommendLocation> existLocation = guideRecommendRepository.findByRecommendId(locations.getRecommendId());
 
         if(!existLocation.isPresent()) return 0;
 

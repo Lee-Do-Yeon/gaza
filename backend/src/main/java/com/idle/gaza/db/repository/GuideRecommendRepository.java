@@ -16,6 +16,6 @@ public interface GuideRecommendRepository extends JpaRepository<GuideRecommendLo
     /* 해당 가이드의 추천 장소를 조회 */
     //Optional<GuideRecommendLocation> findBy();
 
-    Optional<GuideRecommendLocation> findGuideRecommendLocationByRecommendId(int recommendId);
-    void deleteGuideRecommendLocationByRecommendId(int recommendId);
+    Optional<GuideRecommendLocation> findByRecommendId(int recommendId);
+    void deleteByRecommendId(int recommendId);
 }
