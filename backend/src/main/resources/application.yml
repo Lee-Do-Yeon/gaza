@@ -22,7 +22,7 @@ spring:
     allow-bean-definition-overriding: true
   mvc:
     pathmatch:
-      matching-strategy:
+      matching-strategy: ant_path_matcher
 logging:
   pattern:
     file: "%-4relative [%thread] %-5level %logger{35} - %msg%n"
