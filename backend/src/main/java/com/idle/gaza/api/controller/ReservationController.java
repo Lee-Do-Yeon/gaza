@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Api(value = "예약 API", tags = {"Reservation"})
 @RestController
-@RequestMapping("message\":\"OTHER TOKEN ERROR\"")
+@RequestMapping("/books")
 public class ReservationController {
     @Autowired
     ReservationService reservationService;
@@ -41,5 +42,20 @@ public class ReservationController {
     public ResponseEntity<?> getReservationListByGuide(@PathVariable @ApiParam(value="예약 정보", required = true) int guideId){
         List<Reservation> reservationList = reservationService.getReservationListByGuide(guideId);
         return new ResponseEntity<List<?>>(reservationList, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{reservationId}")
+    @ApiOperation(value = "예약 취소", notes = "회원은 예약을 취소할 수 있다.")
+    public ResponseEntity<? extends BaseResponseBody> cancelReservation(@PathVariable @ApiParam(value="예약 ID", required = true) int reservationId){
+        reservationService.cancelReservation(reservationId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
+    @GetMapping("/guide/time")
+    @ApiOperation(value = "불가능한 예약 시간 조회", notes = "회원은 불가능한 시간대를 확인 할 수 있다")
+    public ResponseEntity<?> getImpossibleTime(@RequestParam("guideId") @ApiParam(value = "가이드 PK", required = true) int guideId,
+                                               @RequestParam("selectedTime") @ApiParam(value = "선택한 날짜", required = true) Timestamp selectedTime){
+        List<Timestamp> timeList = reservationService.getImpossibleTime(guideId, selectedTime);
+        return new ResponseEntity<List<?>>(timeList, HttpStatus.OK);
     }
 }
