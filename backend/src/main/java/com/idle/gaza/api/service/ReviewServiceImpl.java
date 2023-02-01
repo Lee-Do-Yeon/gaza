@@ -8,7 +8,7 @@ import com.idle.gaza.db.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @Service("reviewService")
@@ -36,5 +36,15 @@ public class ReviewServiceImpl implements ReviewService{
                 .build();
 
         return reviewRepository.save(review);
+    }
+
+    @Override
+    public List<Review> getReviewsByUser(int userId) {
+        return reviewRepository.findByUserId_UserId(userId);
+    }
+
+    @Override
+    public List<Review> getReviewsByGuide(int guideId) {
+        return reviewRepository.findByGuideId_GuideId(guideId);
     }
 }
