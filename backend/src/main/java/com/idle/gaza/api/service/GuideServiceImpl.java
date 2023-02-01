@@ -1,5 +1,7 @@
 package com.idle.gaza.api.service;
 
+import com.idle.gaza.api.request.GuideRegisterPostRequest;
+import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.db.entity.Guide;
 import com.idle.gaza.db.entity.GuideRecommendLocation;
 import com.idle.gaza.db.entity.User;
@@ -42,29 +44,41 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public Guide guideDetailSearch(String userId) {
+    public Guide guideDetailSearch(int userId) {
         //먼저 회원이 존재하는지 확인
         Optional<User> user = userRepository.findByUserId(userId);
         if(!user.isPresent()) return null;
-        User getUser = user.get();
 
         //해당 회원이 가이드인지 확인 후 가이드 정보 리턴
-        return guideRepository.findGuideByUser(getUser);
+        int id = user.get().getUserId();
+        Optional<Guide> guide = guideRepository.findGuideByUser(id);
+
+        if(!guide.isPresent()) System.out.println("guide is not exist");
+        else System.out.println("guide is exist");
+
+        return guide.orElse(null);
+
     }
 
     ////////////////////////추천 장소 기능//////////////////////
     @Override
-    public void locationRegister(GuideRecommendLocation locations) {
-        GuideRecommendLocation loc = GuideRecommendLocation
+    public void locationRegister(LocationPostRequest locations) {
+        //해당 가이드가 존재하는지 확인함
+        Optional<Guide> guide = guideRepository.findGuideByGuideId(locations.getGuideId());
+
+        if(guide.isPresent()) {
+            GuideRecommendLocation loc = GuideRecommendLocation
                 .builder()
-                .guide(locations.getGuide())
+                .guide(guide.get())
                 .address(locations.getAddress())
                 .latitude(locations.getLatitude())
                 .longitude(locations.getLongitude())
                 .categoryCode(locations.getCategoryCode())
                 .picture(locations.getPicture())
                 .build();
-        guideRecommendRepository.save(loc);
+            guideRecommendRepository.save(loc);
+        }
+
     }
 
     @Override
@@ -83,14 +97,19 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public int locationUpdate(GuideRecommendLocation locations) {
+    public int locationUpdate(LocationPostRequest locations) {
+        //해당 가이드가 존재하는지 확인함
+        Optional<Guide> guide = guideRepository.findGuideByGuideId(locations.getGuideId());
+
+        if(!guide.isPresent()) return 0;
+
         //해당 가이드 추천장소가 존재하는 경우에만 수행
         Optional<GuideRecommendLocation> existLocation = guideRecommendRepository.findGuideRecommendLocationByRecommendId(locations.getRecommendId());
 
         if(!existLocation.isPresent()) return 0;
 
         GuideRecommendLocation updateLocation = existLocation.get();
-        updateLocation.setGuide(locations.getGuide());
+        updateLocation.setGuide(guide.get());
         updateLocation.setAddress(locations.getAddress());
         updateLocation.setLongitude(locations.getLongitude());
         updateLocation.setLatitude(locations.getLatitude());
@@ -103,5 +122,12 @@ public class GuideServiceImpl implements GuideService {
         return 1;//성공 시
     }
 
+
+    //////////////////가이드 등록////////////////////////////
+
+    @Override
+    public void guideRegister(GuideRegisterPostRequest guide) {
+
+    }
 
 }

@@ -11,10 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@ToString
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Guide{
 
     @Id
@@ -55,16 +52,53 @@ public class Guide{
     @OneToMany(mappedBy = "guide")
     private List<DayOff> dayOffList = new ArrayList<>();
 
-    public void addGuideLocation(GuideRecommendLocation guideLocationList){
-        this.guideLocationList.add(guideLocationList);
+    public Guide(Integer guideId, User user, String onlineIntroduction, String introduction, String picture, String country, String city, LocalTime closeTimeStart, LocalTime closeTimeEnd, Integer price, Integer license) {
+        this.guideId = guideId;
+        this.user = user;
+        this.onlineIntroduction = onlineIntroduction;
+        this.introduction = introduction;
+        this.picture = picture;
+        this.country = country;
+        this.city = city;
+        this.closeTimeStart = closeTimeStart;
+        this.closeTimeEnd = closeTimeEnd;
+        this.price = price;
+        this.license = license;
     }
 
-    public List<GuideRecommendLocation> getGuideLocationList() {
-        return guideLocationList;
+//    public void addGuideLocation(GuideRecommendLocation guideLocationList){
+//        this.guideLocationList.add(guideLocationList);
+//    }
+//
+//    public void addDayOffList(DayOff dayOff){
+//        this.dayOffList.add(dayOff);
+//    }
+
+    @Override
+    public String toString() {
+        return "Guide{" +
+                "guideId=" + guideId +
+                ", user=" + user +
+                ", onlineIntroduction='" + onlineIntroduction + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", picture='" + picture + '\'' +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", closeTimeStart=" + closeTimeStart +
+                ", closeTimeEnd=" + closeTimeEnd +
+                ", price=" + price +
+                ", license=" + license +
+                ", guideLocationList=" + guideLocationList +
+                ", dayOffList=" + dayOffList +
+                '}';
     }
 
-    public List<DayOff> getDayOffList() {
-        return dayOffList;
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Integer getGuideId() {
