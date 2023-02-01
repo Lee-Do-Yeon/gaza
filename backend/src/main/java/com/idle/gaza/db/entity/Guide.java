@@ -22,9 +22,9 @@ public class Guide{
     @Column(name="guide_id")
     private Integer guideId;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name="user_id")
-//    private User user;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 
 
     @Column(name="oneline_introduction")

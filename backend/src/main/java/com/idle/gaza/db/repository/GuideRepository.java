@@ -1,6 +1,7 @@
 package com.idle.gaza.db.repository;
 
 import com.idle.gaza.db.entity.Guide;
+import com.idle.gaza.db.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,7 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     /* 가이드 상세 조회 */
     Optional<Guide> findGuideByGuideId(int guideId);
 
-
+    /* 해당 회원이 가이드인지 조회 */
+    Guide findGuideByUser(User user);
 
 }

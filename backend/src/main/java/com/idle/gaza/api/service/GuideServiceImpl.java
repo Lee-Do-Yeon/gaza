@@ -46,11 +46,10 @@ public class GuideServiceImpl implements GuideService {
         //먼저 회원이 존재하는지 확인
         Optional<User> user = userRepository.findByUserId(userId);
         if(!user.isPresent()) return null;
+        User getUser = user.get();
 
-        Optional<Guide> guide;
-
-        return null;
-
+        //해당 회원이 가이드인지 확인 후 가이드 정보 리턴
+        return guideRepository.findGuideByUser(getUser);
     }
 
     ////////////////////////추천 장소 기능//////////////////////
