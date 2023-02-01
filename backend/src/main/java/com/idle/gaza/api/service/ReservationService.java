@@ -2,7 +2,9 @@ package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.ReservationCreatePostRequest;
 import com.idle.gaza.db.entity.Reservation;
+import org.springframework.data.repository.query.Param;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -13,4 +15,5 @@ public interface ReservationService {
     void cancelReservation(int reservationId);
     List<Reservation> getReservationListByGuide(int guideId);
     List<Reservation> getReservationListByUser(int userId);
+    List<Timestamp> getImpossibleTime(int guideId, Timestamp selectedDate);
 }
