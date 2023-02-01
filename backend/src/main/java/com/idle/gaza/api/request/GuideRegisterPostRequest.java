@@ -9,9 +9,9 @@ import java.time.LocalTime;
 @Setter
 public class GuideRegisterPostRequest {
 
-    private String guideId;//guide pk
+    private int guideId;//guide pk
 
-    private String userId;//user pk
+    private int userId;//user pk
 
     private String onlineIntroduction;
 

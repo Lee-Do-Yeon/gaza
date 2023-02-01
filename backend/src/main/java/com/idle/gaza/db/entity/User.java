@@ -14,8 +14,12 @@ import java.util.Date;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+<<<<<<< HEAD
     @Column(name="user_id")
     int userId;
+=======
+    Integer userId;
+>>>>>>> 36e121a476de0529f0f472ccaa446c416044c6d2
 
     String name;
 
@@ -24,8 +28,6 @@ public class User {
     String id;
 
     @Column(name = "password")
-    @JsonIgnore
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String pw;
 
     String gender;

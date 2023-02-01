@@ -2,6 +2,7 @@ package com.idle.gaza.api.controller;
 
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.service.GuideService;
+import com.idle.gaza.db.entity.DayOff;
 import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -133,28 +134,39 @@ public class GuideController {
 
     //////////////////상담 시간 관리////////////////////////
 
-    @PostMapping("/day/{userId}")
+    @PostMapping("/day")
     @ApiOperation(value = "상담 불가능한 날짜 등록", notes = "가이드는 상담 불가능한 날짜를 등록한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> dayRegister(@PathVariable String userId, @RequestParam("date") List<LocalTime> timeList){
+    public ResponseEntity<?> dayRegister(@RequestParam("date") List<DayOff> dayOff){
+
+        for (DayOff day : dayOff) {
+            guideService.consultDateRegister(day);
+        }
+
         return null;
     }
 
-    @DeleteMapping("/day/{userId}")
+    @DeleteMapping("/day/{guideId}")
     @ApiOperation(value = "상담 불가능한 날짜 취소", notes = "가이드는 상담 불가능한 날짜를 취소한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> dayWithdraw(@PathVariable String userId){
+    public ResponseEntity<?> dayWithdraw(@PathVariable int guideId){
         return null;
     }
 
 
 
-
+    @PostMapping("/time/{guideId}")
+    @ApiOperation(value = "상담 불가능한 시간대 등록", notes = "가이드는 상담 불가능한 시작, 종료 시간을 등록한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> timeWithdraw(LocalTime startTime, LocalTime endTime){ return null; }
 
 }
