@@ -3,6 +3,7 @@ package com.idle.gaza.db.repository;
 import com.idle.gaza.db.entity.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -16,6 +17,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     List<Reservation> findByGuideId_GuideId(int guideId);
     List<Reservation> findByUserId_UserId(int userId);
 
-    @Query(value="SELECT * FROM reservation WHERE DATE(eDate) = DATE(NOW()); ", nativeQuery = true)
-    List<Reservation> aaa(int guideId, Timestamp consultingDate);
+    @Query(value="SELECT consulting_date FROM reservation WHERE guide_id = :guideId AND DATE(consulting_date) = DATE(:selectedDate); ", nativeQuery = true)
+    List<Timestamp> getImpossibleTime(@Param("guideId") int guideId, @Param("selectedDate") Timestamp selectedDate);
 }
