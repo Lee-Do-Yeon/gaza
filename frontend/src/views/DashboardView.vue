@@ -1,7 +1,7 @@
 <template>
 
     <!-- Common Banner Area -->
-    <DashboardBanner />
+    <!-- <DashboardBanner /> -->
 
     <!-- Dashboard Area -->
     <DashboardArea />

@@ -17,6 +17,9 @@ spring:
     allow-bean-definition-overriding: true
   jwt:
     secret: "gazagazagazagazagazagazagaza"
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 logging:
   pattern:
     file: "%-4relative [%thread] %-5level %logger{35} - %msg%n"
@@ -25,6 +28,10 @@ logging:
   level:
     root: info
     com.idel.gaza: Debug
+<<<<<<< HEAD
 redis:
   host: localhost
   port: 6379
+=======
+
+>>>>>>> d43fab826150e09aec0054cff0fc8754dc2b92cb
