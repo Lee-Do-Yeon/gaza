@@ -19,6 +19,4 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     /* 가이드 상세 조회 */
     Optional<Guide> findGuideByGuideId(int guideId);
 
-
-
 }
