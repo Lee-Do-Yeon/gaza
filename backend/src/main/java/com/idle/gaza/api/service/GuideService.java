@@ -13,11 +13,11 @@ public interface GuideService {
     //가이드 조회 기능
     List<Guide> guideSearch();
     List<Guide> famousGuideSearch();
-    Guide guideDetailSearch(int userId);
+    Guide guideDetailSearch(int guideId);
 
     //가이드 추천 장소 기능
     void locationRegister(LocationPostRequest locations);
-    void locationDelete(int guideId, int recommendId);
+    int locationDelete(int guideId, int recommendId);
     int locationUpdate(LocationPostRequest locations);
 
     //상담 날짜 관리 기능
