@@ -74,4 +74,9 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.findByUserId_UserId(userId);
     }
 
+    @Override
+    public List<Timestamp> getImpossibleTime(int guideId, Timestamp selectedDate) {
+        return reservationRepository.getImpossibleTime(guideId, selectedDate);
+    }
+
 }
