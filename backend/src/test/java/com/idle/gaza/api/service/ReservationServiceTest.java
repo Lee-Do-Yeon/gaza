@@ -22,7 +22,7 @@ class ReservationServiceTest {
     ReservationService reservationService = new ReservationServiceImpl();
 
     @Test
-    void 예약_생성_성공() {
+    void createReservation() {
         //given
         ReservationCreatePostRequest reservation = new ReservationCreatePostRequest();
 
@@ -44,7 +44,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    void 예약내역_조회_회원() {
+    void getReservationListByUser() {
         //given
         int userId = 1;
         //when
@@ -54,7 +54,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    void 예약내역_조회_가이드() {
+    void getReservationListByGuide() {
         //given
         int guideId = 1;
         //when
