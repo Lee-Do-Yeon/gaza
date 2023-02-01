@@ -28,13 +28,13 @@ public class AuthController {
     /**
      * [API] 사용자 정보를 기반으로 JWT를 발급하는 API
      *
-     * @param User user
+     * @param user User
      * @return ApiResponseWrapper<ApiResponse> : 응답 결과 및 응답 코드 반환
      */
     @PostMapping("/generateToken")
     public ResponseEntity<ApiResponse> selectCodeList(@RequestBody User user) {
 
-        String resultToken = TokenUtil.generateJwtToken(user, 10);
+        String resultToken = TokenUtil.generateJwtToken(user, 10, "access");
 
         ApiResponse ar = ApiResponse.builder()
                 // BEARER {토큰} 형태로 반환을 해줍니다.

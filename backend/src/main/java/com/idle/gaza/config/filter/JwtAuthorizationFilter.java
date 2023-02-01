@@ -55,15 +55,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain)
             throws IOException, ServletException {
 
-        // 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성합니다.
+        // 1. 토큰이 필요한 API URL에 대해서 배열로 구성합니다.
         List<String> list = Arrays.asList(
-                "/users/join",
-                "/auth/generateToken",
-                "/swagger-io"
+            "/users/needJWT"
         );
 
         // 2. 토큰이 필요하지 않은 API URL의 경우 => 로직 처리 없이 다음 필터로 이동
-        if (list.contains(request.getRequestURI())) {
+        if (!list.contains(request.getRequestURI())) {
+            System.out.println(request.getRequestURI());
             chain.doFilter(request, response);
             return;
         }
@@ -75,7 +74,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
 
         // [STEP1] Client에서 API를 요청할때 Header를 확인합니다.
-        String header = request.getHeader(AuthConstants.AUTH_HEADER);
+        String header = request.getHeader(AuthConstants.AUTH_HEADER_ACCESS_TOKEN);
+        System.out.println(header);
         logger.debug("[+] header Check: " + header);
 
         try {
@@ -84,12 +84,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                 // [STEP2] Header 내에 토큰을 추출합니다.
                 String token = TokenUtil.getTokenFromHeader(header);
-
+                System.out.println("여긴 올거고");
                 // [STEP3] 추출한 토큰이 유효한지 여부를 체크합니다.
-                if (TokenUtil.isValidToken(token)) {
-
+                if (TokenUtil.isValidToken(token, TokenUtil.ACCESS_TOKEN_NAME)) {
+                        
+                    System.out.println("여기 들어오나");
                     // [STEP4] 토큰을 기반으로 사용자 아이디를 반환 받는 메서드
-                    String userId = TokenUtil.getUserIdFromToken(token);
+                    String userId = TokenUtil.getUserIdFromToken(token, TokenUtil.ACCESS_TOKEN_NAME);
                     logger.debug("[+] userId Check: " + userId);
 
                     // [STEP5] 사용자 아이디가 존재하는지 여부 체크

@@ -25,21 +25,22 @@ import java.util.Map;
 @Component
 public class TokenUtil {
 
-    public final static long TOKEN_VALIDATION_SECOND = 1000L * 10;
+    public final static long TOKEN_VALIDATION_SECOND = 30000L;
     public final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 24 * 2;
 
-    final static public String ACCESS_TOKEN_NAME = "accessToken";
-    final static public String REFRESH_TOKEN_NAME = "refreshToken";
+    final static public String ACCESS_TOKEN_NAME = "access";
+    final static public String REFRESH_TOKEN_NAME = "refresh";
 
     @Value("${spring.jwt.secret}")
-    private static String SECRET_KEY = "gazagazagazagazagazagazagazagazagazagazagazagazagaza";
+    private static String ACCESS_TOKEN_SECRET_KEY = "gazagazagazagazagazagazagazagazagazagazagazagazagaza";
+    private static String REFRESH_TOKEN_SECRET_KEY = "zagazagazagazagazagazagazagazagazagazagazagazagazaga";
 
-    public String generateToken(User user) {
-        return generateJwtToken(user, TOKEN_VALIDATION_SECOND);
+    public String generateAccessToken(User user) {
+        return generateJwtToken(user, TOKEN_VALIDATION_SECOND, "access");
     }
 
     public String generateRefreshToken(User user) {
-        return generateJwtToken(user, REFRESH_TOKEN_VALIDATION_SECOND);
+        return generateJwtToken(user, REFRESH_TOKEN_VALIDATION_SECOND, "refresh");
     }
 
     /**
@@ -48,13 +49,13 @@ public class TokenUtil {
      * @param user User : 사용자 정보
      * @return String : 토큰
      */
-    public static String generateJwtToken(User user, long expireTime) {
+    public static String generateJwtToken(User user, long expireTime, String type) {
         // 사용자 시퀀스를 기준으로 JWT 토큰을 발급하여 반환해줍니다.
         JwtBuilder builder = Jwts.builder()
                 .setHeader(createHeader())                              // Header 구성
                 .setClaims(createClaims(user))                       // Payload - Claims 구성
                 .setSubject(String.valueOf(user.getId()))        // Payload - Subject 구성
-                .signWith(SignatureAlgorithm.HS256, createSignature())  // Signature 구성
+                .signWith(SignatureAlgorithm.HS256, createSignature(type))  // Signature 구성
                 .setExpiration(createExpiredDate(expireTime));                    // Expired Date 구성
         return builder.compact();
     }
@@ -67,7 +68,7 @@ public class TokenUtil {
      */
     public static String parseTokenToUserInfo(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(ACCESS_TOKEN_SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -79,13 +80,22 @@ public class TokenUtil {
      * @param token String  : 토큰
      * @return boolean      : 유효한지 여부 반환
      */
-    public static boolean isValidToken(String token) {
+    public static boolean isValidToken(String token, String type) {
         try {
-            Claims claims = getClaimsFormToken(token);
+            if(type.equals(ACCESS_TOKEN_NAME)) {
+                Claims claims = getClaimsFormToken(token, ACCESS_TOKEN_NAME);
+                System.out.println("여기는 와야지 제발");
+                System.out.println(claims.getExpiration());
+                log.info("expireTime :" + claims.getExpiration());
+                log.info("userId :" + claims.get("userId"));
+                log.info("userNm :" + claims.get("userNm"));
+            } else if (type.equals(REFRESH_TOKEN_NAME)) {
+                Claims claims = getClaimsFormToken(token, REFRESH_TOKEN_NAME);
 
-            log.info("expireTime :" + claims.getExpiration());
-            log.info("userId :" + claims.get("userId"));
-            log.info("userNm :" + claims.get("userNm"));
+                log.info("expireTime :" + claims.getExpiration());
+                log.info("userId :" + claims.get("userId"));
+                log.info("userNm :" + claims.get("userNm"));
+            }
 
             return true;
         } catch (ExpiredJwtException exception) {
@@ -156,9 +166,14 @@ public class TokenUtil {
      *
      * @return Key
      */
-    private static Key createSignature() {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
-        return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+    private static Key createSignature(String type) {
+        if(type.equals(ACCESS_TOKEN_NAME)) {
+            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY);
+            return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+        } else {
+            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(REFRESH_TOKEN_SECRET_KEY);
+            return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+        }
     }
 
 
@@ -168,9 +183,19 @@ public class TokenUtil {
      * @param token : 토큰
      * @return Claims : Claims
      */
-    private static Claims getClaimsFormToken(String token) {
-        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
-                .parseClaimsJws(token).getBody();
+    private static Claims getClaimsFormToken(String token, String type) {
+        try {
+            if (type.equals(ACCESS_TOKEN_NAME)) {
+                return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY))
+                        .parseClaimsJws(token).getBody();
+            } else {
+                return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(REFRESH_TOKEN_SECRET_KEY))
+                        .parseClaimsJws(token).getBody();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -179,8 +204,13 @@ public class TokenUtil {
      * @param token : 토큰
      * @return String : 사용자 아이디
      */
-    public static String getUserIdFromToken(String token) {
-        Claims claims = getClaimsFormToken(token);
-        return claims.get("userId").toString();
+    public static String getUserIdFromToken(String token, String type) {
+        if(type.equals(ACCESS_TOKEN_NAME)) {
+            Claims claims = getClaimsFormToken(token, ACCESS_TOKEN_NAME);
+            return claims.get("userId").toString();
+        } else {
+            Claims claims = getClaimsFormToken(token, REFRESH_TOKEN_NAME);
+            return claims.get("userId").toString();
+        }
     }
 }

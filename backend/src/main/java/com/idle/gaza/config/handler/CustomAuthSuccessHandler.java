@@ -2,6 +2,7 @@ package com.idle.gaza.config.handler;
 
 import com.idle.gaza.common.codes.AuthConstants;
 import com.idle.gaza.common.util.ConvertUtil;
+import com.idle.gaza.common.util.RedisUtil;
 import com.idle.gaza.common.util.TokenUtil;
 import com.idle.gaza.db.entity.User;
 import com.idle.gaza.db.entity.UserDetailsDto;
@@ -56,9 +57,15 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
             responseMap.put("failMsg", null);
             jsonObject = new JSONObject(responseMap);
 
-            String token = TokenUtil.generateJwtToken(user, TokenUtil.TOKEN_VALIDATION_SECOND);
-            jsonObject.put("token", token);
-            response.addHeader(AuthConstants.AUTH_HEADER, AuthConstants.TOKEN_TYPE + " " + token);
+            String accessToken = TokenUtil.generateJwtToken(user, TokenUtil.TOKEN_VALIDATION_SECOND, TokenUtil.ACCESS_TOKEN_NAME);
+            jsonObject.put("accessToken", accessToken);
+            response.addHeader(AuthConstants.AUTH_HEADER_ACCESS_TOKEN, AuthConstants.TOKEN_TYPE + " " + accessToken);
+            String refreshToken = TokenUtil.generateJwtToken(user, TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND, TokenUtil.REFRESH_TOKEN_NAME);
+            jsonObject.put("refreshToken", refreshToken);
+            response.addHeader(AuthConstants.AUTH_HEADER_REFRESH_TOKEN, AuthConstants.TOKEN_TYPE + " " + refreshToken);
+
+            RedisUtil redisUtil = new RedisUtil();
+            redisUtil.setDataExpire(refreshToken, user.getName(), TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND);
         }
 
         // [STEP4] 구성한 응답 값을 전달합니다.
