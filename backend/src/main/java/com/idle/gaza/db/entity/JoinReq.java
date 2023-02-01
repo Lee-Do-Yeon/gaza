@@ -20,7 +20,7 @@ public class JoinReq {
 
     String id;
 
-    String pw;
+    String password;
 
     String gender;
 

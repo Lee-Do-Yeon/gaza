@@ -23,12 +23,12 @@ public class UserServiceImpl implements UserService{
     /**
      * 로그인 구현체
      *
-     * @param String userId
+     * @param id String
      * @return Optional<UserDto>
      */
     @Override
-    public Optional<User> login(String userId) {
-        return userRepository.findByUserId(userId);
+    public Optional<User> login(String id) {
+        return userRepository.findById(id);
     }
 
     @Override
