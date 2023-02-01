@@ -1,5 +1,6 @@
 package com.idle.gaza.api.controller;
 
+import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.Api;
@@ -33,7 +34,7 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> guideRegister(@RequestBody Guide guide, @RequestParam MultipartFile uploadFile){
+    public ResponseEntity<?> guideRegister(@RequestBody GuideRegisterPostRequest guide, @RequestParam MultipartFile uploadFile){
         return null;
     }
 
