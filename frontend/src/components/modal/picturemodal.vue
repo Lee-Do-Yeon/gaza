@@ -1,14 +1,14 @@
 <template>
-  <li>
+
     <a
       href="#!"
       @click="modalToggle"
       data-bs-toggle="modal"
       data-bs-target="#exampleModal"
     >
-      <i class="fas fa-sign-out-alt"></i>로그아웃
+      <button class="btn btn_theme">사진선택</button>
     </a>
-  </li>
+
 
   <div
     ref="modal"
@@ -31,19 +31,19 @@
             </button>
           </div>
           <h3>
-            정말 <br />
-            로그아웃 하시겠습니까?
+            <img src="../../assets/img/common/dashboard-user.png" alt="img" />
+
           </h3>
           <div class="logout_approve_button">
             <button data-bs-dismiss="modal" class="btn btn_theme btn_md">
-              네
+              사진선택
             </button>
             <button
               data-bs-dismiss="modal"
               class="btn btn_border btn_md"
               @click="modalToggle"
             >
-              아니요
+            닫기
             </button>
           </div>
         </div>
