@@ -44,7 +44,7 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public Guide guideDetailSearch(String userId) {
         //먼저 회원이 존재하는지 확인
-        Optional<User> user = userRepository.findByUserId(userId);
+        Optional<User> user = userRepository.findById(userId);
         if(!user.isPresent()) return null;
 
         Optional<Guide> guide;
