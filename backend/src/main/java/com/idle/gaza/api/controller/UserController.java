@@ -78,9 +78,8 @@ public class UserController {
      */
     @GetMapping("/needJWT")
     public ResponseEntity<ApiResponse<Object>> JWTtest(@RequestBody String ref) {
-        RedisUtil redisUtil = new RedisUtil();
 
-        System.out.println(redisUtil.getData(ref));
+        System.out.println(RedisUtil.getData(ref));
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(null)
                 .resultCode(SuccessCode.INSERT.getStatus())

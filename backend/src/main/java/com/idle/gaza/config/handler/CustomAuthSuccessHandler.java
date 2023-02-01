@@ -64,8 +64,8 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
             jsonObject.put("refreshToken", refreshToken);
             response.addHeader(AuthConstants.AUTH_HEADER_REFRESH_TOKEN, AuthConstants.TOKEN_TYPE + " " + refreshToken);
 
-            RedisUtil redisUtil = new RedisUtil();
-            redisUtil.setDataExpire(refreshToken, user.getName(), TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND);
+            RedisUtil.setDataExpire(refreshToken, user.getName(), TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND);
+            System.out.println("최초 설정 ref : " + refreshToken);
         }
 
         // [STEP4] 구성한 응답 값을 전달합니다.
