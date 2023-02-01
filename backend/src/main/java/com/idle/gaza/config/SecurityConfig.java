@@ -77,7 +77,6 @@ class SecurityConfig {
         return http.build();
     }
 
-
     /**
      * 3. authenticate 의 인증 메서드를 제공하는 매니져로'Provider'의 인터페이스를 의미합니다.
      * - 과정: CustomAuthenticationFilter → AuthenticationManager(interface) → CustomAuthenticationProvider(implements)

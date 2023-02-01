@@ -8,6 +8,7 @@ package com.idle.gaza.common.codes;
  * @since 2022.12.23
  */
 public final class AuthConstants {
-    public static final String AUTH_HEADER = "Authorization";
+    public static final String AUTH_HEADER_ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String AUTH_HEADER_REFRESH_TOKEN = "REFRESH_TOKEN";
     public static final String TOKEN_TYPE = "BEARER";
 }
