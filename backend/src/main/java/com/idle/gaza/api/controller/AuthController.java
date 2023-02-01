@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * Please explain the class!!
  *
@@ -45,8 +47,9 @@ public class AuthController {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<ApiResponse> getRef(@RequestBody String ref) {
-        System.out.println("아니 여기 뭔데?? : " + RedisUtil.getData(ref));
+    public ResponseEntity<ApiResponse> getRef(@RequestBody Map<String, String> refMap) {
+        System.out.println(refMap.get("ref"));
+        System.out.println("아니 여기 뭔데?? : " + RedisUtil.getData(refMap.get("ref").substring(7)));
 
         ApiResponse ar = ApiResponse.builder()
                 // BEARER {토큰} 형태로 반환을 해줍니다.

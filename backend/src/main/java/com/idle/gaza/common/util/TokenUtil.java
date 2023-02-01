@@ -84,7 +84,6 @@ public class TokenUtil {
         try {
             if(type.equals(ACCESS_TOKEN_NAME)) {
                 Claims claims = getClaimsFormToken(token, ACCESS_TOKEN_NAME);
-                System.out.println("여기는 와야지 제발");
                 System.out.println(claims.getExpiration());
                 log.info("expireTime :" + claims.getExpiration());
                 log.info("userId :" + claims.get("userId"));
@@ -212,5 +211,16 @@ public class TokenUtil {
             Claims claims = getClaimsFormToken(token, REFRESH_TOKEN_NAME);
             return claims.get("userId").toString();
         }
+    }
+
+    public TokenResponse reissueAtk(AccountResponse accountResponse) throws JsonProcessingException {
+        String rtkInRedis = redisDao.getValues(accountResponse.getEmail());
+        if (Objects.isNull(rtkInRedis)) throw new ForbiddenException("인증 정보가 만료되었습니다.");
+        Subject atkSubject = Subject.atk(
+                accountResponse.getAccountId(),
+                accountResponse.getEmail(),
+                accountResponse.getNickname());
+        String atk = createToken(atkSubject, atkLive);
+        return new TokenResponse(atk, null);
     }
 }
