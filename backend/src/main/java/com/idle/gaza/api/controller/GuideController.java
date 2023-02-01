@@ -36,6 +36,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> guideRegister(@RequestBody GuideRegisterPostRequest guide, @RequestParam MultipartFile uploadFile){
+
         return null;
     }
 

@@ -130,7 +130,7 @@ public class GuideServiceImpl implements GuideService {
 
 
 
-    //////////////////가이드 등록////////////////////////////
+    ///////////////// /가이드 등록////////////////////////////
 
     @Override
     public void guideRegister(GuideRegisterPostRequest guide) {
@@ -166,9 +166,7 @@ public class GuideServiceImpl implements GuideService {
 
         if(existGuide.isPresent()){
             //상담 불가능한 날짜를 추가함
-
-
-            //guideRepository.save(guide);
+            dayOffRepository.save(dayoff);
         }
     }
 
@@ -177,7 +175,9 @@ public class GuideServiceImpl implements GuideService {
     public void consultDateDelete(DayOff dayOff) {
         //해당 가이드의 상담 날짜가 존재하는지 확인함
         Optional<DayOff> day = dayOffRepository.findDayOffByDayOffId(dayOff.getDayOffId());
-
+        if(!day.isPresent()){
+            dayOffRepository.delete(dayOff);
+        }
     }
 
 
