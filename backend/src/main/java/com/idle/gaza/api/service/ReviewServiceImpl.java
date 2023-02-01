@@ -14,10 +14,13 @@ import java.util.Optional;
 @Service("reviewService")
 public class ReviewServiceImpl implements ReviewService{
 
-    @Autowired
     ReviewRepository reviewRepository;
     @Autowired
     ReservationRepository reservationRepository;
+    @Autowired
+    public ReviewServiceImpl(ReviewRepository reviewRepository) {
+        this.reviewRepository = reviewRepository;
+    }
 
     @Override
     public Review writeReview(ReviewCreatePostRequest reviewInfo) {
@@ -40,11 +43,16 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public List<Review> getReviewsByUser(int userId) {
-        return reviewRepository.findByUserId_UserId(userId);
+        return reviewRepository.findByReservationId_UserId(userId);
     }
 
     @Override
     public List<Review> getReviewsByGuide(int guideId) {
-        return reviewRepository.findByGuideId_GuideId(guideId);
+        return reviewRepository.findByReservationId_GuideId(guideId);
+    }
+
+    @Override
+    public Optional<Review> getReviewById(int reviewId) {
+        return reviewRepository.findById(reviewId);
     }
 }
