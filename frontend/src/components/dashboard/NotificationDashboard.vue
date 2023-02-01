@@ -88,10 +88,19 @@
                         {{ res.with_disabled }} 노약자 동반 :
                         {{ res.with_elderly }}
                       </div>
+                      <div>특이사항 : {{ res.note }}</div>
                       <div class="d-flex justify-content-end">
-                          <button class="me-2 btn btn_theme btn-lg">일정확인</button>
-                          <button class="me-2 btn btn_theme btn-lg">후기작성</button>
-                          <button class="btn btn_theme btn-lg">입장</button>
+                        <button class="me-2 btn btn_theme btn-lg">
+                          일정확인
+                        </button>
+
+                        <router-link to="/review"
+                          ><button class="me-2 btn btn_theme btn-lg">
+                            후기작성
+                          </button></router-link
+                        >
+
+                        <button class="btn btn_theme btn-lg">입장</button>
                       </div>
                     </div>
                   </div>

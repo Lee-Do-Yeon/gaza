@@ -38,6 +38,8 @@ import ContactView from '../views/ContactView.vue'
 import BecomeVendorView from '../views/BecomeVendorView.vue'
 import NotFound from '../components/NotFound.vue'
 
+import reviewView from '../views/reviewView.vue'
+
 const routes = [
   {
     path: '/',
@@ -228,6 +230,11 @@ const routes = [
     path: '/:cathAll(.*)',
     name: 'NotFound',
     component: NotFound
+  },
+  {
+    path :'/review/',
+    name: 'review',
+    component: reviewView
   }
 ]
 
