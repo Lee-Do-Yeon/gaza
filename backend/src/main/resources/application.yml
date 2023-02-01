@@ -27,11 +27,7 @@ logging:
     name: ./log/logs.log
   level:
     root: info
-    com.idel.gaza: Debug
-<<<<<<< HEAD
+    com.idle.gaza: Debug
 redis:
   host: localhost
   port: 6379
-=======
-
->>>>>>> d43fab826150e09aec0054cff0fc8754dc2b92cb
