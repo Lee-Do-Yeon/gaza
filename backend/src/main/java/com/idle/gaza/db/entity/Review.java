@@ -1,15 +1,15 @@
 package com.idle.gaza.db.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Review {
     @Id
     @Column(name="review_id")
@@ -31,4 +31,5 @@ public class Review {
         this.content = content;
         this.score = score;
     }
+
 }
