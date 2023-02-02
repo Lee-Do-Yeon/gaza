@@ -4,12 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Review {
     @Id
     @Column(name="review_id")
@@ -22,14 +22,17 @@ public class Review {
 
     private String content;
     @Column(name="created_date")
-    private Timestamp createdDate;
+    private LocalDateTime createdDate;
     private int score;
 
-    @Builder
-    public Review(Reservation reservationId, String content, int score) {
-        this.reservationId = reservationId;
-        this.content = content;
-        this.score = score;
+    // == 생성 메서드 ==
+    public static Review createReview(Reservation reservation, String content, int score){
+        Review review = new Review();
+        review.setReservationId(reservation);
+        review.setContent(content);
+        review.setScore(score);
+        review.setCreatedDate(LocalDateTime.now());
+        return review;
     }
 
 }
