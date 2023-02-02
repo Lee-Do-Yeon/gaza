@@ -1,7 +1,7 @@
 <template>
 
     <!-- Common Banner Area -->
-    <RoomBanner />
+    <!-- <RoomBanner /> -->
 
     <!-- Room Details Areas -->
     <RoomDetails />
