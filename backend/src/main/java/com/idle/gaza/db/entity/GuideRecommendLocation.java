@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Table(name = "recommend")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

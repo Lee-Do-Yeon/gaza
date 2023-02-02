@@ -1,5 +1,7 @@
 package com.idle.gaza.api.controller;
 
+import com.idle.gaza.api.request.GuideRegisterPostRequest;
+import com.idle.gaza.api.request.TimeRegisterPostRequest;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.Api;
@@ -13,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Api(value = "가이드 API", tags = {"Guide"})
@@ -31,10 +33,16 @@ public class GuideController {
     @ApiOperation(value = "가이드 등록", notes = "가이드를 등록한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 500, message = "서버 오류")
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message="사용자 없음")
     })
-    public ResponseEntity<?> guideRegister(@RequestBody Guide guide, @RequestParam MultipartFile uploadFile){
-        return null;
+    public ResponseEntity<?> guideRegister(@RequestBody GuideRegisterPostRequest guide, @RequestParam MultipartFile uploadFile){
+
+        int result = guideService.guideRegister(guide);
+
+        if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //////////////////////가이드 조회///////////////////////////
@@ -44,11 +52,14 @@ public class GuideController {
     @ApiOperation(value = "가이드 전체 조회", notes = "가이드 전체 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 500, message = "서버 오류")
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message="사용자 없음")
     })
     public ResponseEntity<?> guideSearch() {
+        List<Guide> guideList = guideService.guideSearch();
 
-        return null;
+        if(guideList==null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(guideList, HttpStatus.OK);
     }
 
     //인기 가이드 조회
@@ -68,10 +79,14 @@ public class GuideController {
     @ApiOperation(value = "가이드 상세 프로필 조회", notes = "가이드 프로필을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 500, message = "서버 오류")
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message="사용자 없음")
     })
     public ResponseEntity<?> guideProfileSearch(@PathVariable int guideId) {
-        return null;
+        Guide guide = guideService.guideDetailSearch(guideId);
+
+        if(guide == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(guide, HttpStatus.OK);
     }
 
 
@@ -85,13 +100,15 @@ public class GuideController {
         return null;
     }
 
-    @DeleteMapping("/location/{userId}/{recommendId}")
+    @DeleteMapping("/location/{guideId}/{recommendId}")
     @ApiOperation(value = "추천 장소 삭제", notes = "추천 장소를 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> locationDelete(@PathVariable String userId, @PathVariable int recommendId) {
+    public ResponseEntity<?> locationDelete(@PathVariable int guideId, @PathVariable int recommendId) {
+
+        guideService.locationDelete(guideId, recommendId);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -109,24 +126,34 @@ public class GuideController {
 
     /////////////////////여행 테마 기능///////////////////////////
 
-    @PutMapping("/theme/{userId}")
+    @PutMapping("/thema/{guideId}")
     @ApiOperation(value = "여행 테마 등록", notes = "여행 테마를 등록한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 500, message = "서버 오류")
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message="사용자 없음")
     })
-    public ResponseEntity<?> tourThemeRegister(@PathVariable String userId, @RequestParam(name = "tourTheme" ,required = false) List<String> travelList) {
-        return null;
+    public ResponseEntity<?> tourThemaRegister(@PathVariable int guideId, @RequestParam(name = "thema" ,required = false) String themaName) {
+        int result = guideService.tourThemaRegister(guideId, themaName);
+
+        if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/theme/{userId}")
+    @DeleteMapping("/thema/{guideId}")
     @ApiOperation(value = "여행 테마 삭제", notes = "가이드가 등록한 여행 테마를 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 500, message = "서버 오류")
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message="사용자 없음")
     })
-    public ResponseEntity<?> tourThemeDelete(@PathVariable String userId, @RequestParam int tourId) {
-        return null;
+    public ResponseEntity<?> tourThemaDelete(@PathVariable int guideId, @RequestParam int themaId) {
+        int result = guideService.tourThemaDelete(guideId, themaId);
+
+        if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -136,10 +163,17 @@ public class GuideController {
     @ApiOperation(value = "상담 불가능한 날짜 등록", notes = "가이드는 상담 불가능한 날짜를 등록한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 500, message = "서버 오류")
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message="사용자 없음")
     })
-    public ResponseEntity<?> dayRegister(@PathVariable String userId, @RequestParam("date") List<LocalTime> timeList){
-        return null;
+    public ResponseEntity<?> dayRegister(@PathVariable String userId, @RequestParam("date") List<LocalDate> dayOff){
+
+        for (LocalDate day : dayOff) {
+            int result = guideService.consultDateRegister(userId, day);
+            if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/day/{userId}")
@@ -148,12 +182,27 @@ public class GuideController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> dayWithdraw(@PathVariable String userId){
+    public ResponseEntity<?> dayDelete(@PathVariable String userId){
+
         return null;
     }
 
 
 
+    @PostMapping("/time")
+    @ApiOperation(value = "상담 불가능한 시간대 등록", notes = "가이드는 상담 불가능한 시작, 종료 시간을 등록한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code=204, message="NO CONTENT")
+    })
+    public ResponseEntity<?> timeDelete(@RequestBody TimeRegisterPostRequest time){
+        int result = guideService.consultTimeRegister(time.getStartTime(), time.getEndTime(), time.getUserId());
+
+        if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 }
