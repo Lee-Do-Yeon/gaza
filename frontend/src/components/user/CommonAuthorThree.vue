@@ -193,7 +193,9 @@ export default {
         const Signin = async function () {
             console.log('submit sign');
             if (!state.form.emailend.includes('.')) {
-                emailc.value = true
+                if (state.form.emailend) {
+                    emailc.value = true
+                }
             } else {
                 emailc.value = false
             }
