@@ -232,7 +232,7 @@ export default {
             passwordc.value = false
         }
 
-        return { state, Signin, idc, passwordc, emailc, upemail}
+        return { state, Signin, idc, passwordc, emailc, upemail, uppassword}
      },
     
 };
