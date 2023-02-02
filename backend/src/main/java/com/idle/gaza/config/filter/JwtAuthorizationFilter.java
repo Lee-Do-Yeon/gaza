@@ -13,8 +13,11 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -44,9 +47,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenUtil tokenUtils;
-
-    @Autowired
-    private CookieUtil cookieUtil;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -84,17 +84,26 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 // [STEP2] Header 내에 토큰을 추출합니다.
                 String token = TokenUtil.getTokenFromHeader(header);
                 // [STEP3] 추출한 토큰이 유효한지 여부를 체크합니다.
-                if (TokenUtil.isValidToken(token, TokenUtil.ACCESS_TOKEN_NAME)) {
+                if (TokenUtil.isValidToken(token)) {
 
-                    // [STEP4] 토큰을 기반으로 사용자 아이디를 반환 받는 메서드
-                    String userId = TokenUtil.getUserIdFromToken(token, TokenUtil.ACCESS_TOKEN_NAME);
-                    logger.debug("[+] userId Check: " + userId);
+                    // (추가) Redis 에 해당 accessToken logout 여부 확인
+                    String isLogout = (String)RedisUtil.getData(token);
 
-                    // [STEP5] 사용자 아이디가 존재하는지 여부 체크
-                    if (userId != null && !userId.equalsIgnoreCase("")) {
-                        chain.doFilter(request, response);
-                    } else {
-                        throw new BusinessExceptionHandler("TOKEN isn't userId", ErrorCode.BUSINESS_EXCEPTION_ERROR);
+                    if(ObjectUtils.isEmpty(isLogout)) {
+                        // [STEP4] 토큰을 기반으로 사용자 아이디를 반환 받는 메서드
+                        String userId = TokenUtil.getUserIdFromToken(token);
+                        logger.debug("[+] userId Check: " + userId);
+
+                        // [STEP5] 사용자 아이디가 존재하는지 여부 체크
+                        if (userId != null && !userId.equalsIgnoreCase("")) {
+                            // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
+                            // Authentication authentication = TokenUtil.getAuthentication(token);
+                            // SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                            chain.doFilter(request, response);
+                        } else {
+                            throw new BusinessExceptionHandler("TOKEN isn't userId", ErrorCode.BUSINESS_EXCEPTION_ERROR);
+                        }
                     }
                     // 토큰이 유효하지 않은 경우
                 } else {
