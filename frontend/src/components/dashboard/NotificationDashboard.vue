@@ -146,6 +146,7 @@ export default {
     return {
       reservation,
       getreservation,
+      instance
     };
   },
 };

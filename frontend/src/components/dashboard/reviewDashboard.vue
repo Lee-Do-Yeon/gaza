@@ -85,8 +85,6 @@
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
-import axios from "axios";
-import { ref } from "vue";
 
 export default {
   name: "reviewDashboard",
@@ -94,25 +92,6 @@ export default {
     LogoutBtn,
     MyBookingOption,
     picturemodalVue,
-  },
-  setup() {
-    const reservation = ref([]);
-
-    const getreservation = async () => {
-      try {
-        const res = await axios.get("http://localhost:3000/reservation");
-        reservation.value = res.data;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getreservation();
-
-    return {
-      reservation,
-      getreservation,
-    };
   },
 };
 </script>
