@@ -172,7 +172,6 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> locationUpdate(@RequestBody LocationPostRequest location, @RequestParam("uploadFile") MultipartFile multipartFile) {
-
         //파일이 존재한다면 기존 경로에서 파일 삭제
         String existFile = guideService.findExistFile(location.getRecommendId());
 
