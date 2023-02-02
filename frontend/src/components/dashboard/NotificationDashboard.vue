@@ -129,10 +129,12 @@ export default {
   },
   setup() {
     const reservation = ref([]);
-
+    const instance = axios.create({
+      baseURL: process.env.VUE_APP_API_URL,
+    });
     const getreservation = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/reservation");
+        const res = await instance.get("/reservation");
         reservation.value = res.data;
       } catch (err) {
         console.log(err);
