@@ -1,5 +1,6 @@
 package com.idle.gaza.api.controller;
 
+import com.idle.gaza.api.dto.TokenDto;
 import com.idle.gaza.common.codes.AuthConstants;
 import com.idle.gaza.common.codes.SuccessCode;
 import com.idle.gaza.common.response.ApiResponse;
@@ -46,11 +47,22 @@ public class AuthController {
         return new ResponseEntity<>(ar, HttpStatus.OK);
     }
 
+    @PostMapping("/reissue")
+    public ResponseEntity<ApiResponse> reissue(@RequestBody TokenDto tokenDto) {
+        TokenDto newTokenDto = TokenUtil.reissue(tokenDto);
+
+        ApiResponse ar = ApiResponse.builder()
+                // BEARER {토큰} 형태로 반환을 해줍니다.
+                .result(newTokenDto)
+                .resultCode(200)
+                .resultMsg("토큰 재발급 성공")
+                .build();
+
+        return null;
+    }
+
     @GetMapping("/check")
     public ResponseEntity<ApiResponse> getRef(@RequestBody Map<String, String> refMap) {
-        System.out.println(refMap.get("ref"));
-        System.out.println("아니 여기 뭔데?? : " + RedisUtil.getData(refMap.get("ref").substring(7)));
-
         ApiResponse ar = ApiResponse.builder()
                 // BEARER {토큰} 형태로 반환을 해줍니다.
                 .result(null)
