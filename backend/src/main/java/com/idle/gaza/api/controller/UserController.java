@@ -25,7 +25,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/join")
+    @PostMapping("")
     public ResponseEntity<ApiResponse<Object>> join(@RequestBody User user) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -48,7 +48,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PostMapping("/pw")
-    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<Object>> findPassword(@RequestBody User user) {
         List<User> selectUserList = userService.selectUserList(user);
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(selectUserList)
@@ -65,7 +65,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @GetMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<Object>> get(@RequestBody User user) {
         List<User> selectUserList = userService.selectUserList(user);
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(selectUserList)
@@ -82,7 +82,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PutMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<Object>> update(@RequestBody User user) {
         List<User> selectUserList = userService.selectUserList(user);
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(selectUserList)
@@ -99,7 +99,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<Object>> delete(@RequestBody User user) {
         List<User> selectUserList = userService.selectUserList(user);
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(selectUserList)
@@ -116,7 +116,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PutMapping("/users/pw/{userId}")
-    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<Object>> changePassword(@RequestBody User user) {
         List<User> selectUserList = userService.selectUserList(user);
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(selectUserList)
@@ -133,7 +133,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PostMapping("/users/isLogin")
-    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<Object>> checkLogin(@RequestBody User user) {
         List<User> selectUserList = userService.selectUserList(user);
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(selectUserList)
@@ -150,7 +150,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PostMapping("/users/guide")
-    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<Object>> joinGuide(@RequestBody User user) {
         List<User> selectUserList = userService.selectUserList(user);
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(selectUserList)
