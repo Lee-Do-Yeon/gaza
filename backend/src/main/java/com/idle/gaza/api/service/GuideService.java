@@ -5,6 +5,7 @@ import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.db.entity.DayOff;
 import com.idle.gaza.db.entity.Guide;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -21,18 +22,19 @@ public interface GuideService {
     int locationUpdate(LocationPostRequest locations);
 
     //상담 날짜 관리 기능
-    void consultDateRegister(DayOff dayoff);
-    void consultDateDelete(DayOff dayoff);
+    int consultDateRegister(String userId, LocalDate dayoff);
+    int consultDateDelete(String userId, int dayOffId);
 
     //상담 시간대 관리 기능
-    void consultTimeRegister(LocalTime startTime, LocalTime endTime, int guideId);
+    int consultTimeRegister(LocalTime startTime, LocalTime endTime, String userId);
 
     //가이드 사용 언어 관리 기능
 
     //여행 테마 관리 기능
-
+    int tourThemaRegister(int guideId, String themaCode);
+    int tourThemaDelete(int guideId,  int themaId);
 
     //가이드 등록
-    void guideRegister(GuideRegisterPostRequest guide);
+    int guideRegister(GuideRegisterPostRequest guide);
 
 }
