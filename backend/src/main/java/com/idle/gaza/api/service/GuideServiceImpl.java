@@ -35,6 +35,12 @@ public class GuideServiceImpl implements GuideService {
     @Autowired
     GuideThemaRepository guideThemaRepository;
 
+    @Autowired
+    ReservationRepository reservationRepository;
+
+    @Autowired
+    ReviewRepository reviewRepository;
+
     ///////////////////////가이드 조회 기능/////////////////////////
 
     @Override
@@ -44,6 +50,10 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public List<Guide> famousGuideSearch() {
+        //가이드를 리스트업
+        List<Guide> guideList = guideRepository.findBy();
+
+
         return null;
     }
 
@@ -181,6 +191,7 @@ public class GuideServiceImpl implements GuideService {
         if(!day.isPresent()) return 0;
 
         dayOffRepository.deleteById(dayOffId);
+
         return 1;
     }
 
