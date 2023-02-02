@@ -1,5 +1,7 @@
 package com.idle.gaza.api.service;
 
+import com.idle.gaza.api.request.UserUpdateRequest;
+import com.idle.gaza.db.entity.Guide;
 import com.idle.gaza.db.entity.User;
 import com.idle.gaza.db.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,46 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public User searchUser(Integer userId) {
+        //유저 정보 리턴
+        Optional<User> user = userRepository.findByUserId(userId);
+        return user.orElse(null);
+    }
+
+    @Override
     public List<User> selectUserList(User user) {
         return null;
+    }
+
+    @Override
+    public int updateUser(Integer userId, UserUpdateRequest userUpdateRequest) {
+        Optional<User> user = userRepository.findByUserId(userId);
+        if (!user.isPresent()) return 0;
+
+        User updateUser = user.get();
+
+        updateUser.setName(updateUser.getName());
+        updateUser.setPhone_number(updateUser.getPhone_number());
+        updateUser.setPicture(updateUser.getPicture());
+        updateUser.setEmail(updateUser.getEmail());
+        updateUser.setEmail_domain(updateUser.getEmail_domain());
+
+        userRepository.save(updateUser);
+
+        return 1;
+    }
+
+    @Override
+    public int updatePassword(Integer userId, String password) {
+        Optional<User> user = userRepository.findByUserId(userId);
+        if (!user.isPresent()) return 0;
+
+        User updateUser = user.get();
+
+        updateUser.setPassword(password);
+
+        userRepository.save(updateUser);
+
+        return 1;
     }
 }
