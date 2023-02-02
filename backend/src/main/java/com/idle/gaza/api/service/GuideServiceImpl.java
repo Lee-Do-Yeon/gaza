@@ -2,14 +2,17 @@ package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
+import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.db.entity.*;
 import com.idle.gaza.db.repository.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,17 +46,36 @@ public class GuideServiceImpl implements GuideService {
 
     ///////////////////////가이드 조회 기능/////////////////////////
 
+
     @Override
     public List<Guide> guideSearch() {
         return guideRepository.findBy();
     }
 
     @Override
-    public List<Guide> famousGuideSearch() {
+    public List<GuideResponse> famousGuideSearch() {
         //예약 많은 순으로 정렬
         List<Guide> orderByGuide = guideRepository.findOrderByMaxReservation();
 
-        return orderByGuide;
+        List<GuideResponse> guideResponseList = new ArrayList<>();
+        for (Guide guide : orderByGuide) {
+
+            GuideResponse guideResponse = GuideResponse.builder()
+                    .guideId(guide.getGuideId())
+                    .name(guide.getUser().getName())
+                    .city(guide.getCity())
+                    .closeTimeEnd(guide.getCloseTimeEnd())
+                    .closeTimeStart(guide.getCloseTimeStart())
+                    .country(guide.getCountry())
+                    .price(guide.getPrice())
+                    .picture(guide.getPicture())
+                    .build();
+            guideResponseList.add(guideResponse);
+
+
+        }
+
+        return guideResponseList;
     }
 
     @Override
