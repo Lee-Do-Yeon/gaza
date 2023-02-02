@@ -142,6 +142,7 @@
 import { reactive, computed, ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { requestSignin } from "../../../common/api/commonAPI"
+import router from "@/router";
 
 export default {
     name: "CommonAuthorThree",
@@ -216,6 +217,7 @@ export default {
                         "phone_number": `${state.form.phonefront}-${state.form.phonemid}-${state.form.phoneend}`,
                     })
                     console.log(response);
+                    router.push({name: "login"})
                 } catch (error) {
                     console.log(error);
                 }
