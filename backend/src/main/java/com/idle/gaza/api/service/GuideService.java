@@ -2,7 +2,6 @@ package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
-import com.idle.gaza.db.entity.DayOff;
 import com.idle.gaza.db.entity.Guide;
 
 import java.time.LocalDate;
@@ -32,7 +31,7 @@ public interface GuideService {
 
     //여행 테마 관리 기능
     int tourThemaRegister(int guideId, String themaCode);
-    int tourThemaDelete(int guideId,  int themaId);
+    int tourThemaDelete(int guideId, int themaId);
 
     //가이드 등록
     int guideRegister(GuideRegisterPostRequest guide);
