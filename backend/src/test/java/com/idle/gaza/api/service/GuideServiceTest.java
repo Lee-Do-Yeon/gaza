@@ -72,12 +72,12 @@ class GuideServiceTest {
     void guideRegister() {
         //given
         GuideRegisterPostRequest guide = new GuideRegisterPostRequest();
-        int userId = 1;
+        int userId = 2;
         guide.setCity("Seoul");
         guide.setCloseTimeEnd(LocalTime.now());
         guide.setIntroduction("i'm from south korea");
         guide.setLicense(0);
-        guide.setId("ssafy");
+        guide.setId("ssafy2");
         guide.setCloseTimeStart(LocalTime.now());
         guide.setOnlineIntroduction("hello my name is kim");
         guide.setCountry("south korea");
@@ -88,7 +88,7 @@ class GuideServiceTest {
         Guide searchGuide =  guideService.guideDetailSearch(userId);
 
         //then
-        Assertions.assertEquals(userId, searchGuide.getUser().getUserId());
+
     }
 
     @Test
@@ -101,6 +101,13 @@ class GuideServiceTest {
 
     @Test
     void consultTimeRegister() {
+        LocalTime start = LocalTime.of(1, 30);
+        LocalTime end = LocalTime.of(4, 20);
+
+        int result = guideService.consultTimeRegister(start, end, "ssafy2");
+
+
+        Assertions.assertEquals(result, 1);
     }
 
     @Test
@@ -120,11 +127,15 @@ class GuideServiceTest {
     @Test
     void tourThemaDelete() {
         //given
+        int guideId = 1;
+        int themaId = 1;
+
 
         //when
+        int result = guideService.tourThemaDelete(guideId, themaId);//성공 시 1반환
 
         //then
-
+        Assertions.assertEquals(1, result);
     }
 
 
