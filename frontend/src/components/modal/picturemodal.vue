@@ -53,7 +53,7 @@
 </template>
 <script>
 export default {
-  name: "LogoutBtn",
+  name: "picturemodal",
   data() {
     return {
       active: false,
