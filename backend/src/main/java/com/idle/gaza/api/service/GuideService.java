@@ -2,6 +2,7 @@ package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
+import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.db.entity.Guide;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ public interface GuideService {
 
     //가이드 조회 기능
     List<Guide> guideSearch();
-    List<Guide> famousGuideSearch();
+    List<GuideResponse> famousGuideSearch();
     Guide guideDetailSearch(int guideId);
 
     //가이드 추천 장소 기능

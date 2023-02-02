@@ -1,5 +1,6 @@
 package com.idle.gaza.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class GuideThema {
     private int themaId;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "guide_id")
     private Guide guide;//여러개의 테마가 한명의 가이드에게 사용될 수 있음
 
