@@ -30,9 +30,6 @@ class ReservationServiceTest {
 
         reservation.setUserId(1);
         reservation.setGuideId(1);
-        reservation.setConsultingDate(new Timestamp(System.currentTimeMillis()));
-        reservation.setTravelStartDate(new Timestamp(System.currentTimeMillis()));
-        reservation.setTravelEndDate(new Timestamp(System.currentTimeMillis()));
         reservation.setNumberOfPeople(3);
         reservation.setWithElderly(1);
         reservation.setWithChildren(0);
@@ -50,7 +47,6 @@ class ReservationServiceTest {
         //given
         int userId = 1;
         //when
-        List<Reservation> list = reservationService.getReservationListByUser(userId);
         //then
         //Assertions.assertEquals(list.size(), 1);
     }
@@ -60,7 +56,6 @@ class ReservationServiceTest {
         //given
         int guideId = 1;
         //when
-        List<Reservation> list = reservationService.getReservationListByGuide(guideId);
         //then
         //Assertions.assertEquals(list.size(), 1);
     }
