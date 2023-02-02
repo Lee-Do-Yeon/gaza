@@ -1,9 +1,11 @@
 package com.idle.gaza.api.controller;
 
+import com.idle.gaza.api.dto.TokenDto;
 import com.idle.gaza.api.service.UserService;
 import com.idle.gaza.common.codes.SuccessCode;
 import com.idle.gaza.common.response.ApiResponse;
 import com.idle.gaza.common.util.RedisUtil;
+import com.idle.gaza.common.util.TokenUtil;
 import com.idle.gaza.db.entity.JoinReq;
 import com.idle.gaza.db.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -24,24 +26,10 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/join")
-    public ResponseEntity<ApiResponse<Object>> join(@RequestBody JoinReq joinReq) {
+    public ResponseEntity<ApiResponse<Object>> join(@RequestBody User user) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        joinReq.setPassword(bCryptPasswordEncoder.encode(joinReq.getPassword()));
-
-        User user = User.userBuilder()
-                .userId(joinReq.getUserId())
-                .name(joinReq.getName())
-                .phone_number(joinReq.getPhone_number())
-                .id(joinReq.getId())
-                .pw(joinReq.getPassword())
-                .gender(joinReq.getGender())
-                .birthday(joinReq.getBirthday())
-                .picture(joinReq.getPicture())
-                .email(joinReq.getEmail())
-                .email_domain(joinReq.getEmail_domain())
-                .state(joinReq.getState())
-                .build();
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         userService.join(user);
 
@@ -71,20 +59,19 @@ public class UserController {
     }
 
     /**
-     * [API] 사용자 리스트 조회
+     * [API] 로그아웃
      *
-     * @param user User
+     * @param tokenDto TokenDto
      * @return ResponseEntity
      */
-    @GetMapping("/needJWT")
-    public ResponseEntity<ApiResponse<Object>> JWTtest(@RequestBody String ref) {
-        RedisUtil redisUtil = new RedisUtil();
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Object>> logout(@RequestBody TokenDto tokenDto) {
+        TokenUtil.logout(tokenDto);
 
-        System.out.println(redisUtil.getData(ref));
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(null)
-                .resultCode(SuccessCode.INSERT.getStatus())
-                .resultMsg(SuccessCode.INSERT.getMessage())
+                .resultCode(200)
+                .resultMsg("로그아웃 되었습니다.")
                 .build();
         return new ResponseEntity<>(ar, HttpStatus.OK);
     }

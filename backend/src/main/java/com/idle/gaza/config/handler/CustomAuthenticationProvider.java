@@ -44,7 +44,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         System.out.println(userDetailsDto.getPassword() + "  " + userPw);
 
         if (!(userDetailsDto.getPassword().equalsIgnoreCase(userPw) && userDetailsDto.getPassword().equalsIgnoreCase(userPw))) {
-            throw new BadCredentialsException(userDetailsDto.getId() + "Invalid password");
+            throw new BadCredentialsException(userDetailsDto.getUsername() + "Invalid password");
         }
         return new UsernamePasswordAuthenticationToken(userDetailsDto, userPw, userDetailsDto.getAuthorities());
     }

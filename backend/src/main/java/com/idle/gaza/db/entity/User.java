@@ -1,7 +1,5 @@
 package com.idle.gaza.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,7 +23,7 @@ public class User {
     String id;
 
     @Column(name = "password")
-    String pw;
+    String password;
 
     String gender;
 
@@ -41,12 +39,12 @@ public class User {
     String state;
 
     @Builder(builderMethodName = "userBuilder", toBuilder = true)
-    public User(int userId, String name, String phone_number, String id, String pw, String gender, Date birthday, String picture, String email, String email_domain, String state) {
+    public User(int userId, String name, String phone_number, String id, String password, String gender, Date birthday, String picture, String email, String email_domain, String state) {
         this.userId = userId;
         this.name = name;
         this.phone_number = phone_number;
         this.id = id;
-        this.pw = pw;
+        this.password = password;
         this.gender = gender;
         this.birthday = birthday;
         this.picture = picture;
