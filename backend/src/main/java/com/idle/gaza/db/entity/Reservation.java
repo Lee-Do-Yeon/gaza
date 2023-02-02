@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,16 +29,16 @@ public class Reservation {
     private String stateCode;
 
     @Column(name="consulting_date")
-    private Timestamp consultingDate;
+    private LocalDateTime consultingDate;
 
     @Column(name="reservation_date")
-    private Timestamp reservationDate;
+    private LocalDateTime reservationDate;
 
     @Column(name="travel_start_date")
-    private Timestamp travelStartDate;
+    private LocalDateTime travelStartDate;
 
     @Column(name="travel_end_date")
-    private Timestamp travelEndDate;
+    private LocalDateTime travelEndDate;
 
     @Column(name="number_of_people")
     private Integer numberOfPeople;
@@ -54,7 +55,7 @@ public class Reservation {
     private String note;
 
     @Builder
-    public Reservation(User userId, Guide guideId, Timestamp consultingDate, Timestamp reservationDate, Timestamp travelStartDate, Timestamp travelEndDate, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, String stateCode) {
+    public Reservation(User userId, Guide guideId, LocalDateTime consultingDate, LocalDateTime reservationDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, String stateCode) {
         this.userId = userId;
         this.guideId = guideId;
         this.consultingDate = consultingDate;
