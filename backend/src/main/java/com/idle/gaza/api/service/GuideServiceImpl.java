@@ -35,6 +35,12 @@ public class GuideServiceImpl implements GuideService {
     @Autowired
     GuideThemaRepository guideThemaRepository;
 
+    @Autowired
+    ReservationRepository reservationRepository;
+
+    @Autowired
+    ReviewRepository reviewRepository;
+
     ///////////////////////가이드 조회 기능/////////////////////////
 
     @Override
@@ -44,6 +50,10 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public List<Guide> famousGuideSearch() {
+        //가이드를 리스트업
+        List<Guide> guideList = guideRepository.findBy();
+
+
         return null;
     }
 
@@ -127,8 +137,13 @@ public class GuideServiceImpl implements GuideService {
         if (!checkId.isPresent()) return 0;
 
         Optional<User> user = userRepository.findByUserId(checkId.get().getUserId());
-
         if (!user.isPresent()) return 0;
+
+        //가이드가 이미 존재하는 경우
+        Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
+        if(existGuide.isPresent()) return 0;
+
+
         Guide newGuide = Guide.builder()
                 .user(user.get())
                 .picture(guide.getPicture())
@@ -151,12 +166,14 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public int consultDateRegister(String userId, LocalDate dayoff) {
-        //해당 가이드가 존재하는지 확인한다.
-        Optional<User> checkUser = userRepository.findById(userId);
+        Optional<User> checkUser = userRepository.findById(userId);//로그인 아이디로 사용자 얻기
         if(!checkUser.isPresent()) return 0;
+        System.out.println("user id" + checkUser.get().getUserId());
 
-        Optional<Guide> checkGuide = guideRepository.findGuideByUser(checkUser.get().getUserId());
+        int id = checkUser.get().getUserId();
+        Optional<Guide> checkGuide = guideRepository.findGuideByUser(id);//위에서 얻은 사용자로 가이드인지 확인함
         if(!checkGuide.isPresent()) return 0;
+        System.out.println("guide id" + checkGuide.get().getGuideId());
 
         //상담 불가능한 날짜를 추가함
         DayOff dayOff = DayOff.builder().dayOffDate(dayoff).guide(checkGuide.get()).build();
@@ -174,6 +191,7 @@ public class GuideServiceImpl implements GuideService {
         if(!day.isPresent()) return 0;
 
         dayOffRepository.deleteById(dayOffId);
+
         return 1;
     }
 
@@ -235,7 +253,7 @@ public class GuideServiceImpl implements GuideService {
         if(!existGuide.isPresent()) return 0;
 
         //테마를 삭제함
-        guideThemaRepository.deleteGuideThemaByThemaId(themaId);
+        guideThemaRepository.deleteByThemaId(themaId);
 
         return 1;
     }

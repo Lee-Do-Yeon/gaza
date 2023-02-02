@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -53,6 +54,10 @@ public class Reservation {
     private Integer withDisabled;
 
     private String note;
+
+    @OneToOne(mappedBy = "reservationId")
+    @JoinColumn(name = "review_id")
+    private Review review;
 
     @Builder
     public Reservation(User userId, Guide guideId, LocalDateTime consultingDate, LocalDateTime reservationDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, String stateCode) {

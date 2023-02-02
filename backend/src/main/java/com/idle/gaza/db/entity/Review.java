@@ -16,7 +16,8 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer reviewId;
 
-    @ManyToOne
+    //@ManyToOne
+    @OneToOne
     @JoinColumn(name="reservation_id")
     private Reservation reservationId;
 

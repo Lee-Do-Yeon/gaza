@@ -25,5 +25,5 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     /* 해당 회원이 가이드인지 조회 */
     @Query(value = "SELECT *  FROM guide as g WHERE g.user_id=:userId", nativeQuery = true)
     Optional<Guide> findGuideByUser(@Param("userId") int userId);
-
+    
 }
