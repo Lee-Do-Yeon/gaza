@@ -54,8 +54,11 @@ public class Guide{
     @OneToMany(mappedBy = "guide")
     private List<DayOff> dayOffList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "guide")
+    private List<GuideThema> guideThemaList = new ArrayList<>();
+
     @Builder
-    public Guide(Integer guideId, User user, String onlineIntroduction, String introduction, String picture, String country, String city, LocalTime closeTimeStart, LocalTime closeTimeEnd, Integer price, Integer license, List<GuideRecommendLocation> guideLocationList, List<DayOff> dayOffList) {
+    public Guide(Integer guideId, User user, String onlineIntroduction, String introduction, String picture, String country, String city, LocalTime closeTimeStart, LocalTime closeTimeEnd, Integer price, Integer license, List<GuideRecommendLocation> guideLocationList, List<DayOff> dayOffList, List<GuideThema> guideThemaList) {
         this.guideId = guideId;
         this.user = user;
         this.onlineIntroduction = onlineIntroduction;
@@ -69,7 +72,9 @@ public class Guide{
         this.license = license;
         this.guideLocationList = guideLocationList;
         this.dayOffList = dayOffList;
+        this.guideThemaList = guideThemaList;
     }
+
 
     public void addGuideLocation(GuideRecommendLocation guideLocationList){
         this.guideLocationList.add(guideLocationList);
@@ -78,6 +83,8 @@ public class Guide{
     public void addDayOffList(DayOff dayOff){
         this.dayOffList.add(dayOff);
     }
+
+    public void addGuideThema(GuideThema guideThema){ this.guideThemaList.add(guideThema);}
 
     @Override
     public String toString() {

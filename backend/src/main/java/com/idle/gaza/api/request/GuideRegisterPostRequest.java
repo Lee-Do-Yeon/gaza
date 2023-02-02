@@ -11,7 +11,7 @@ public class GuideRegisterPostRequest {
 
     private int guideId;//guide pk
 
-    private int userId;//user pk
+    private String id;//user pk
 
     private String onlineIntroduction;
 
