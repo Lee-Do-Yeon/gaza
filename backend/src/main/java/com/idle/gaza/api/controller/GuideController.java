@@ -1,21 +1,25 @@
 package com.idle.gaza.api.controller;
 
+import com.idle.gaza.api.request.DayOffPostRequest;
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.TimeRegisterPostRequest;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.db.entity.Guide;
+import com.idle.gaza.db.repository.DayOffRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Api(value = "가이드 API", tags = {"Guide"})
@@ -159,19 +163,17 @@ public class GuideController {
 
     //////////////////상담 시간 관리////////////////////////
 
-    @PostMapping("/day/{userId}")
+    @PostMapping("/day")
     @ApiOperation(value = "상담 불가능한 날짜 등록", notes = "가이드는 상담 불가능한 날짜를 등록한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message="사용자 없음")
     })
-    public ResponseEntity<?> dayRegister(@PathVariable String userId, @RequestParam("date") List<LocalDate> dayOff){
+    public ResponseEntity<?> dayRegister(@RequestBody DayOffPostRequest dayOff){
 
-        for (LocalDate day : dayOff) {
-            int result = guideService.consultDateRegister(userId, day);
-            if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        int result = guideService.consultDateRegister(dayOff.getUserId(), dayOff.getDay());
+        if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
