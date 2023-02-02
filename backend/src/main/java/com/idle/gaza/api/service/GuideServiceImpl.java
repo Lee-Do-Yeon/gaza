@@ -68,23 +68,24 @@ public class GuideServiceImpl implements GuideService {
 
     ////////////////////////추천 장소 기능//////////////////////
     @Override
-    public void locationRegister(LocationPostRequest locations) {
+    public int locationRegister(LocationPostRequest locations) {
         //해당 가이드가 존재하는지 확인함
         Optional<Guide> guide = guideRepository.findGuideByGuideId(locations.getGuideId());
 
-        if (guide.isPresent()) {
-            GuideRecommendLocation loc = GuideRecommendLocation
-                    .builder()
-                    .guide(guide.get())
-                    .address(locations.getAddress())
-                    .latitude(locations.getLatitude())
-                    .longitude(locations.getLongitude())
-                    .categoryCode(locations.getCategoryCode())
-                    .picture(locations.getPicture())
-                    .build();
-            guideRecommendRepository.save(loc);
-        }
+        if (!guide.isPresent()) return 0;
 
+        GuideRecommendLocation loc = GuideRecommendLocation
+                .builder()
+                .guide(guide.get())
+                .address(locations.getAddress())
+                .latitude(locations.getLatitude())
+                .longitude(locations.getLongitude())
+                .categoryCode(locations.getCategoryCode())
+                .picture(locations.getPicture())
+                .build();
+        guideRecommendRepository.save(loc);
+
+        return 1;
     }
 
     @Override
@@ -127,6 +128,13 @@ public class GuideServiceImpl implements GuideService {
         return 1;//성공 시
     }
 
+    @Override
+    public String findExistFile(int recommendId) {
+        Optional<GuideRecommendLocation> loc = guideRecommendRepository.findByRecommendId(recommendId);
+        String file = loc.get().getPicture();
+
+        return file;
+    }
 
     //////////////////가이드 등록////////////////////////////
 
@@ -141,7 +149,7 @@ public class GuideServiceImpl implements GuideService {
 
         //가이드가 이미 존재하는 경우
         Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
-        if(existGuide.isPresent()) return 0;
+        if (existGuide.isPresent()) return 0;
 
 
         Guide newGuide = Guide.builder()
@@ -167,12 +175,12 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public int consultDateRegister(String userId, LocalDate dayoff) {
         Optional<User> checkUser = userRepository.findById(userId);//로그인 아이디로 사용자 얻기
-        if(!checkUser.isPresent()) return 0;
+        if (!checkUser.isPresent()) return 0;
         System.out.println("user id" + checkUser.get().getUserId());
 
         int id = checkUser.get().getUserId();
         Optional<Guide> checkGuide = guideRepository.findGuideByUser(id);//위에서 얻은 사용자로 가이드인지 확인함
-        if(!checkGuide.isPresent()) return 0;
+        if (!checkGuide.isPresent()) return 0;
         System.out.println("guide id" + checkGuide.get().getGuideId());
 
         //상담 불가능한 날짜를 추가함
@@ -188,7 +196,7 @@ public class GuideServiceImpl implements GuideService {
 
         //해당 가이드의 상담 날짜가 존재하는지 확인함
         Optional<DayOff> day = dayOffRepository.findDayOffByDayOffId(dayOffId);
-        if(!day.isPresent()) return 0;
+        if (!day.isPresent()) return 0;
 
         dayOffRepository.deleteById(dayOffId);
 
@@ -237,7 +245,7 @@ public class GuideServiceImpl implements GuideService {
     public int tourThemaRegister(int guideId, String themaCode) {
         //가이드 정보 반환
         Optional<Guide> existGuide = guideRepository.findById(guideId);
-        if(!existGuide.isPresent()) return 0;
+        if (!existGuide.isPresent()) return 0;
 
         GuideThema thema = GuideThema.builder().themaCode(themaCode).guide(existGuide.get()).build();
 
@@ -250,7 +258,7 @@ public class GuideServiceImpl implements GuideService {
     public int tourThemaDelete(int guideId, int themaId) {
         //가이드 정보 반환
         Optional<Guide> existGuide = guideRepository.findById(guideId);
-        if(!existGuide.isPresent()) return 0;
+        if (!existGuide.isPresent()) return 0;
 
         //테마를 삭제함
         guideThemaRepository.deleteByThemaId(themaId);
