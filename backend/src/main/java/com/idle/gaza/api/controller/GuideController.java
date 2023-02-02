@@ -77,7 +77,11 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> popularGuideSearch() {
-        List<Guide> guide = guideService.famousGuideSearch();
+        try{
+            List<Guide> guide = guideService.famousGuideSearch();
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         return new ResponseEntity<>(guide, HttpStatus.OK);
     }
@@ -157,7 +161,7 @@ public class GuideController {
             }
         }
 
-        //guideService.locationDelete(guideId, recommendId);
+        guideService.locationDelete(guideId, recommendId);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
