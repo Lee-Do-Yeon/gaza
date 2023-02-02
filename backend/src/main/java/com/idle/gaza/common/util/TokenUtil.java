@@ -1,18 +1,27 @@
 package com.idle.gaza.common.util;
 
+import com.idle.gaza.api.dto.TokenDto;
+import com.idle.gaza.api.service.UserDetailsServiceImpl;
 import com.idle.gaza.db.entity.User;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * JWT 관련된 토큰 Util
@@ -22,10 +31,9 @@ import java.util.Map;
  * @since 2022.12.23
  */
 @Log4j2
-@Component
+@Service
 public class TokenUtil {
-
-    public final static long TOKEN_VALIDATION_SECOND = 30000L;
+    public final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 10;
     public final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 24 * 2;
 
     final static public String ACCESS_TOKEN_NAME = "access";
@@ -35,11 +43,14 @@ public class TokenUtil {
     private static String ACCESS_TOKEN_SECRET_KEY = "gazagazagazagazagazagazagazagazagazagazagazagazagaza";
     private static String REFRESH_TOKEN_SECRET_KEY = "zagazagazagazagazagazagazagazagazagazagazagazagazaga";
 
-    public String generateAccessToken(User user) {
+    @Autowired
+    public static UserDetailsService userDetailsService;
+
+    public static String generateAccessToken(User user) {
         return generateJwtToken(user, TOKEN_VALIDATION_SECOND, "access");
     }
 
-    public String generateRefreshToken(User user) {
+    public static String generateRefreshToken(User user) {
         return generateJwtToken(user, REFRESH_TOKEN_VALIDATION_SECOND, "refresh");
     }
 
@@ -74,28 +85,51 @@ public class TokenUtil {
                 .getSubject();
     }
 
+    /*
+    // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
+    public Authentication getAuthentication(String accessToken) {
+        // 토큰 복호화
+        Claims claims = getClaimsFormToken(accessToken, ACCESS_TOKEN_NAME);
+
+        if (claims.get("authorization") == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+
+        // 클레임에서 권한 정보 가져오기
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get("authorization").toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+        // UserDetails 객체를 만들어서 Authentication 리턴
+        UserDetails principal = new org.springframework.security.core.userdetails.User(claims.getSubject(), "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+    }
+     */
+
     /**
      * 유효한 토큰인지 확인 해주는 메서드
      *
      * @param token String  : 토큰
      * @return boolean      : 유효한지 여부 반환
      */
-    public static boolean isValidToken(String token, String type) {
+    public static boolean isValidToken(String token) {
         try {
-            if(type.equals(ACCESS_TOKEN_NAME)) {
-                Claims claims = getClaimsFormToken(token, ACCESS_TOKEN_NAME);
-                System.out.println("여기는 와야지 제발");
+                System.out.println(token);
+
+                Claims claims = getClaimsFormToken(token);
+
+                String TokenDataFromRedis = RedisUtil.getData(token);
+
+                if(TokenDataFromRedis != null && TokenDataFromRedis.equals("logout")) {
+                    log.info("로그아웃된 토큰입니다.");
+                    return false;
+                }
+
                 System.out.println(claims.getExpiration());
                 log.info("expireTime :" + claims.getExpiration());
                 log.info("userId :" + claims.get("userId"));
                 log.info("userNm :" + claims.get("userNm"));
-            } else if (type.equals(REFRESH_TOKEN_NAME)) {
-                Claims claims = getClaimsFormToken(token, REFRESH_TOKEN_NAME);
-
-                log.info("expireTime :" + claims.getExpiration());
-                log.info("userId :" + claims.get("userId"));
-                log.info("userNm :" + claims.get("userNm"));
-            }
 
             return true;
         } catch (ExpiredJwtException exception) {
@@ -117,7 +151,15 @@ public class TokenUtil {
      * @return String
      */
     public static String getTokenFromHeader(String header) {
-        return header.split(" ")[1];
+        return header.substring(7);
+    }
+
+    public static Long getExpiration(String accessToken) {
+        // accessToken 남은 유효시간
+        Date expiration = Jwts.parserBuilder().setSigningKey(ACCESS_TOKEN_SECRET_KEY).build().parseClaimsJws(accessToken).getBody().getExpiration();
+        // 현재 시간
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 
     /**
@@ -183,17 +225,11 @@ public class TokenUtil {
      * @param token : 토큰
      * @return Claims : Claims
      */
-    private static Claims getClaimsFormToken(String token, String type) {
+    private static Claims getClaimsFormToken(String token) {
         try {
-            if (type.equals(ACCESS_TOKEN_NAME)) {
-                return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY))
+            return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY))
                         .parseClaimsJws(token).getBody();
-            } else {
-                return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(REFRESH_TOKEN_SECRET_KEY))
-                        .parseClaimsJws(token).getBody();
-            }
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -204,13 +240,76 @@ public class TokenUtil {
      * @param token : 토큰
      * @return String : 사용자 아이디
      */
-    public static String getUserIdFromToken(String token, String type) {
-        if(type.equals(ACCESS_TOKEN_NAME)) {
-            Claims claims = getClaimsFormToken(token, ACCESS_TOKEN_NAME);
-            return claims.get("userId").toString();
-        } else {
-            Claims claims = getClaimsFormToken(token, REFRESH_TOKEN_NAME);
-            return claims.get("userId").toString();
+    public static String getUserIdFromToken(String token) {
+        Claims claims = getClaimsFormToken(token);
+        return claims.get("userId").toString();
+    }
+
+    /*
+    public TokenResponse reissueAtk(AccountResponse accountResponse) throws JsonProcessingException {
+        String rtkInRedis = redisDao.getValues(accountResponse.getEmail());
+        if (Objects.isNull(rtkInRedis)) throw new ForbiddenException("인증 정보가 만료되었습니다.");
+        Subject atkSubject = Subject.atk(
+                accountResponse.getAccountId(),
+                accountResponse.getEmail(),
+                accountResponse.getNickname());
+        String atk = createToken(atkSubject, atkLive);
+        return new TokenResponse(atk, null);
+    }
+
+     */
+
+    public static TokenDto reissue(TokenDto tokenDto) {
+        /*
+         *  accessToken 은 JWT Filter 에서 검증되고 옴
+         * */
+        String originAccessToken = tokenDto.getAccessToken();
+        String originRefreshToken = tokenDto.getRefreshToken();
+
+        // refreshToken 검증
+        String refreshTokenFlag = RedisUtil.getData(originRefreshToken);
+
+        log.debug("refreshTokenFlag = {}", refreshTokenFlag);
+
+        //refreshToken 검증하고 상황에 맞는 오류를 내보낸다.
+        if (refreshTokenFlag == null) {
+            throw new RuntimeException("잘못된 리프레시 토큰"); // 잘못된 리프레시 토큰
         }
+
+        // 5. 새로운 토큰 생성
+        String userId = getUserIdFromToken(originAccessToken);
+        User user = (User)userDetailsService.loadUserByUsername(userId);
+
+        String newAccessToken = TokenUtil.generateAccessToken(user);
+        String newRefreshToken = TokenUtil.generateRefreshToken(user);
+        TokenDto newTokenDto = TokenDto.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .build();
+
+        log.debug("refresh Origin = {}",originRefreshToken);
+        log.debug("refresh New = {} ",newRefreshToken);
+        // 6. 저장소 정보 업데이트 (dirtyChecking으로 업데이트)
+        RedisUtil.setDataExpire(newRefreshToken, user.getId(), getExpiration(originRefreshToken));
+
+        // 토큰 발급
+        return tokenDto;
+    }
+
+    public static void logout(TokenDto tokenDto) {
+        // 1. Access Token 검증
+        if (!TokenUtil.isValidToken(tokenDto.getAccessToken())) {
+            throw new RuntimeException("잘못된 토큰 정보입니다.");
+        }
+
+        String refreshToken = RedisUtil.getData(tokenDto.getRefreshToken());
+
+        if(!refreshToken.equals(null)) {
+            RedisUtil.deleteData(refreshToken);
+        }
+
+        // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
+        Long expiration = TokenUtil.getExpiration(tokenDto.getAccessToken());
+        RedisUtil.setDataExpire(tokenDto.getAccessToken(), "logout", expiration);
     }
 }
