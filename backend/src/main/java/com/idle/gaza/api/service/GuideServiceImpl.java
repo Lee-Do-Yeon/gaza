@@ -50,11 +50,10 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public List<Guide> famousGuideSearch() {
-        //가이드를 리스트업
-        List<Guide> guideList = guideRepository.findBy();
+        //예약 많은 순으로 정렬
+        List<Guide> orderByGuide = guideRepository.findOrderByMaxReservation();
 
-
-        return null;
+        return orderByGuide;
     }
 
     @Override

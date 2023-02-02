@@ -1,5 +1,6 @@
 package com.idle.gaza.api.request;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.time.LocalTime;
 * */
 @Getter
 @Setter
+@ApiModel("TimeRegisterPostRequest")
 public class TimeRegisterPostRequest {
 
     private String userId;
