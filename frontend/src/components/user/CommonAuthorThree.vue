@@ -8,71 +8,72 @@
                             <h3>회원 가입</h3>
                         </div>
                         <div class="common_author_form">
-                            <form action="#" id="main_author_form" class="row">
+                            <form action="#" id="main_author_form" class="row" onsubmit="return false;">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="아이디를 입력해주세요." v-model="state.form.id"/>
+                                    <input type="text" :class="{ 'formerror': idc }" class="form-control"  placeholder="아이디를 입력해주세요." minlength="4" v-model="state.form.id" required/>
                                 </div>
                                 <div class="form-group col-6">
-                                    <input type="text" class="form-control" placeholder="이메일을 입력해 주세요."/>
+                                    <input type="text" class="form-control" placeholder="이메일을 입력해 주세요." v-model="state.form.emailfront" required/>
                                 </div>
                                 <div class="form-group col-1 position-relative">
                                     <h3 class="position-absolute top-50 start-50 translate-middle">@</h3>
                                 </div>
                                 <div class="form-group col-5">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" v-model="state.form.emailend" :class="{ 'formerror': emailc }" @keyup="upemail" required/>
+                                    <p v-if="emailc">이메일이 잘못되었습니다.</p>
                                 </div>
                                 <div class="form-group">
-                                    <select class="form-select form-control" id="validationCustom04" required>
+                                    <select class="form-select form-control" id="validationCustom04" required v-model="state.form.gender">
                                         <option selected disabled value="">성별을 골라주세요</option>
-                                        <option>남자</option>
-                                        <option>여자</option>
+                                        <option value="man" >남자</option>
+                                        <option value="woman">여자</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-3">
                                     <input type="text" class="form-control" placeholder="전화번호" disabled readonly/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input type="text" class="form-control" maxlength='4' minlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="state.form.phonefront" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input type="text" class="form-control" maxlength='4' minlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="state.form.phonemid" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input type="text" class="form-control" maxlength='4' minlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="state.form.phoneend" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
                                     <input type="text" class="form-control" placeholder="생년월일" disabled readonly/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input type="text" class="form-control" maxlength='4' minlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                    <input required type="text" class="form-control" v-model="state.form.birthdayyear" maxlength='4' minlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <select name="month" id="month" class="form-control custom-select">
-                                        <option value="1">1월</option>
-                                        <option value="2">2월</option>
-                                        <option value="3">3월</option>
-                                        <option value="4">4월</option>
-                                        <option value="5">5월</option>
-                                        <option value="6">6월</option>
-                                        <option value="7">7월</option>
-                                        <option value="8">8월</option>
-                                        <option value="9">9월</option>
+                                    <select required name="month" id="month" class="form-control custom-select" v-model="state.form.birthdaymonth">
+                                        <option value="01">1월</option>
+                                        <option value="02">2월</option>
+                                        <option value="03">3월</option>
+                                        <option value="04">4월</option>
+                                        <option value="05">5월</option>
+                                        <option value="06">6월</option>
+                                        <option value="07">7월</option>
+                                        <option value="08">8월</option>
+                                        <option value="09">9월</option>
                                         <option value="10">10월</option>
                                         <option value="11">11월</option>
                                         <option value="12">12월</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-3">
-                                    <select name="day" id="day" class="form-control custom-select">
-                                        <option value="1" selected="selected">1일</option>
-                                        <option value="2">2일</option>
-                                        <option value="3">3일</option>
-                                        <option value="4">4일</option>
-                                        <option value="5">5일</option>
-                                        <option value="6">6일</option>
-                                        <option value="7">7일</option>
-                                        <option value="8">8일</option>
-                                        <option value="9">9일</option>
+                                    <select required name="day" id="day" class="form-control custom-select" v-model="state.form.birthdaydate">
+                                        <option value="01" selected="selected">1일</option>
+                                        <option value="02">2일</option>
+                                        <option value="03">3일</option>
+                                        <option value="04">4일</option>
+                                        <option value="05">5일</option>
+                                        <option value="06">6일</option>
+                                        <option value="07">7일</option>
+                                        <option value="08">8일</option>
+                                        <option value="09">9일</option>
                                         <option value="10">10일</option>
                                         <option value="11">11일</option>
                                         <option value="12">12일</option>
@@ -98,31 +99,29 @@
                                     </select>                                    
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="핸드폰 번호" />
+                                    <input required type="text" class="form-control" placeholder="이름" v-model="state.form.name" minlength="1" />
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="이름" />
+                                    <input required type="password" class="form-control" placeholder="비밀번호" :class="{ 'formerror': passwordc }" @keyup="uppassword" v-model="state.form.password" minlength="6"/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="비밀번호" />
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="비밀번호 확인" />
+                                    <input required type="password" class="form-control" :class="{ 'formerror': passwordc }" @keyup="uppassword" placeholder="비밀번호 확인" v-model="state.form.passwordcheck" minlength="6"/>
+                                    <p v-if="passwordc">비밀번호가 일치하지 않습니다.</p>
                                 </div>
                                 <div class="common_form_submit">
-                                    <button class="btn btn_theme btn_md">Register</button>
+                                    <button class="btn btn_theme btn_md" @click="Signin">회원가입</button>
                                 </div>
                                 
                                 <div class="have_acount_area other_author_option">
-                                    <div class="line_or">
+                                    <!-- <div class="line_or">
                                         <span>or</span>
                                     </div>
                                     <ul>
                                         <li><a href="#!"><img src="../../assets/img/icon/google.png" alt="icon"></a></li>
                                         <li><a href="#!"><img src="../../assets/img/icon/facebook.png" alt="icon"></a></li>
                                         <li><a href="#!"><img src="../../assets/img/icon/twitter.png" alt="icon"></a></li>
-                                    </ul>
-                                    <p>Already have an account? <router-link to="/login">Log in now</router-link></p>
+                                    </ul> -->
+                                    <p>계정이 있으십니까? <router-link to="/login">로그인</router-link></p>
                                 </div>
                             </form>
                         </div>
@@ -133,43 +132,107 @@
     </section>
 
 </template>
+<style>
+.formerror{
+    border: 1px solid red !important;
+}
+</style>
     
 <script>
 import { reactive, computed, ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
+import { requestSignin } from "../../../common/api/commonAPI"
 
 export default {
     name: "CommonAuthorThree",
 
     setup(props, { emit }) {
-        const store = useStore()
+        // const store = useStore()
+        const idc = ref(false)
+        const passwordc =ref(false)
+        const emailc = ref(false)
         const state = reactive({
             form: {
                 id: '',
                 password: '',
                 passwordcheck: '',
-                department:'',
-                position:'',
                 name:'',
-                align: 'left',
-                isformValid: true,
-                isidValid: false,
+                gender:'',
+                birthdaymonth:'',
+                birthdayyear:'',
+                birthdaydate:'',
+                phonefront:'',
+                phonemid:'',
+                phoneend:'',
+                emailfront:'',
+                emailend:'',
             },
 
         })
 
         onMounted(() => {
-            state.form.id = ''
-            state.form.password = ''
-            state.form.department = ''
-            state.form.position = ''
-            state.form.name = ''
-            state.form.passwordcheck = ''
-            state.form.isformValid = true
-            state.form.isidValid = false
+            idc.value = false
+            passwordc.value = false
+            emailc.value =false
+            state.form.id=''
+            state.form.password=''
+            state.form.passwordcheck=''
+            state.form.name=''
+            state.form.gender=''
+            state.form.birthdaymonth=''
+            state.form.birthdayyear=''
+            state.form.birthdaydate=''
+            state.form.phonefront=''
+            state.form.phonemid=''
+            state.form.phoneend=''
+            state.form.emailfront=''
+            state.form.emailend=''
         })
 
-        return { state,}
+        const Signin = async function () {
+            console.log('submit sign');
+            if (!state.form.emailend.includes('.')) {
+                emailc.value = true
+            } else {
+                emailc.value = false
+            }
+
+            if (state.form.password !== state.form.passwordcheck) {
+                passwordc.value = true
+            } else {
+                passwordc.value = false
+            }
+
+            if (!passwordc.value && !emailc.value) {
+                try {
+                    const response = await requestSignin({
+                        "birthday": `${state.form.birthdayyear}-${state.form.birthdaymonth}-${state.form.birthdaydate}T14:35:34.008Z`,
+                        "email": state.form.emailfront,
+                        "email_domain": state.form.emailend,
+                        "gender": state.form.gender,
+                        "id": state.form.id,
+                        "name": state.form.name,
+                        "password": state.form.password,
+                        "phone_number": `${state.form.phonefront}-${state.form.phonemid}-${state.form.phoneend}`,
+                    })
+                    console.log(response);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            
+        }
+
+        const upemail = function ()  {
+            emailc.value = false
+        }
+
+        const uppassword = function () {
+            passwordc.value = false
+        }
+
+        return { state, Signin, idc, passwordc, emailc, upemail}
      },
     
 };
