@@ -4,12 +4,10 @@ import com.idle.gaza.api.request.DayOffPostRequest;
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.request.TimeRegisterPostRequest;
+import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.db.entity.Guide;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,7 +53,7 @@ public class GuideController {
     //////////////////////가이드 조회///////////////////////////
 
     //가이드 전체 조회
-    @GetMapping("/")
+    @GetMapping()
     @ApiOperation(value = "가이드 전체 조회", notes = "가이드 전체 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -78,12 +76,12 @@ public class GuideController {
     })
     public ResponseEntity<?> popularGuideSearch() {
         try{
-            List<Guide> guide = guideService.famousGuideSearch();
-        }catch (Exception e){
+            List<GuideResponse> guideList = guideService.famousGuideSearch();
+            return new ResponseEntity<>(guideList, HttpStatus.OK);
+        }catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>(guide, HttpStatus.OK);
     }
 
 
@@ -95,7 +93,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> guideProfileSearch(@PathVariable int guideId) {
+    public ResponseEntity<?> guideProfileSearch(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId) {
         Guide guide = guideService.guideDetailSearch(guideId);
 
         if (guide == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -220,8 +218,8 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> tourThemaRegister(@PathVariable int guideId, @RequestParam(name = "thema", required = false) String themaName) {
-        int result = guideService.tourThemaRegister(guideId, themaName);
+    public ResponseEntity<?> tourThemaRegister(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId, @RequestParam(name = "thema", required = false) @ApiParam(value = "테마코드", required = true) String themaCode) {
+        int result = guideService.tourThemaRegister(guideId, themaCode);
 
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
@@ -235,7 +233,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> tourThemaDelete(@PathVariable int guideId, @RequestParam int themaId) {
+    public ResponseEntity<?> tourThemaDelete(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId, @RequestParam int themaId) {
         int result = guideService.tourThemaDelete(guideId, themaId);
 
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -268,7 +266,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> dayDelete(@RequestParam Map<String, String> map) {
+    public ResponseEntity<?> dayDelete(@RequestParam @ApiParam(value = "key는 userId와 dayId의 이름으로 받음") Map<String, String> map) {
         String userId = map.get("userId");
         int day = Integer.parseInt(map.get("dayId"));
 
