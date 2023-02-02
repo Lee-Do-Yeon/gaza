@@ -70,16 +70,20 @@ public class GuideController {
     }
 
     //인기 가이드 조회
-    @PostMapping("/popular")
+    @GetMapping("/popular")
     @ApiOperation(value = "인기 가이드 조회", notes = "인기 가이드 목록을 조회한다.(예약 많은 순으로 정렬)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> popularGuideSearch() {
-        List<Guide> guide = guideService.famousGuideSearch();
+        try{
+            List<Guide> guide = guideService.famousGuideSearch();
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        return null;
+        return new ResponseEntity<>(guide, HttpStatus.OK);
     }
 
 
@@ -157,7 +161,7 @@ public class GuideController {
             }
         }
 
-        //guideService.locationDelete(guideId, recommendId);
+        guideService.locationDelete(guideId, recommendId);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

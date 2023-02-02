@@ -1,5 +1,6 @@
 package com.idle.gaza.api.request;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
+@ApiModel("GuideRegisterPostRequest")
 public class GuideRegisterPostRequest {
 
     private int guideId;//guide pk
