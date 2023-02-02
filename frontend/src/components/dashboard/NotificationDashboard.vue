@@ -119,6 +119,7 @@ import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
 import axios from "axios";
 import { ref } from "vue";
+import { reser } from "../../../common/api/commonAPI";
 
 export default {
   name: "NotificationDashboard",
@@ -129,12 +130,10 @@ export default {
   },
   setup() {
     const reservation = ref([]);
-    const instance = axios.create({
-      baseURL: process.env.VUE_APP_API_URL,
-    });
     const getreservation = async () => {
       try {
-        const res = await instance.get("/reservation");
+        const res = await reser();
+        console.log(res);
         reservation.value = res.data;
       } catch (err) {
         console.log(err);
