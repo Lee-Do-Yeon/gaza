@@ -47,7 +47,109 @@ public class UserController {
      * @param user User
      * @return ResponseEntity
      */
-    @PostMapping("/user")
+    @PostMapping("/pw")
+    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+        List<User> selectUserList = userService.selectUserList(user);
+        ApiResponse<Object> ar = ApiResponse.builder()
+                .result(selectUserList)
+                .resultCode(SuccessCode.SELECT.getStatus())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+        return new ResponseEntity<>(ar, HttpStatus.OK);
+    }
+
+    /**
+     * [API] 사용자 리스트 조회
+     *
+     * @param user User
+     * @return ResponseEntity
+     */
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+        List<User> selectUserList = userService.selectUserList(user);
+        ApiResponse<Object> ar = ApiResponse.builder()
+                .result(selectUserList)
+                .resultCode(SuccessCode.SELECT.getStatus())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+        return new ResponseEntity<>(ar, HttpStatus.OK);
+    }
+
+    /**
+     * [API] 사용자 리스트 조회
+     *
+     * @param user User
+     * @return ResponseEntity
+     */
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+        List<User> selectUserList = userService.selectUserList(user);
+        ApiResponse<Object> ar = ApiResponse.builder()
+                .result(selectUserList)
+                .resultCode(SuccessCode.SELECT.getStatus())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+        return new ResponseEntity<>(ar, HttpStatus.OK);
+    }
+
+    /**
+     * [API] 사용자 리스트 조회
+     *
+     * @param user User
+     * @return ResponseEntity
+     */
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+        List<User> selectUserList = userService.selectUserList(user);
+        ApiResponse<Object> ar = ApiResponse.builder()
+                .result(selectUserList)
+                .resultCode(SuccessCode.SELECT.getStatus())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+        return new ResponseEntity<>(ar, HttpStatus.OK);
+    }
+
+    /**
+     * [API] 사용자 리스트 조회
+     *
+     * @param user User
+     * @return ResponseEntity
+     */
+    @PutMapping("/users/pw/{userId}")
+    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+        List<User> selectUserList = userService.selectUserList(user);
+        ApiResponse<Object> ar = ApiResponse.builder()
+                .result(selectUserList)
+                .resultCode(SuccessCode.SELECT.getStatus())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+        return new ResponseEntity<>(ar, HttpStatus.OK);
+    }
+
+    /**
+     * [API] 사용자 리스트 조회
+     *
+     * @param user User
+     * @return ResponseEntity
+     */
+    @PostMapping("/users/isLogin")
+    public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
+        List<User> selectUserList = userService.selectUserList(user);
+        ApiResponse<Object> ar = ApiResponse.builder()
+                .result(selectUserList)
+                .resultCode(SuccessCode.SELECT.getStatus())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+        return new ResponseEntity<>(ar, HttpStatus.OK);
+    }
+
+    /**
+     * [API] 사용자 리스트 조회
+     *
+     * @param user User
+     * @return ResponseEntity
+     */
+    @PostMapping("/users/guide")
     public ResponseEntity<ApiResponse<Object>> selectCodeList(@RequestBody User user) {
         List<User> selectUserList = userService.selectUserList(user);
         ApiResponse<Object> ar = ApiResponse.builder()
