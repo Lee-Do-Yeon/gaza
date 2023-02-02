@@ -1,8 +1,11 @@
 package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.ReservationCreatePostRequest;
+import com.idle.gaza.api.response.ReservationResponse;
+import com.idle.gaza.api.response.ReviewResponse;
 import com.idle.gaza.db.entity.Guide;
 import com.idle.gaza.db.entity.Reservation;
+import com.idle.gaza.db.entity.Review;
 import com.idle.gaza.db.entity.User;
 import com.idle.gaza.db.repository.GuideRepository;
 import com.idle.gaza.db.repository.ReservationRepository;
@@ -10,9 +13,14 @@ import com.idle.gaza.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -45,7 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .userId(user)
                 .guideId(guide)
                 .consultingDate(reservationInfo.getConsultingDate())
-                .reservationDate(new Timestamp(System.currentTimeMillis()))
+                .reservationDate(LocalDateTime.now())
                 .travelStartDate(reservationInfo.getTravelStartDate())
                 .travelEndDate(reservationInfo.getTravelEndDate())
                 .numberOfPeople(reservationInfo.getNumberOfPeople())
@@ -60,23 +68,74 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void cancelReservation(int reservationId) {
+    public void cancelReservation(int reservationId) throws Exception {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() ->new NoSuchElementException("Reservation not found."));
+
+        if(reservation.getStateCode() == "RE01"){
+            throw new IllegalStateException("완료한 상담은 취소할 수 없습니다.");
+        }
+
         reservationRepository.deleteById(reservationId);
     }
 
     @Override
-    public List<Reservation> getReservationListByGuide(int guideId) {
-        return reservationRepository.findByGuideId_GuideId(guideId);
+    public List<ReservationResponse> getReservationListByGuide(int guideId) {
+        List<Reservation> reservations = reservationRepository.findResevationsByGuide(guideId);
+        List<ReservationResponse> reservationRes = new ArrayList<>(reservations.size());
+        for(int i=0; i<reservations.size(); i++){
+            Reservation reservation = reservations.get(i);
+            ReservationResponse res = new ReservationResponse(
+                    reservation.getGuideId().getPicture(),
+                    reservation.getReservationId(),
+                    reservation.getGuideId().getUser().getName(),
+                    reservation.getNumberOfPeople(),
+                    reservation.getWithChildren(),
+                    reservation.getWithElderly(),
+                    reservation.getWithDisabled(),
+                    reservation.getNote(),
+                    reservation.getConsultingDate(),
+                    reservation.getTravelStartDate(),
+                    reservation.getTravelEndDate(),
+                    reservation.getStateCode());
+            reservationRes.add(res);
+        }
+        return reservationRes;
     }
 
     @Override
-    public List<Reservation> getReservationListByUser(int userId) {
-        return reservationRepository.findByUserId_UserId(userId);
+    public List<ReservationResponse> getReservationListByUser(int userId) {
+        List<Reservation> reservations = reservationRepository.findResevationsByUser(userId);
+        List<ReservationResponse> reservationRes = new ArrayList<>(reservations.size());
+        for(int i=0; i<reservations.size(); i++){
+            Reservation reservation = reservations.get(i);
+            ReservationResponse res = new ReservationResponse(
+                    reservation.getGuideId().getPicture(),
+                    reservation.getReservationId(),
+                    reservation.getGuideId().getUser().getName(),
+                    reservation.getNumberOfPeople(),
+                    reservation.getWithChildren(),
+                    reservation.getWithElderly(),
+                    reservation.getWithDisabled(),
+                    reservation.getNote(),
+                    reservation.getConsultingDate(),
+                    reservation.getTravelStartDate(),
+                    reservation.getTravelEndDate(),
+                    reservation.getStateCode());
+            reservationRes.add(res);
+        }
+        return reservationRes;
     }
 
     @Override
-    public List<Timestamp> getImpossibleTime(int guideId, Timestamp selectedDate) {
-        return reservationRepository.getImpossibleTime(guideId, selectedDate);
+    public List<Integer> getImpossibleTime(int guideId, Date selectedDate) {
+        List<Timestamp> timestamps = reservationRepository.getImpossibleTime(guideId, selectedDate);
+        List<Integer> times = new ArrayList<>(timestamps.size());
+        for(int i=0; i<timestamps.size(); i++){
+            Timestamp time = timestamps.get(i);
+            Integer res = Integer.parseInt(time.toString().substring(0, 2));
+            times.add(res);
+        }
+        return times;
     }
 
 }

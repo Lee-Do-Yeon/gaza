@@ -17,12 +17,5 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReservationRepositoryTest {
     @Autowired
     ReservationRepository reservationRepository;
-    @Test
-    void getImpossibleTime() {
-        List<Timestamp> list = reservationRepository.getImpossibleTime(1, new Timestamp(System.currentTimeMillis()));
-        log.debug("개수" + list.size());
-        for(int i=0; i<list.size(); i++){
-            log.debug(i+"번 : " + list.get(i));
-        }
-    }
+
 }
