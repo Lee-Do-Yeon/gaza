@@ -1,5 +1,6 @@
 package com.idle.gaza.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class DayOff {
     private Integer dayOffId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name="guide_id")
     private Guide guide;
 

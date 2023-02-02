@@ -1,5 +1,6 @@
 package com.idle.gaza.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Guide{
     private Integer guideId;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name="user_id")
     private User user;
 
