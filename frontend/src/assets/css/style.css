@@ -4217,8 +4217,9 @@ textarea {
 }
 
 .table_common_area thead tr th {
+    color:white;
     border: none;
-    background: #fff;
+    background: #15d4cd;
     padding: 15px 0;
 }
 
