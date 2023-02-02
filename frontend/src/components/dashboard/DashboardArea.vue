@@ -44,26 +44,29 @@
           <div class="dashboard_common_table">
             <div class="dashboard_main_top">
               <div class="d-flex align-items-center justify-content-between">
-                <div>
-                  From
-                  <Datepicker
-                    v-model="picked"
-                    :locale="locale"
-                    :weekStartsOn="0"
-                    :inputFormat="inputFormat"
-                  />
+                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                  <div class="form_search_date">
+                    <div class="flight_Search_boxed date_flex_area">
+                      <div class="Journey_date">
+                        <p>From</p>
+                        <input type="date" value="2023-01-10" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  To
-                  <Datepicker
-                    v-model="picked"
-                    :locale="locale"
-                    :weekStartsOn="0"
-                    :inputFormat="inputFormat"
-                  />
+                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                  <div class="form_search_date">
+                    <div class="flight_Search_boxed date_flex_area">
+                      <div class="Journey_date">
+                        <p>To</p>
+                        <input type="date" value="2023-01-30" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
                 <div>
-                    <button class="btn btn_theme">Filter</button>
+                  <button class="btn btn_theme btn-lg">Filter</button>
                 </div>
               </div>
             </div>
@@ -76,62 +79,27 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Sl no.</th>
-                    <th>Booking ID</th>
-                    <th>Booking type</th>
-                    <th>Booking amount</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                    <th>별점</th>
+                    <th>내용</th>
+                    <!-- <th>Status</th>
+                    <th>Action</th> -->
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-for="rev in review" :key="rev.id">
                   <tr>
-                    <td>01.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
-                  </tr>
-                  <tr>
-                    <td>02.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
-                  </tr>
-                  <tr>
-                    <td>03.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
-                  </tr>
-                  <tr>
-                    <td>04.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
-                  </tr>
-                  <tr>
-                    <td>05.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="cancele">Canceled</td>
-                    <td><i class="fas fa-eye"></i></td>
-                  </tr>
-                  <tr>
-                    <td>06.</td>
-                    <td>#JK589V80</td>
-                    <td>Hotel</td>
-                    <td>$754.00</td>
-                    <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td>
+                    <td>{{ rev.reservation_id }}</td>
+                    <td>{{ rev.created_date }}</td>
+                    <td >
+                      <i v-for="score in rev.score" :key="score"
+                        class="fas fa-sharp fa-solid fa-star"
+                        style="color: yellow"
+                      ></i>
+                    </td>
+                    <td>{{ rev.content }}</td>
+                    <!-- <td class="complete">Completed</td>
+                    <td><i class="fas fa-eye"></i></td> -->
                   </tr>
                 </tbody>
               </table>
@@ -139,21 +107,30 @@
           </div>
           <div class="pagination_area">
             <ul class="pagination">
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
+              <li v-if="currentpage !== 1" class="page-item">
+                <a
+                  style="cursor: pointer"
+                  class="page-link"
+                  @click="getValue(currentpage - 1)"
+                  aria-label="Previous"
+                >
                   <span aria-hidden="true">«</span>
                   <span class="sr-only">Previous</span>
                 </a>
               </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                  <span aria-hidden="true">»</span>
-                  <span class="sr-only">Next</span>
-                </a>
+              <li  v-for="page in numberofpages" :key="page" class="page-item">
+                <a
+                  style="cursor: pointer"
+                  class="page-link"
+                  @click="getValue(page)"
+                >
+                  {{ page }}</a
+                >
               </li>
+              <a v-if="currentpage !== numberofpages" style="cursor:pointer" class="page-link" @click="getValue(currentpage +1)" aria-label="Next">
+                <span aria-hidden="true">»</span>
+                <span class="sr-only">Next</span>
+              </a>
             </ul>
           </div>
         </div>
@@ -162,30 +139,49 @@
   </section>
 </template>
 <script>
-import { ref, reactive, defineCom } from "vue";
-import Datepicker from "vue3-datepicker";
-import { ko } from "date-fns/locale";
-
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
+import axios from "axios";
+import { ref, computed } from "vue";
 export default {
   name: "DashboardArea",
   components: {
     LogoutBtn,
     MyBookingOption,
     picturemodalVue,
-    Datepicker,
   },
   setup() {
-    const picked = ref(new Date());
-    const locale = reactive(ko);
-    const inputFormat = ref("yyyy-MM-dd");
+    const review = ref([]);
+    const numberofreviews = ref(0);
+    const currentpage = ref(1);
+    const limit = 5;
+
+    const getValue = async (page = currentpage.value) => {
+      currentpage.value = page;
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/review?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
+        );
+        numberofreviews.value = res.headers["x-total-count"];
+        review.value = res.data;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getValue();
+
+    const numberofpages = computed(() => {
+      return Math.ceil(numberofreviews.value / limit);
+    });
 
     return {
-      picked,
-      locale,
-      inputFormat,
+      getValue,
+      limit,
+      numberofpages,
+      currentpage,
+      numberofreviews,
+      review
     };
   },
 };

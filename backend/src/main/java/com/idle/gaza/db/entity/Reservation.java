@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Reservation {
     @Id

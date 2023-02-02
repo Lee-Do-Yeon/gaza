@@ -1,7 +1,7 @@
 <template>
 
     <!-- Common Banner Area -->
-    <NBanner />
+    <!-- <NBanner /> -->
 
     <NotificationDashboard />
 
