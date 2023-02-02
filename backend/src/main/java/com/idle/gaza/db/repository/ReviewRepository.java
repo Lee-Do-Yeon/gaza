@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
-    @Query(value = "select * from review where reservation_id in (select user_id from reservation where user_id = :userId);", nativeQuery = true)
+    @Query(value = "select * from review where reservation_id in (select reservation_id from reservation where user_id = :userId);", nativeQuery = true)
     List<Review> findReviewsByUser(@Param("userId") int userId);
 
     @Query(value = "select * from review where reservation_id in (select reservation_id from reservation where guide_id = :guideId);", nativeQuery = true)
