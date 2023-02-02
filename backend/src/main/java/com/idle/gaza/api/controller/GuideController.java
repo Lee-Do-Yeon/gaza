@@ -70,7 +70,7 @@ public class GuideController {
     }
 
     //인기 가이드 조회
-    @PostMapping("/popular")
+    @GetMapping("/popular")
     @ApiOperation(value = "인기 가이드 조회", notes = "인기 가이드 목록을 조회한다.(예약 많은 순으로 정렬)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -79,7 +79,7 @@ public class GuideController {
     public ResponseEntity<?> popularGuideSearch() {
         List<Guide> guide = guideService.famousGuideSearch();
 
-        return null;
+        return new ResponseEntity<>(guide, HttpStatus.OK);
     }
 
 
