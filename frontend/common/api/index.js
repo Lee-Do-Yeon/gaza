@@ -3,7 +3,7 @@ import axios from "axios";
 // local vue api axios instance
 function apiInstance() {
   const instance = axios.create({
-    baseURL: process.env.VUE_APP_API_BASE_URL,
+    baseURL: 'https://i8c207.p.ssafy.io',
     
     // headers: {
     //   "Content-Type": "application/json;charset=utf-8",
