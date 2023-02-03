@@ -7,7 +7,7 @@ const api = apiInstance();
 //유저 회원가입
 const requestSignin = payload => api.post("/api/users", payload);
 
-const requesttest = payload => api.get("/api/reviews/user/1")
+const requesttest = payload => api.get("http://i8c207.p.ssafy.io/api/reviews/user/1")
 
 const requestLogin = (payload, token) => api.post("/auth/login", payload);
 
