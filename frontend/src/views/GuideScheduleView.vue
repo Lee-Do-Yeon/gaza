@@ -4,7 +4,7 @@
     <!-- <RoomBanner /> -->
 
     <!-- Room Details Areas -->
-    <RoomDetails />
+    <GuideSchedule />
 
     <!-- Cta Area -->
     <Cta />
@@ -13,13 +13,13 @@
 </template>
 <script>
 import RoomBanner from '@/components/hotel/RoomBanner.vue'
-import RoomDetails from '@/components/hotel/RoomDetails.vue'
+import GuideSchedule from '@/components/hotel/GuideSchedule.vue'
 import Cta from '@/components/home/Cta.vue'
 
 export default {
-    name: "RoomDetailsView",
+    name: "GuideScheduleView",
     components: {
-        RoomBanner, RoomDetails, Cta
+        RoomBanner, GuideSchedule, Cta
     }
 };
 </script>
