@@ -207,7 +207,7 @@ export default {
             }
             try {   
                     console.log('test')
-                    const response = await requestSignin()
+                    const response = await requesttest()
                     console.log(response);
                     
                 } catch (error) {
