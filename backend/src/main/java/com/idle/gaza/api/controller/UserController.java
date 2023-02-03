@@ -70,7 +70,9 @@ public class UserController {
     /**
      * [API] 사용자 조회
      *
+     * @param userId Integer
      * @return ResponseEntity
+     *
      */
     @GetMapping("/users/{userId}")
     @ApiOperation(value = "사용자 조회", notes = "사용자를 조회한다.")
@@ -80,6 +82,8 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<ApiResponse<Object>> getUser(@PathVariable @ApiParam(value="유저 PK", required = true) Integer userId) {
+        System.out.println("여기들어옴??");
+
         User user = userService.searchUser(userId);
 
         if(user == null) {
@@ -104,6 +108,7 @@ public class UserController {
      *
      * @param userUpdateRequest UserUpdateRequest
      * @return ResponseEntity
+     *
      */
     @ApiOperation(value = "사용자 정보 수정", notes = "사용자 정보를 수정한다.")
     @ApiResponses({
@@ -112,7 +117,7 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
     @PutMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse<Object>> update(@PathVariable int userId, @RequestBody UserUpdateRequest userUpdateRequest) {
+    public ResponseEntity<ApiResponse<Object>> updateUser(@PathVariable int userId, @RequestBody UserUpdateRequest userUpdateRequest) {
         int result = userService.updateUser(userId, userUpdateRequest);
 
         if(result == 0) {
@@ -135,20 +140,29 @@ public class UserController {
     /**
      * [API] 회원 탈퇴
      *
-     * @param user User
+     * @param userId Integer
      * @return ResponseEntity
-     * 
-     * 삭제 방법 고려 중
+     *
      */
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse<Object>> delete(@RequestBody User user) {
-        List<User> selectUserList = userService.selectUserList(user);
-        ApiResponse<Object> ar = ApiResponse.builder()
-                .result(selectUserList)
-                .resultCode(SuccessCode.SELECT.getStatus())
-                .resultMsg(SuccessCode.SELECT.getMessage())
-                .build();
-        return new ResponseEntity<>(ar, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<Object>> deleteUser(@PathVariable Integer userId) {
+        int result = userService.deleteUser(userId);
+
+        if(result == 0) {
+            ApiResponse<Object> ar = ApiResponse.builder()
+                    .result(null)
+                    .resultCode(HttpStatus.NO_CONTENT.value())
+                    .resultMsg("회원이 없습니다.")
+                    .build();
+            return new ResponseEntity<>(ar, HttpStatus.NO_CONTENT);
+        } else {
+            ApiResponse<Object> ar = ApiResponse.builder()
+                    .result(null)
+                    .resultCode(SuccessCode.DELETE.getStatus())
+                    .resultMsg("회원이 탈퇴되었습니다.")
+                    .build();
+            return new ResponseEntity<>(ar, HttpStatus.OK);
+        }
     }
 
     /**

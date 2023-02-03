@@ -154,7 +154,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         HashMap<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("status", 401);
-        jsonMap.put("code", "9999");
+        jsonMap.put("code", "401");
         jsonMap.put("message", resultMsg);
         jsonMap.put("reason", e.getMessage());
         JSONObject jsonObject = new JSONObject(jsonMap);
