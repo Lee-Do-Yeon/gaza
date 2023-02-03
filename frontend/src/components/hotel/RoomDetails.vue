@@ -6,19 +6,19 @@
           <div class="dashboard_menu_area">
             <ul>
               <li>
-                <router-link to="/dashboard" class="active"
+                <router-link to="/room-details" class="active"
                   >내 정보 확인 및 수정</router-link
                 >
               </li>
               <li>
-                <router-link to="/my-profile">상담일정 확인</router-link>
+                <router-link to="/guide_schedule">상담일정 확인</router-link>
               </li>
 
               <li>
-                <router-link to="/notification">리뷰조회</router-link>
+                <router-link to="/guide_review">리뷰조회</router-link>
               </li>
               <li>
-                <router-link to="/notification">질문답변</router-link>
+                <router-link to="/guide_QNA">질문답변</router-link>
               </li>
             </ul>
           </div>
@@ -41,7 +41,7 @@
               />
               <div class="ms-3">
                 <h3>고길동</h3>
-                <br/>
+                <br />
                 <h5>대한민국 / 광주 / 54 / 남성</h5>
                 <div>
                   안녕하세요!! 저는 가이드 고길동입니다.<br />
@@ -65,13 +65,9 @@
                     </div>
                     <div class="news_item_content">
                       <h3>
-                        <router-link to="/news-details"
-                          >한강
-                        </router-link>
+                        <router-link to="/news-details">한강 </router-link>
                       </h3>
-                      <p>
-                        대한민국 치킨 맛집
-                      </p>
+                      <p>대한민국 치킨 맛집</p>
                     </div>
                   </div>
                 </div>
@@ -84,13 +80,9 @@
                     </div>
                     <div class="news_item_content">
                       <h3>
-                        <router-link to="/news-details">
-                          전주
-                        </router-link>
+                        <router-link to="/news-details"> 전주 </router-link>
                       </h3>
-                      <p>
-                        대한민국 비빔밥 맛집
-                      </p>
+                      <p>대한민국 비빔밥 맛집</p>
                     </div>
                   </div>
                 </div>
@@ -103,23 +95,118 @@
                     </div>
                     <div class="news_item_content">
                       <h3>
-                        <router-link to="/news-details">
-                            완도
-                        </router-link>
+                        <router-link to="/news-details"> 완도 </router-link>
                       </h3>
-                      <p>
-                        대한민국 김 맛집
-                      </p>
+                      <p>대한민국 김 맛집</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <hr/>
+          <hr />
+          <h3 style="font-weight: bold">상담 불가 날짜/시간 설정</h3>
+          <br />
+          <div class="row d-flex justify-content-center">
+            
 
-
-
+            <div class="col-lg-4 me-5">
+              <h5 style="color: #15d4cd">Choose a Date</h5>
+            <br/>
+              <div class="form_search_date">
+                <div class="flight_Search_boxed date_flex_area">
+                  <div class="Journey_date">
+                    <input type="date" value="2023-02-01" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 ms-5">
+              <h5 style="color: #15d4cd">Pick a time</h5>
+              <div class="tour_details_boxed">
+                <div class="btn-group" role="group">
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    01
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    02
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    03
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    04
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    05
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    06
+                  </button>
+                </div>
+                <div class="btn-group" role="group">
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    07
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    08
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    09
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    10
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    11
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    12
+                  </button>
+                </div>
+                <div class="btn-group" role="group">
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    13
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    14
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    15
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    16
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    17
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    18
+                  </button>
+                </div>
+                <div class="btn-group" role="group">
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    19
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    20
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    21
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    22
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    23
+                  </button>
+                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
+                    24
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

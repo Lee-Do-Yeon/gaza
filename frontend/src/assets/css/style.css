@@ -2818,7 +2818,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
     background: #FFFFFF;
     box-shadow: -4px -5px 14px rgb(0 0 0 / 8%), 5px 8px 16px rgb(0 0 0 / 8%);
     border-radius: 10px;
-    padding: 20px 20px;
+    padding: 10px 5px;
     margin-top: 30px;
 }
 
@@ -2843,7 +2843,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .tour_details_boxed_inner ul li i {
     color: var(--black-color);
     font-size: 6px;
-    padding-right: 7px;
+    padding-right: 5px;
     padding-top: 6px;
 }
 
