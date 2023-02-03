@@ -1,49 +1,35 @@
 <template>
-  <section id="dashboard_main_arae" class="section_padding">
+  <section id="tour_details_main" class="section_padding">
     <div class="container">
       <div class="row">
-        <div class="col-lg-4">
-          <div class="dashboard_sidebar">
-            <div class="dashboard_sidebar_user">
-              <img src="../../assets/img/common/dashboard-user.png" alt="img" />
-              <h3>최지성</h3>
-              <div>
-                <picturemodalVue />
-              </div>
-            </div>
-            <div class="dashboard_menu_area">
-              <ul>
-                <li>
-                  <router-link to="/dashboard"
-                    ><i class="fas fa-list"></i>이용후기</router-link
-                  >
-                </li>
-                <!-- <MyBookingOption /> -->
-                <li>
-                  <router-link to="/my-profile"
-                    ><i class="fas fa-user-circle"></i>내 정보 수정</router-link
-                  >
-                </li>
-                <!-- <li>
-                  <router-link to="/wallet"
-                    ><i class="fas fa-wallet"></i>Wallet</router-link
-                  >
-                </li> -->
-                <li>
-                  <router-link to="/notification" class="active"
-                    ><i class="fas fa-bell"></i>예약내역</router-link
-                  >
-                </li>
-                <LogoutBtn />
-              </ul>
-            </div>
-          </div>
-        </div>
+        <div class="col-3">
+          <div class="dashboard_menu_area">
+            <ul>
+              <li>
+                <router-link to="/room-details"
+                  >내 정보 확인 및 수정</router-link
+                >
+              </li>
+              <li>
+                <router-link to="/guide_schedule" class="active"
+                  >상담일정 확인</router-link
+                >
+              </li>
 
-        <div class="col-lg-8">
+              <li>
+                <router-link to="/guide_review">리뷰조회</router-link>
+              </li>
+              <li>
+                <router-link to="/guide_QNA">질문답변</router-link>
+              </li>
+            </ul>
+          </div>
+          
+        </div>
+        <div class="col">
           <div class="dashboard_common_table">
             <div class="notification_top_heading">
-              <h3>예약 내역</h3>
+              <h3>상담일정 확인</h3>
             </div>
             <div class="notification_wrapper">
               <div class="accordion" id="accordionExample">
@@ -111,42 +97,11 @@
         </div>
       </div>
     </div>
+    
   </section>
 </template>
 <script>
-import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
-import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
-import picturemodalVue from "../modal/picturemodal.vue";
-import axios from "axios";
-import { ref } from "vue";
-import { reser } from "../../../common/api/commonAPI";
-
 export default {
-  name: "NotificationDashboard",
-  components: {
-    LogoutBtn,
-    MyBookingOption,
-    picturemodalVue,
-  },
-  setup() {
-    const reservation = ref([]);
-    const getreservation = async () => {
-      try {
-        const res = await reser();
-        console.log(res);
-        reservation.value = res.data;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getreservation();
-
-    return {
-      reservation,
-      getreservation,
-      instance
-    };
-  },
+  name: "GuideSchedule",
 };
 </script>
