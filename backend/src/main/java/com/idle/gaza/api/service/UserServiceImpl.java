@@ -76,4 +76,18 @@ public class UserServiceImpl implements UserService{
 
         return 1;
     }
+
+    @Override
+    public int deleteUser(Integer userId) {
+        Optional<User> user = userRepository.findByUserId(userId);
+        if (!user.isPresent()) return 0;
+
+        User updateUser = user.get();
+
+        updateUser.setState("US5");
+
+        userRepository.save(updateUser);
+
+        return 1;
+    }
 }
