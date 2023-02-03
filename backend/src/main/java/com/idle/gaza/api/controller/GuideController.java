@@ -41,7 +41,26 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> guideRegister(@RequestBody GuideRegisterPostRequest guide, @RequestParam MultipartFile uploadFile) {
+    public ResponseEntity<?> guideRegister(@RequestBody GuideRegisterPostRequest guide, @RequestParam("uploadFile") MultipartFile multipartFile) {
+        if (!multipartFile.isEmpty()) {
+            //make upload folder
+            String uploadPath = "/guide/";
+            File uploadFilePath = new File(rootPath, uploadPath);
+
+            if(!uploadFilePath.exists()){
+                uploadFilePath.mkdirs();
+            }
+            String fileName = multipartFile.getOriginalFilename();//저장될 파일명
+            File saveFile = new File(uploadFilePath, fileName);
+
+            log.info("file name = " + fileName);
+            try {
+                multipartFile.transferTo(saveFile);
+                guide.setPicture(fileName);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
 
         int result = guideService.guideRegister(guide);
 
