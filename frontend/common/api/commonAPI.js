@@ -5,7 +5,7 @@ const api = apiInstance();
 
 //유저구역
 //유저 회원가입
-const requestSignin = payload => api.post("/users/join", payload);
+const requestSignin = payload => api.post("/api/users/join", payload);
 
 
 
