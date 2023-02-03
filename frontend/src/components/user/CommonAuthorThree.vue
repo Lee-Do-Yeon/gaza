@@ -208,7 +208,7 @@ export default {
             try {   
                     console.log('test')
                     const response = await requesttest()
-                    console.log(response);
+                    console.log(response.data);
                     
                 } catch (error) {
                     console.log(error);
