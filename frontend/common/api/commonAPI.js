@@ -7,7 +7,7 @@ const api = apiInstance();
 //유저 회원가입
 const requestSignin = payload => api.post("/api/users", payload);
 
-const requesttest = payload => api.get("/guides")
+const requesttest = payload => api.get("/api/guides")
 
 const requestLogin = (payload, token) => api.post("/auth/login", payload);
 
