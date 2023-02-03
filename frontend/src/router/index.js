@@ -40,6 +40,10 @@ import NotFound from '../components/NotFound.vue'
 
 import reviewView from '../views/reviewView.vue'
 
+import GuideScheduleView from '../views/GuideScheduleView.vue'
+import GuideReviewView from '../views/GuideReviewView.vue'
+import GuideQNAView from '../views/GuideQNAView.vue'
+
 const routes = [
   {
     path: '/',
@@ -235,6 +239,21 @@ const routes = [
     path :'/review/',
     name: 'review',
     component: reviewView
+  },
+  {
+    path:'/guide_schedule',
+    name : 'guide_schedule',
+    component:GuideScheduleView
+  },
+  {
+    path: '/guide_review',
+    name : 'guide_review',
+    component : GuideReviewView
+  },
+  {
+    path : '/guide_QNA',
+    name : 'guide_QNA',
+    component :GuideQNAView
   }
 ]
 
