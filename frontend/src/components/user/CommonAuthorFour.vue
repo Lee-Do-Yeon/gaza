@@ -6,23 +6,22 @@
                 <div class="col-lg-8 offset-lg-2">
                     <div class="common_author_boxed">
                         <div class="common_author_heading">
-                            <h3>Login your account</h3>
-                            <h2>Logged in to stay in touch</h2>
+                            <h2>로그인</h2>
                         </div>
                         <div class="common_author_form">
-                            <form action="#" id="main_author_form">
+                            <form @submit.prevent="Login" id="main_author_form">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Enter user name" />
+                                    <input type="text" class="form-control" placeholder="아이디를 입력해 주세요." v-model="state.form.id" required/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="Enter password" />
-                                    <router-link to="/forgot-password">Forgot password?</router-link>
+                                    <input type="password" class="form-control" placeholder="비밀번호를 입력해 주세요." v-model="state.form.password" required/>
+                                    <router-link to="/forgot-password">비밀번호 찾기</router-link>
                                 </div>
                                 <div class="common_form_submit">
-                                    <button class="btn btn_theme btn_md">Log in</button>
+                                    <button class="btn btn_theme btn_md">로그인</button>
                                 </div>
                                 <div class="have_acount_area">
-                                    <p>Dont have an account? <router-link to="/register">Register now</router-link></p>
+                                    <p>아이디가 없으십니까? <router-link to="/register">회원 가입</router-link></p>
                                 </div>
                             </form>
                         </div>
@@ -34,8 +33,30 @@
 </template>
     
 <script>
+import { reactive, computed, ref, onMounted, watch } from 'vue'
+import { useStore } from 'vuex'
+import { requestSignin, requesttest } from "../../../common/api/commonAPI"
+import router from "@/router";
 
 export default {
-    name: "CommonAuthorFour"
+    name: "CommonAuthorFour",
+
+    setup(props, { emit }) {
+        const state = reactive({
+            form: {
+                id:'',
+                password:'',
+            }
+        })
+
+        const Loginplease = async function () {
+            await store.dispatch('accountStore/loginAction', { id: state.form.id, password: state.form.password })
+        }
+
+        return {state,}
+    }
+    
+
+
 };
 </script>
