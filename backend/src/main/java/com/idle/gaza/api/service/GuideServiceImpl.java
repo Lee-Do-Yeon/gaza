@@ -202,7 +202,6 @@ public class GuideServiceImpl implements GuideService {
         int id = checkUser.get().getUserId();
         Optional<Guide> checkGuide = guideRepository.findGuideByUser(id);//위에서 얻은 사용자로 가이드인지 확인함
         if (!checkGuide.isPresent()) return 0;
-        System.out.println("guide id" + checkGuide.get().getGuideId());
 
         //상담 불가능한 날짜를 추가함
         DayOff dayOff = DayOff.builder().dayOffDate(dayoff).guide(checkGuide.get()).build();
