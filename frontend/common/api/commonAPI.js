@@ -7,7 +7,7 @@ const api = apiInstance();
 //유저 회원가입
 const requestSignin = payload => api.post("/api/users", payload);
 
-
+const requesttest = payload => api.get("/api/users/1")
 
 const requestLogin = (payload, token) => api.post("/auth/login", payload);
 
@@ -21,4 +21,4 @@ const requestConfirm = token => api.get("/users/me", {headers: {Authorization: t
 const requestConfirmId = userid => api.get(`/users/${userid}`)
 
 
-export { requestLogin, requestSignin, requestConfirm, requestConfirmId, reser};
+export { requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, requesttest};

@@ -141,7 +141,7 @@
 <script>
 import { reactive, computed, ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
-import { requestSignin } from "../../../common/api/commonAPI"
+import { requestSignin, requesttest } from "../../../common/api/commonAPI"
 import router from "@/router";
 
 export default {
@@ -205,6 +205,14 @@ export default {
             } else {
                 passwordc.value = false
             }
+            try {   
+                    console.log('test')
+                    const response = await requestSignin()
+                    console.log(response);
+                    
+                } catch (error) {
+                    console.log(error);
+                }
 
             if (!passwordc.value && !emailc.value) {
                 try {
