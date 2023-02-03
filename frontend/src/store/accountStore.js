@@ -57,6 +57,7 @@ const actions = {
     try {
       const response = await requestLogin(loginData);
       alert('로그인 성공')
+      console.log(reponse.data);
       commit("logInData")
       commit("setToken", response.data.accessToken);
     } catch (error) {

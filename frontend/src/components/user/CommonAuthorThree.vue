@@ -8,7 +8,7 @@
                             <h3>회원 가입</h3>
                         </div>
                         <div class="common_author_form">
-                            <form action="#" id="main_author_form" class="row" onsubmit="return false;">
+                            <form @submit.prevent="Signin" id="main_author_form" class="row">
                                 <div class="form-group">
                                     <input type="text" :class="{ 'formerror': idc }" class="form-control"  placeholder="아이디를 입력해주세요." minlength="4" v-model="state.form.id" required/>
                                 </div>
@@ -109,7 +109,7 @@
                                     <p v-if="passwordc">비밀번호가 일치하지 않습니다.</p>
                                 </div>
                                 <div class="common_form_submit">
-                                    <button class="btn btn_theme btn_md" @click="Signin">회원가입</button>
+                                    <button class="btn btn_theme btn_md" >회원가입</button>
                                 </div>
                                 
                                 <div class="have_acount_area other_author_option">
@@ -205,14 +205,6 @@ export default {
             } else {
                 passwordc.value = false
             }
-            try {   
-                    console.log('test')
-                    const response = await requesttest()
-                    console.log(response.data);
-                    
-                } catch (error) {
-                    console.log(error);
-                }
 
             if (!passwordc.value && !emailc.value) {
                 try {
