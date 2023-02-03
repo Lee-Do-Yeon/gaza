@@ -45,7 +45,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> guideRegister(@RequestPart GuideRegisterPostRequest guide, @RequestPart("uploadFile") MultipartFile multipartFile) {
+    public ResponseEntity<?> guideRegister(@RequestPart GuideRegisterPostRequest guide, @RequestPart(value = "uploadFile", required = false) MultipartFile multipartFile) {
         log.info("guide = " + guide.toString());
         if (!multipartFile.isEmpty()) {
             //make upload folder
@@ -132,7 +132,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> locationRegister(@RequestPart LocationPostRequest location, @RequestPart(name = "uploadFile") MultipartFile multipartFile) {
+    public ResponseEntity<?> locationRegister(@RequestPart LocationPostRequest location, @RequestPart(name = "uploadFile", required = false) MultipartFile multipartFile) {
 
         if (!multipartFile.isEmpty()) {
             //make upload folder
@@ -204,7 +204,7 @@ public class GuideController {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Not Found")
     })
-    public ResponseEntity<?> locationUpdate(@RequestPart LocationPostRequest location, @RequestPart("uploadFile") MultipartFile multipartFile) {
+    public ResponseEntity<?> locationUpdate(@RequestPart LocationPostRequest location, @RequestPart(name="uploadFile", required = false) MultipartFile multipartFile) {
         //파일이 존재한다면 기존 경로에서 파일 삭제
         String existFile = guideService.findExistFile(location.getRecommendId());
 
