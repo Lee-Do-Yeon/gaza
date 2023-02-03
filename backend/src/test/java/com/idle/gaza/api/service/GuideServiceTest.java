@@ -84,11 +84,12 @@ class GuideServiceTest {
         guide.setPicture("test.png");
 
         //when
-        guideService.guideRegister(guide);
+        int result = guideService.guideRegister(guide);
         Guide searchGuide =  guideService.guideDetailSearch(userId);
 
         //then
-
+        if(result == 0) log.info("already guide exist");
+        else log.info("guide register");
     }
 
     @Test
