@@ -13,27 +13,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.idle.gaza.db.entity.ChatRoom;
-import com.idle.gaza.db.repository.ChatRoomRepository;
+import com.idle.gaza.db.entity.MapRoom;
+import com.idle.gaza.db.repository.MapRoomRepository;
 
 @Controller
 @RequestMapping("/chat")
-public class ChatRoomController {
+public class MapRoomController {
 
-	private final ChatRoomRepository chatRoomRepository;
+	private final MapRoomRepository mapRoomRepository;
 
 	// 모든 채팅방 목록 반환
 	@GetMapping("/rooms")
 	@ResponseBody
-	public List<ChatRoom> room() {
-	    return chatRoomRepository.findAllRoom();
+	public List<MapRoom> room() {
+	    return mapRoomRepository.findAllRoom();
 	}
 	 
 	// 채팅방 생성
 	@PostMapping("/room")
 	@ResponseBody
-	public ChatRoom createRoom(@RequestBody String name) {
-		ChatRoom room = chatRoomRepository.createChatRoom(name);
+	public MapRoom createRoom(@RequestBody String name) {
+		MapRoom room = mapRoomRepository.createChatRoom(name);
 	    return room;
 	}
 	 
@@ -49,14 +49,14 @@ public class ChatRoomController {
 	@ResponseBody
 	public ResponseEntity<?> roomInfo(@PathVariable String roomId) {
 		System.out.println("들어온 룸 아이디 : "+roomId);
-	    ChatRoom room = chatRoomRepository.findRoomById(roomId);
+	    MapRoom room = mapRoomRepository.findRoomById(roomId);
 	    System.out.println(room.toString());
 	    return new ResponseEntity<>(room,HttpStatus.OK);
 	}
 	 
-	public ChatRoomController(ChatRoomRepository chatRoomRepository) {
+	public MapRoomController(MapRoomRepository mapRoomRepository) {
 		super();
-		this.chatRoomRepository = chatRoomRepository;
+		this.mapRoomRepository = mapRoomRepository;
 	}
 	 
 }

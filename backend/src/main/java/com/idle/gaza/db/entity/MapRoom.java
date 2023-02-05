@@ -1,21 +1,17 @@
 package com.idle.gaza.db.entity;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
-import org.springframework.web.socket.WebSocketSession;
 
-
-public class ChatRoom {
+public class MapRoom {
     private String roomId;
     private String name;
     
-    public static ChatRoom create(String name) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = UUID.randomUUID().toString();
-        chatRoom.name = name;
-        return chatRoom;
+    public static MapRoom create(String name) {
+        MapRoom mapRoom = new MapRoom();
+        mapRoom.roomId = UUID.randomUUID().toString();
+        mapRoom.name = name;
+        return mapRoom;
     }
 
 	public String getRoomId() {
@@ -34,7 +30,7 @@ public class ChatRoom {
 		this.name = name;
 	}
 
-	public ChatRoom() {
+	public MapRoom() {
 		super();
 	}
     
