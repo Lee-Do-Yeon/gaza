@@ -1,0 +1,37 @@
+package com.idle.gaza.db.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+
+@Entity
+@Setter
+@Getter
+@NoArgsConstructor
+public class GuideDocument {
+
+    @Id
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinColumn(name="user_id")
+    User user;
+
+    @Column(name = "id_file")
+    String idFile;
+
+    @Column(name = "certificate_residence")
+    String certificateResidence;
+
+    String certificate;
+
+    @Builder
+    public GuideDocument(String idFile, String certificateResidence, String certificate) {
+        this.idFile = idFile;
+        this.certificateResidence = certificateResidence;
+        this.certificate = certificate;
+    }
+}
