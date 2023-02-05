@@ -103,6 +103,7 @@ public class GuideServiceImpl implements GuideService {
                 .longitude(locations.getLongitude())
                 .categoryCode(locations.getCategoryCode())
                 .picture(locations.getPicture())
+                .name(locations.getName())
                 .build();
         guideRecommendRepository.save(loc);
 
