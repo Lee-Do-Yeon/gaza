@@ -25,6 +25,7 @@ spring:
       location: D:/SSAFY/upload-workspace
       max-file-size: 10MB
       max-request-size: 50MB
+
 logging:
   pattern:
     file: "%-4relative [%thread] %-5level %logger{35} - %msg%n"
