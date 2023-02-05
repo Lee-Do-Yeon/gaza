@@ -132,8 +132,8 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> locationRegister(@RequestPart LocationPostRequest location, @RequestPart(name = "uploadFile", required = false) MultipartFile multipartFile) {
-
+    public ResponseEntity<?> locationRegister(@RequestPart(name = "location") LocationPostRequest location, @RequestPart(name = "uploadFile", required = false) MultipartFile multipartFile) {
+        log.info("location = " + location.toString());
         if (!multipartFile.isEmpty()) {
             //make upload folder
             String uploadPath = "/location/";
@@ -148,7 +148,7 @@ public class GuideController {
             log.info("file name = " + fileName);
             try {
                 multipartFile.transferTo(saveFile);
-                location.setPicture(uploadFilePath + "/" + fileName);
+                location.setPicture(uploadFilePath + "\\" + fileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
@@ -308,7 +308,9 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> dayDelete(@RequestParam @ApiParam(value = "key는 userId와 dayId의 이름으로 받음") Map<String, String> map) {
+    public ResponseEntity<?> dayDelete(@RequestBody @ApiParam(value = "map의 key는 userId와 dayId") Map<String, String> map) {
+        //log.info("userId = " + map.get("userId") + ", dayId = " + map.get("dayId"));
+
         String userId = map.get("userId");
         int dayId = Integer.parseInt(map.get("dayId"));
 
