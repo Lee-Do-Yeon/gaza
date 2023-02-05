@@ -2,14 +2,17 @@ package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
+import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.db.entity.*;
 import com.idle.gaza.db.repository.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +38,14 @@ public class GuideServiceImpl implements GuideService {
     @Autowired
     GuideThemaRepository guideThemaRepository;
 
+    @Autowired
+    ReservationRepository reservationRepository;
+
+    @Autowired
+    ReviewRepository reviewRepository;
+
     ///////////////////////가이드 조회 기능/////////////////////////
+
 
     @Override
     public List<Guide> guideSearch() {
@@ -43,8 +53,29 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public List<Guide> famousGuideSearch() {
-        return null;
+    public List<GuideResponse> famousGuideSearch() {
+        //예약 많은 순으로 정렬
+        List<Guide> orderByGuide = guideRepository.findOrderByMaxReservation();
+
+        List<GuideResponse> guideResponseList = new ArrayList<>();
+        for (Guide guide : orderByGuide) {
+
+            GuideResponse guideResponse = GuideResponse.builder()
+                    .guideId(guide.getGuideId())
+                    .name(guide.getUser().getName())
+                    .city(guide.getCity())
+                    .closeTimeEnd(guide.getCloseTimeEnd())
+                    .closeTimeStart(guide.getCloseTimeStart())
+                    .country(guide.getCountry())
+                    .price(guide.getPrice())
+                    .picture(guide.getPicture())
+                    .build();
+            guideResponseList.add(guideResponse);
+
+
+        }
+
+        return guideResponseList;
     }
 
     @Override
@@ -58,23 +89,24 @@ public class GuideServiceImpl implements GuideService {
 
     ////////////////////////추천 장소 기능//////////////////////
     @Override
-    public void locationRegister(LocationPostRequest locations) {
+    public int locationRegister(LocationPostRequest locations) {
         //해당 가이드가 존재하는지 확인함
         Optional<Guide> guide = guideRepository.findGuideByGuideId(locations.getGuideId());
 
-        if (guide.isPresent()) {
-            GuideRecommendLocation loc = GuideRecommendLocation
-                    .builder()
-                    .guide(guide.get())
-                    .address(locations.getAddress())
-                    .latitude(locations.getLatitude())
-                    .longitude(locations.getLongitude())
-                    .categoryCode(locations.getCategoryCode())
-                    .picture(locations.getPicture())
-                    .build();
-            guideRecommendRepository.save(loc);
-        }
+        if (!guide.isPresent()) return 0;
 
+        GuideRecommendLocation loc = GuideRecommendLocation
+                .builder()
+                .guide(guide.get())
+                .address(locations.getAddress())
+                .latitude(locations.getLatitude())
+                .longitude(locations.getLongitude())
+                .categoryCode(locations.getCategoryCode())
+                .picture(locations.getPicture())
+                .build();
+        guideRecommendRepository.save(loc);
+
+        return 1;
     }
 
     @Override
@@ -117,6 +149,13 @@ public class GuideServiceImpl implements GuideService {
         return 1;//성공 시
     }
 
+    @Override
+    public String findExistFile(int recommendId) {
+        Optional<GuideRecommendLocation> loc = guideRecommendRepository.findByRecommendId(recommendId);
+        String file = loc.get().getPicture();
+
+        return file;
+    }
 
     //////////////////가이드 등록////////////////////////////
 
@@ -127,8 +166,13 @@ public class GuideServiceImpl implements GuideService {
         if (!checkId.isPresent()) return 0;
 
         Optional<User> user = userRepository.findByUserId(checkId.get().getUserId());
-
         if (!user.isPresent()) return 0;
+
+        //가이드가 이미 존재하는 경우
+        Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
+        if (existGuide.isPresent()) return 0;
+
+
         Guide newGuide = Guide.builder()
                 .user(user.get())
                 .picture(guide.getPicture())
@@ -151,12 +195,14 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public int consultDateRegister(String userId, LocalDate dayoff) {
-        //해당 가이드가 존재하는지 확인한다.
-        Optional<User> checkUser = userRepository.findById(userId);
-        if(!checkUser.isPresent()) return 0;
+        Optional<User> checkUser = userRepository.findById(userId);//로그인 아이디로 사용자 얻기
+        if (!checkUser.isPresent()) return 0;
+        System.out.println("user id" + checkUser.get().getUserId());
 
-        Optional<Guide> checkGuide = guideRepository.findGuideByUser(checkUser.get().getUserId());
-        if(!checkGuide.isPresent()) return 0;
+        int id = checkUser.get().getUserId();
+        Optional<Guide> checkGuide = guideRepository.findGuideByUser(id);//위에서 얻은 사용자로 가이드인지 확인함
+        if (!checkGuide.isPresent()) return 0;
+        System.out.println("guide id" + checkGuide.get().getGuideId());
 
         //상담 불가능한 날짜를 추가함
         DayOff dayOff = DayOff.builder().dayOffDate(dayoff).guide(checkGuide.get()).build();
@@ -171,9 +217,10 @@ public class GuideServiceImpl implements GuideService {
 
         //해당 가이드의 상담 날짜가 존재하는지 확인함
         Optional<DayOff> day = dayOffRepository.findDayOffByDayOffId(dayOffId);
-        if(!day.isPresent()) return 0;
+        if (!day.isPresent()) return 0;
 
         dayOffRepository.deleteById(dayOffId);
+
         return 1;
     }
 
@@ -219,7 +266,7 @@ public class GuideServiceImpl implements GuideService {
     public int tourThemaRegister(int guideId, String themaCode) {
         //가이드 정보 반환
         Optional<Guide> existGuide = guideRepository.findById(guideId);
-        if(!existGuide.isPresent()) return 0;
+        if (!existGuide.isPresent()) return 0;
 
         GuideThema thema = GuideThema.builder().themaCode(themaCode).guide(existGuide.get()).build();
 
@@ -232,10 +279,10 @@ public class GuideServiceImpl implements GuideService {
     public int tourThemaDelete(int guideId, int themaId) {
         //가이드 정보 반환
         Optional<Guide> existGuide = guideRepository.findById(guideId);
-        if(!existGuide.isPresent()) return 0;
+        if (!existGuide.isPresent()) return 0;
 
         //테마를 삭제함
-        guideThemaRepository.deleteGuideThemaByThemaId(themaId);
+        guideThemaRepository.deleteByThemaId(themaId);
 
         return 1;
     }

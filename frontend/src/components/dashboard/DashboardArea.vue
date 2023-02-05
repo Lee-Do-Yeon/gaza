@@ -156,12 +156,14 @@ export default {
     const numberofreviews = ref(0);
     const currentpage = ref(1);
     const limit = 5;
-
+    const instance = axios.create({
+      baseURL: process.env.VUE_APP_API_URL,
+    });
     const getValue = async (page = currentpage.value) => {
       currentpage.value = page;
       try {
-        const res = await axios.get(
-          `http://localhost:3000/review?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
+        const res = await instance.get(
+          `review?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
         );
         numberofreviews.value = res.headers["x-total-count"];
         review.value = res.data;

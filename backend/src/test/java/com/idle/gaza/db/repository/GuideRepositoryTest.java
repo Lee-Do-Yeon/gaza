@@ -28,9 +28,7 @@ class GuideRepositoryTest {
         List<Guide> guideList = guideRepository.findBy();
 
         //then
-        for (Guide guide: guideList) {
-            log.info("guide = " + guide);
-        }
+        //log.info("list size = " +guideList.size());
     }
 
     @Test

@@ -13,27 +13,30 @@ import java.time.Duration;
 @Component
 public class RedisUtil {
 
-    @Autowired
-    @Qualifier("redisTemplate")
-    private RedisTemplate<String,String> redisTemplate;
+    private static RedisTemplate<String,String> redisTemplate;
 
-    public String getData(String key){
+    @Autowired
+    public RedisUtil (RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    public static String getData(String key){
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(key);
     }
 
-    public void setData(String key, String value){
+    public static void setData(String key, String value){
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key,value);
     }
 
-    public void setDataExpire(String key,String value,long duration){
+    public static void setDataExpire(String key,String value,long duration){
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
         Duration expireDuration = Duration.ofSeconds(duration);
         valueOperations.set(key,value,expireDuration);
     }
 
-    public void deleteData(String key){
+    public static void deleteData(String key){
         redisTemplate.delete(key);
     }
 
