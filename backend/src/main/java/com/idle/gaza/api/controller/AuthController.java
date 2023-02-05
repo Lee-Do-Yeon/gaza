@@ -51,6 +51,8 @@ public class AuthController {
     public ResponseEntity<ApiResponse> reissue(@RequestBody TokenDto tokenDto) {
         TokenDto newTokenDto = TokenUtil.reissue(tokenDto);
 
+        System.out.println(newTokenDto.getAccessToken());
+
         ApiResponse ar = ApiResponse.builder()
                 // BEARER {토큰} 형태로 반환을 해줍니다.
                 .result(newTokenDto)
@@ -58,7 +60,7 @@ public class AuthController {
                 .resultMsg("토큰 재발급 성공")
                 .build();
 
-        return null;
+        return new ResponseEntity<>(ar, HttpStatus.OK);
     }
 
     @GetMapping("/check")
