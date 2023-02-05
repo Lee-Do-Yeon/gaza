@@ -9,7 +9,6 @@ import lombok.Setter;
 @ApiModel("LocationPostRequest")
 public class LocationPostRequest {
 
-
     private Integer recommendId;
 
     private Integer guideId;
