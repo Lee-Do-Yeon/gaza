@@ -13,8 +13,11 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -46,9 +49,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private TokenUtil tokenUtils;
 
     @Autowired
-    private CookieUtil cookieUtil;
-
-    @Autowired
     private RedisUtil redisUtil;
 
     @Override
@@ -57,12 +57,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // 1. 토큰이 필요한 API URL에 대해서 배열로 구성합니다.
         List<String> list = Arrays.asList(
-            "/users/needJWT"
+            "/users/needJWT",
+            "/auth/check"
         );
 
         // 2. 토큰이 필요하지 않은 API URL의 경우 => 로직 처리 없이 다음 필터로 이동
         if (!list.contains(request.getRequestURI())) {
-            System.out.println(request.getRequestURI());
             chain.doFilter(request, response);
             return;
         }
@@ -75,7 +75,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // [STEP1] Client에서 API를 요청할때 Header를 확인합니다.
         String header = request.getHeader(AuthConstants.AUTH_HEADER_ACCESS_TOKEN);
-        System.out.println(header);
         logger.debug("[+] header Check: " + header);
 
         try {
@@ -84,20 +83,27 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                 // [STEP2] Header 내에 토큰을 추출합니다.
                 String token = TokenUtil.getTokenFromHeader(header);
-                System.out.println("여긴 올거고");
                 // [STEP3] 추출한 토큰이 유효한지 여부를 체크합니다.
-                if (TokenUtil.isValidToken(token, TokenUtil.ACCESS_TOKEN_NAME)) {
-                        
-                    System.out.println("여기 들어오나");
-                    // [STEP4] 토큰을 기반으로 사용자 아이디를 반환 받는 메서드
-                    String userId = TokenUtil.getUserIdFromToken(token, TokenUtil.ACCESS_TOKEN_NAME);
-                    logger.debug("[+] userId Check: " + userId);
+                if (TokenUtil.isValidToken(token)) {
 
-                    // [STEP5] 사용자 아이디가 존재하는지 여부 체크
-                    if (userId != null && !userId.equalsIgnoreCase("")) {
-                        chain.doFilter(request, response);
-                    } else {
-                        throw new BusinessExceptionHandler("TOKEN isn't userId", ErrorCode.BUSINESS_EXCEPTION_ERROR);
+                    // (추가) Redis 에 해당 accessToken logout 여부 확인
+                    String isLogout = (String)RedisUtil.getData(token);
+
+                    if(ObjectUtils.isEmpty(isLogout)) {
+                        // [STEP4] 토큰을 기반으로 사용자 아이디를 반환 받는 메서드
+                        String userId = TokenUtil.getUserIdFromToken(token);
+                        logger.debug("[+] userId Check: " + userId);
+
+                        // [STEP5] 사용자 아이디가 존재하는지 여부 체크
+                        if (userId != null && !userId.equalsIgnoreCase("")) {
+                            // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
+                            // Authentication authentication = TokenUtil.getAuthentication(token);
+                            // SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                            chain.doFilter(request, response);
+                        } else {
+                            throw new BusinessExceptionHandler("TOKEN isn't userId", ErrorCode.BUSINESS_EXCEPTION_ERROR);
+                        }
                     }
                     // 토큰이 유효하지 않은 경우
                 } else {
@@ -148,7 +154,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         HashMap<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("status", 401);
-        jsonMap.put("code", "9999");
+        jsonMap.put("code", "401");
         jsonMap.put("message", resultMsg);
         jsonMap.put("reason", e.getMessage());
         JSONObject jsonObject = new JSONObject(jsonMap);

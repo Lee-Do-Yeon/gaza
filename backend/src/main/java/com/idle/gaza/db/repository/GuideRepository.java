@@ -1,7 +1,6 @@
 package com.idle.gaza.db.repository;
 
 import com.idle.gaza.db.entity.Guide;
-import com.idle.gaza.db.entity.User;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +25,7 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     @Query(value = "SELECT *  FROM guide as g WHERE g.user_id=:userId", nativeQuery = true)
     Optional<Guide> findGuideByUser(@Param("userId") int userId);
 
+    /* 예약순 조회 */
+    @Query(value = "select * from guide left join ( select guide_id, count(guide_id) from reservation group by guide_id order by count(*)) reservation on reservation.guide_id=guide.guide_id order by reservation.guide_id", nativeQuery = true)
+    List<Guide> findOrderByMaxReservation();
 }

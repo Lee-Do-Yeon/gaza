@@ -1,11 +1,18 @@
 package com.idle.gaza.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity(name="dayoff")
+@Entity
+@Table(name = "dayoff")
+@Setter
+@Getter
 public class DayOff {
 
     @Id
@@ -14,10 +21,12 @@ public class DayOff {
     private Integer dayOffId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name="guide_id")
     private Guide guide;
 
     @Column(name="dayoff_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dayOffDate;
 
     @Builder
@@ -30,27 +39,6 @@ public class DayOff {
     public DayOff() {
 
     }
-
-    public Guide getGuide() {
-        return guide;
-    }
-
-    public int getDayOffId() {
-        return dayOffId;
-    }
-
-    public void setDayOffId(int dayOffId) {
-        this.dayOffId = dayOffId;
-    }
-
-    public LocalDate getDayOffDate() {
-        return dayOffDate;
-    }
-
-    public void setDayOffDate(LocalDate dayOffDate) {
-        this.dayOffDate = dayOffDate;
-    }
-
 
 
 }

@@ -15,5 +15,6 @@ FROM nginx as production-stage
 RUN mkdir /app
 # builder에서 빌드한 바이너리를 실행할 이미지로 전달해주기 위해 copy --from 옵션을 사용하여 실행 이미지로 전달한다
 COPY --from=build-stage /app/dist /app
+RUN hostname -i
 COPY nginx.conf /etc/nginx/nginx.conf
 RUN service nginx restart
