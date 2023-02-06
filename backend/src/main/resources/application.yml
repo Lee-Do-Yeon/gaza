@@ -22,9 +22,10 @@ spring:
       matching-strategy: ant_path_matcher
   servlet:
     multipart:
-      location: D:/SSAFY/upload-workspace
+      location: classpath:/resources/
       max-file-size: 10MB
       max-request-size: 50MB
+
 logging:
   pattern:
     file: "%-4relative [%thread] %-5level %logger{35} - %msg%n"
