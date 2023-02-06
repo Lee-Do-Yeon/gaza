@@ -20,8 +20,13 @@ const reser = () => api.get("/reservation");
 const popularGuide = () => api.get("/guides/popular")
 
 
+const reser = (payload) => api.get("/reservation", payload);
+
+const reviewss = (payload) => api.get('/review',payload);
+
+const requestConfirm = token => api.get("/users/me", {headers: {Authorization: token}})
 
 const requestConfirmId = userid => api.get(`/users/${userid}`)
 
 
-export { requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser};

@@ -117,9 +117,9 @@
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
-import axios from "axios";
 import { ref } from "vue";
 import { reser } from "../../../common/api/commonAPI";
+import { useRoute} from 'vue-router';
 
 export default {
   name: "NotificationDashboard",
@@ -129,11 +129,14 @@ export default {
     picturemodalVue,
   },
   setup() {
+
+    const route = useRoute();
+    const id = route.params.id;
+
     const reservation = ref([]);
     const getreservation = async () => {
       try {
         const res = await reser();
-        console.log(res.data);
         reservation.value = res.data;
       } catch (err) {
         console.log(err);
@@ -145,7 +148,7 @@ export default {
     return {
       reservation,
       getreservation,
-      instance
+      id
     };
   },
 };
