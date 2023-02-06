@@ -133,7 +133,7 @@ export default {
     const getreservation = async () => {
       try {
         const res = await reser();
-        console.log(res);
+        console.log(res.data);
         reservation.value = res.data;
       } catch (err) {
         console.log(err);

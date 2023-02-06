@@ -9,7 +9,7 @@
                             <h2>로그인</h2>
                         </div>
                         <div class="common_author_form">
-                            <form @submit.prevent="Login" id="main_author_form">
+                            <form @submit.prevent="Loginplease" id="main_author_form">
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="아이디를 입력해 주세요." v-model="state.form.id" required/>
                                 </div>
@@ -35,13 +35,14 @@
 <script>
 import { reactive, computed, ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
-import { requestSignin, requesttest } from "../../../common/api/commonAPI"
 import router from "@/router";
 
 export default {
     name: "CommonAuthorFour",
 
     setup(props, { emit }) {
+        const store = useStore()
+
         const state = reactive({
             form: {
                 id:'',
@@ -50,10 +51,16 @@ export default {
         })
 
         const Loginplease = async function () {
-            await store.dispatch('accountStore/loginAction', { id: state.form.id, password: state.form.password })
-        }
-
-        return {state,}
+                await store.dispatch('accountStore/loginAction', { id: state.form.id, password: state.form.password })
+            }      
+            
+        onMounted(() => {
+            if (store.getters["accountStore/getIsLogin"]) {
+                router.push({name: "home"})
+            }
+        })
+        
+        return {state, Loginplease}
     }
     
 
