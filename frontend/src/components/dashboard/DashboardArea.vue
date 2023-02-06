@@ -49,7 +49,7 @@
                     <div class="flight_Search_boxed date_flex_area">
                       <div class="Journey_date">
                         <p>From</p>
-                        <input type="date" value="2023-01-10" />
+                        <input v-model="StartDate" type="date" />
                       </div>
                     </div>
                   </div>
@@ -59,14 +59,14 @@
                     <div class="flight_Search_boxed date_flex_area">
                       <div class="Journey_date">
                         <p>To</p>
-                        <input type="date" value="2023-01-30" />
+                        <input  v-model="EndDate" type="date" />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <button class="btn btn_theme btn-lg">Filter</button>
+                  <button @click="filter_date" class="btn btn_theme btn-lg">Filter</button>
                 </div>
               </div>
             </div>
@@ -91,8 +91,10 @@
                   <tr>
                     <td>{{ rev.reservation_id }}</td>
                     <td>{{ rev.created_date }}</td>
-                    <td >
-                      <i v-for="score in rev.score" :key="score"
+                    <td>
+                      <i
+                        v-for="score in rev.score"
+                        :key="score"
                         class="fas fa-sharp fa-solid fa-star"
                         style="color: yellow"
                       ></i>
@@ -118,7 +120,7 @@
                   <span class="sr-only">Previous</span>
                 </a>
               </li>
-              <li  v-for="page in numberofpages" :key="page" class="page-item">
+              <li v-for="page in numberofpages" :key="page" class="page-item">
                 <a
                   style="cursor: pointer"
                   class="page-link"
@@ -127,7 +129,13 @@
                   {{ page }}</a
                 >
               </li>
-              <a v-if="currentpage !== numberofpages" style="cursor:pointer" class="page-link" @click="getValue(currentpage +1)" aria-label="Next">
+              <a
+                v-if="currentpage !== numberofpages"
+                style="cursor: pointer"
+                class="page-link"
+                @click="getValue(currentpage + 1)"
+                aria-label="Next"
+              >
                 <span aria-hidden="true">»</span>
                 <span class="sr-only">Next</span>
               </a>
@@ -142,7 +150,8 @@
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
-import axios from "axios";
+import { reviewss } from "../../../common/api/commonAPI";
+
 import { ref, computed } from "vue";
 export default {
   name: "DashboardArea",
@@ -152,26 +161,55 @@ export default {
     picturemodalVue,
   },
   setup() {
+
     const review = ref([]);
     const numberofreviews = ref(0);
     const currentpage = ref(1);
     const limit = 5;
-    const instance = axios.create({
-      baseURL: process.env.VUE_APP_API_URL,
-    });
+    const StartDate =ref("");
+    const EndDate =ref("");
+
+    const filter_date=() => {
+      const [syear,smonth,sday] =StartDate.value.split('-');
+      const SD = new Date(+syear,smonth-1,+sday);
+
+
+      const [eyear,emonth,eday] =EndDate.value.split('-');
+      const ED = new Date(+eyear,emonth-1,+eday);
+
+      let newarray = []
+      review.value.filter( re =>{
+        const [nyear,nmonth,nday] =re.created_date.split('-');
+        const ND = new Date(+nyear,nmonth-1,+nday);
+
+        if(ND >=SD && ND <=ED){
+          newarray.push(re)
+        }
+
+      })
+
+      review.value = newarray
+    }
+
+
     const getValue = async (page = currentpage.value) => {
       currentpage.value = page;
       try {
-        const res = await instance.get(
-          `review?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
+        const res = await reviewss(
+          `?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
         );
-        numberofreviews.value = res.headers["x-total-count"];
+        numberofreviews.value = res.data['length'];
         review.value = res.data;
       } catch (err) {
         console.log(err);
       }
     };
     getValue();
+
+    const coputeReview = computed(() =>{
+      return review
+    })
+
 
     const numberofpages = computed(() => {
       return Math.ceil(numberofreviews.value / limit);
@@ -183,7 +221,12 @@ export default {
       numberofpages,
       currentpage,
       numberofreviews,
-      review
+      review,
+      StartDate,
+      EndDate,
+      coputeReview,
+      filter_date
+
     };
   },
 };
