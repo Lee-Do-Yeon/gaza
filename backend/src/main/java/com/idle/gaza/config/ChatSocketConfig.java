@@ -1,6 +1,5 @@
 package com.idle.gaza.config;
 
-
 import com.idle.gaza.api.handler.ChatHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 
 @Configuration
 @EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
+public class ChatSocketConfig implements WebSocketConfigurer {
 
     @Autowired
     private ChatHandler chatHandler;
