@@ -89,8 +89,8 @@
                 </thead>
                 <tbody v-for="rev in review" :key="rev.id">
                   <tr>
-                    <td>{{ rev.reservation_id }}</td>
-                    <td>{{ rev.created_date }}</td>
+                    <td>{{ rev.userId}}</td>
+                    <td>{{ getDate(rev.createdDate) }}</td>
                     <td>
                       <i
                         v-for="score in rev.score"
@@ -169,6 +169,11 @@ export default {
     const StartDate =ref("");
     const EndDate =ref("");
 
+    const getDate = ( date ) => {
+      const DAT = new Date(date)
+      return DAT.getFullYear() +'-'+(DAT.getMonth()+1) +'-' +data.getDay()
+    }
+
     const filter_date=() => {
       const [syear,smonth,sday] =StartDate.value.split('-');
       const SD = new Date(+syear,smonth-1,+sday);
@@ -225,7 +230,9 @@ export default {
       StartDate,
       EndDate,
       coputeReview,
-      filter_date
+      filter_date,
+      getDate
+
 
     };
   },

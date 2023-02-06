@@ -2,7 +2,7 @@ import axios from "axios";
 
 function apiInstance() {
   const instance = axios.create({
-    baseURL: 'https://i8c207.p.ssafy.io/api',
+    baseURL: 'http://i8c207.p.ssafy.io:8080',
   });
   return instance;
 }
