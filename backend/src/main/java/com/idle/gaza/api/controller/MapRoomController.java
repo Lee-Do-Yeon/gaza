@@ -17,7 +17,7 @@ import com.idle.gaza.db.entity.MapRoom;
 import com.idle.gaza.db.repository.MapRoomRepository;
 
 @Controller
-@RequestMapping("/chat")
+@RequestMapping("/map")
 public class MapRoomController {
 
 	private final MapRoomRepository mapRoomRepository;
@@ -41,7 +41,7 @@ public class MapRoomController {
 	@GetMapping("/room/enter/{roomId}")
 	public String roomDetail(Model model, @PathVariable String roomId) {
 	    model.addAttribute("roomId", roomId);
-	    return "/chat/roomdetail";
+	    return "/map/roomdetail";
 	}
 	 
 	 // 특정 채팅방 조회
