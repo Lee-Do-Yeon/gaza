@@ -52,11 +52,11 @@ public class TokenUtil {
         this.userService = userService;
     }
 
-    public static String generateAccessToken(User user) {
+    public String generateAccessToken(User user) {
         return generateJwtToken(user, TOKEN_VALIDATION_SECOND, "access");
     }
 
-    public static String generateRefreshToken(User user) {
+    public String generateRefreshToken(User user) {
         return generateJwtToken(user, REFRESH_TOKEN_VALIDATION_SECOND, "refresh");
     }
 
@@ -66,7 +66,7 @@ public class TokenUtil {
      * @param user User : 사용자 정보
      * @return String : 토큰
      */
-    public static String generateJwtToken(User user, long expireTime, String type) {
+    public String generateJwtToken(User user, long expireTime, String type) {
         // 사용자 시퀀스를 기준으로 JWT 토큰을 발급하여 반환해줍니다.
         JwtBuilder builder = Jwts.builder()
                 .setHeader(createHeader())                              // Header 구성
@@ -156,11 +156,11 @@ public class TokenUtil {
      * @param header 헤더
      * @return String
      */
-    public static String getTokenFromHeader(String header) {
+    public String getTokenFromHeader(String header) {
         return header.substring(7);
     }
 
-    public static Long getExpiration(String token, String type) {
+    public Long getExpiration(String token, String type) {
 
         if(type.equals(ACCESS_TOKEN_NAME)) {
             // accessToken 남은 유효시간
@@ -182,7 +182,7 @@ public class TokenUtil {
      *
      * @return Calendar
      */
-    private static Date createExpiredDate(long expireTime) {
+    private Date createExpiredDate(long expireTime) {
         return new Date(System.currentTimeMillis() + expireTime);
     }
 
@@ -257,7 +257,7 @@ public class TokenUtil {
      * @param token : 토큰
      * @return String : 사용자 아이디
      */
-    public static String getUserIdFromToken(String token) {
+    public String getUserIdFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
         return claims.get("userId").toString();
     }
@@ -276,7 +276,7 @@ public class TokenUtil {
 
      */
 
-    public static TokenDto reissue(TokenDto tokenDto) {
+    public TokenDto reissue(TokenDto tokenDto) {
         /*
          *  accessToken 은 JWT Filter 에서 검증되고 옴
          * */
@@ -293,8 +293,6 @@ public class TokenUtil {
             throw new RuntimeException("잘못된 리프레시 토큰"); // 잘못된 리프레시 토큰
         }
 
-        System.out.println(getUserIdFromToken(originAccessToken));
-
         // 5. 새로운 토큰 생성
         String userId = getUserIdFromToken(originAccessToken);
 
@@ -306,8 +304,8 @@ public class TokenUtil {
             throw new RuntimeException("잘못된 유저 정보"); // 잘못된 리프레시 토큰
         }
         
-        String newAccessToken = TokenUtil.generateAccessToken(user);
-        String newRefreshToken = TokenUtil.generateRefreshToken(user);
+        String newAccessToken = generateAccessToken(user);
+        String newRefreshToken = generateRefreshToken(user);
         TokenDto newTokenDto = TokenDto.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
@@ -322,7 +320,7 @@ public class TokenUtil {
         return newTokenDto;
     }
 
-    public static void logout(TokenDto tokenDto) {
+    public void logout(TokenDto tokenDto) {
         // 1. Access Token 검증
         if (!TokenUtil.isValidToken(tokenDto.getAccessToken())) {
             throw new RuntimeException("잘못된 토큰 정보입니다.");
@@ -335,7 +333,7 @@ public class TokenUtil {
         }
 
         // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
-        Long expiration = TokenUtil.getExpiration(tokenDto.getAccessToken(), ACCESS_TOKEN_NAME);
+        Long expiration = getExpiration(tokenDto.getAccessToken(), ACCESS_TOKEN_NAME);
         RedisUtil.setDataExpire(tokenDto.getAccessToken(), "logout", expiration);
     }
 }

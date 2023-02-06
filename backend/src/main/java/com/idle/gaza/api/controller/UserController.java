@@ -34,6 +34,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     @Value("${spring.servlet.multipart.location}")
     String rootPath;
 
@@ -105,22 +108,26 @@ public class UserController {
     }
 
     /**
-     * [API] 사용자 정보 조회
+     * [API] 사용자 내 정보 조회
      *
-     * @param userId Integer
+     * @param accessToken String
      * @return ResponseEntity
      * 
      * header에서 토큰 가져와서 유저 정보 가져와서 보여주기
      */
-    @GetMapping("/{userId}")
+    @GetMapping("")
     @ApiOperation(value = "사용자 조회", notes = "사용자를 조회한다.")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 200, message = "성공"),
             @io.swagger.annotations.ApiResponse(code = 500, message = "서버 오류"),
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<ApiResponse<Object>> getUser(@PathVariable @ApiParam(value = "유저 PK", required = true) Integer userId) {
-        User user = userService.searchUser(userId);
+    public ResponseEntity<ApiResponse<Object>> getUser(@RequestHeader("Authorization") String accessToken) {
+        String token = tokenUtil.getTokenFromHeader(accessToken);
+
+        String id = tokenUtil.getUserIdFromToken(token);
+
+        User user = userService.searchUser(id);
 
         if (user == null) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -151,10 +158,14 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 500, message = "서버 오류"),
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
-    @PutMapping("/{userId}")
-    public ResponseEntity<ApiResponse<Object>> updateUser(@PathVariable int userId, @RequestBody UserUpdateRequest userUpdateRequest, @RequestParam("picture") MultipartFile pictureFile) {
+    @PutMapping("")
+    public ResponseEntity<ApiResponse<Object>> updateUser(@RequestHeader("Authorization") String accessToken, @RequestBody UserUpdateRequest userUpdateRequest, @RequestParam("picture") MultipartFile pictureFile) {
+        String token = tokenUtil.getTokenFromHeader(accessToken);
+
+        String id = tokenUtil.getUserIdFromToken(token);
+
         //파일이 존재한다면 기존 경로에서 파일 삭제
-        User user = userService.searchUser(userId);
+        User user = userService.searchUser(id);
 
         String originPictureName = user.getPicture();
 
@@ -191,7 +202,7 @@ public class UserController {
             log.error(e.getMessage());
         }
 
-        int result = userService.updateUser(userId, userUpdateRequest);
+        int result = userService.updateUser(id, userUpdateRequest);
 
         if (result == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -213,12 +224,16 @@ public class UserController {
     /**
      * [API] 회원 탈퇴
      *
-     * @param userId Integer
+     * @param accessToken String
      * @return ResponseEntity
      */
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<ApiResponse<Object>> deleteUser(@PathVariable Integer userId) {
-        int result = userService.deleteUser(userId);
+    @DeleteMapping("")
+    public ResponseEntity<ApiResponse<Object>> deleteUser(@RequestHeader("Authorization") String accessToken) {
+        String token = tokenUtil.getTokenFromHeader(accessToken);
+
+        String id = tokenUtil.getUserIdFromToken(token);
+
+        int result = userService.deleteUser(id);
 
         if (result == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -244,8 +259,12 @@ public class UserController {
      * @return ResponseEntity
      */
     @PutMapping("/pw/{userId}")
-    public ResponseEntity<ApiResponse<Object>> changePassword(@PathVariable int userId, @RequestParam String password) {
-        int result = userService.updatePassword(userId, password);
+    public ResponseEntity<ApiResponse<Object>> changePassword(@RequestHeader("Authorization") String accessToken, @RequestParam String password) {
+        String token = tokenUtil.getTokenFromHeader(accessToken);
+
+        String id = tokenUtil.getUserIdFromToken(token);
+
+        int result = userService.updatePassword(id, password);
 
         if (result == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -267,13 +286,12 @@ public class UserController {
     /**
      * [API] 사용자 로그인 상태 조회
      *
-     * @param user User
      * @return ResponseEntity
      * <p>
      * 프론트에서 만료 시간을 가지고 있다면 자체적으로 확인 가능할듯(만료X면 그대로 사용, 만료됐으면 auth/reissue
      */
     @PostMapping("/isLogin")
-    public ResponseEntity<ApiResponse<Object>> checkLogin(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<Object>> checkLogin() {
 
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(null)
@@ -285,17 +303,21 @@ public class UserController {
 
     /**
      *
-     * @param userId Integer
+     * @param accessToken String
      * @param idFileFile MultipartFile
      * @param certificateResidenceFile MultipartFile
      * @param certificateFile MultipartFile
      * @return
      */
-    @PostMapping("/guide/{userId}")
-    public ResponseEntity<ApiResponse<Object>> joinGuide(@PathVariable("userId") Integer userId,
+    @PostMapping("/guide")
+    public ResponseEntity<ApiResponse<Object>> joinGuide(@RequestHeader("Authorization") String accessToken,
                                                          @RequestParam("idFile") MultipartFile idFileFile,
                                                          @RequestParam("certificateResidence") MultipartFile certificateResidenceFile,
                                                          @RequestParam("certificate") MultipartFile certificateFile) {
+
+        String token = tokenUtil.getTokenFromHeader(accessToken);
+
+        String id = tokenUtil.getUserIdFromToken(token);
 
         if (idFileFile == null || certificateResidenceFile == null || certificateFile == null) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -306,7 +328,7 @@ public class UserController {
             return new ResponseEntity<>(ar, HttpStatus.NO_CONTENT);
         }
 
-        int updateResult = userService.changeState(userId, "US3");
+        int updateResult = userService.changeState(id, "US3");
 
         if (updateResult == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -367,7 +389,7 @@ public class UserController {
                 .certificate(certificateUploadFileName)
                 .build();
 
-        int insertResult = userService.registerGuide(userId, guideDocument);
+        int insertResult = userService.registerGuide(id, guideDocument);
 
         if (insertResult == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -388,15 +410,17 @@ public class UserController {
     /**
      * [API] 가이드 신청 승인
      *
-     * @param userId Integer
+     * @param accessToken String
      * @return ResponseEntity
      * <p>
      * 프론트에서 만료 시간을 가지고 있다면 자체적으로 확인 가능할듯(만료X면 그대로 사용, 만료됐으면 auth/reissue
      */
-    @PutMapping("/guide/{userId}")
-    public ResponseEntity<ApiResponse<Object>> acceptGuide(@PathVariable("userId") Integer userId) {
+    @PutMapping("/guide")
+    public ResponseEntity<ApiResponse<Object>> acceptGuide(@RequestHeader("Authorization") String accessToken) {
 
+        String token = tokenUtil.getTokenFromHeader(accessToken);
 
+        String id = tokenUtil.getUserIdFromToken(token);
 
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(null)
@@ -416,7 +440,7 @@ public class UserController {
      */
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Object>> logout(@RequestBody TokenDto tokenDto) {
-        TokenUtil.logout(tokenDto);
+        tokenUtil.logout(tokenDto);
 
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(null)

@@ -8,6 +8,7 @@ import com.idle.gaza.db.entity.User;
 import com.idle.gaza.db.entity.UserDetailsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -24,6 +25,9 @@ import java.util.HashMap;
 @Slf4j
 @Configuration
 public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+
+    @Autowired
+    TokenUtil tokenUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -56,9 +60,9 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
             responseMap.put("failMsg", null);
             jsonObject = new JSONObject(responseMap);
 
-            String accessToken = TokenUtil.generateJwtToken(user, TokenUtil.TOKEN_VALIDATION_SECOND, TokenUtil.ACCESS_TOKEN_NAME);
+            String accessToken = tokenUtil.generateJwtToken(user, TokenUtil.TOKEN_VALIDATION_SECOND, TokenUtil.ACCESS_TOKEN_NAME);
             jsonObject.put("accessToken", accessToken);
-            String refreshToken = TokenUtil.generateJwtToken(user, TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND, TokenUtil.REFRESH_TOKEN_NAME);
+            String refreshToken = tokenUtil.generateJwtToken(user, TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND, TokenUtil.REFRESH_TOKEN_NAME);
             jsonObject.put("refreshToken", refreshToken);
 
             RedisUtil.setDataExpire(refreshToken, user.getId(), TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND);

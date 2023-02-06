@@ -38,15 +38,15 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User searchUser(Integer userId) {
+    public User searchUser(String id) {
         //유저 정보 리턴
-        Optional<User> user = userRepository.findByUserId(userId);
+        Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
     }
 
     @Override
-    public int changeState(Integer userId, String state) {
-        Optional<User> user = userRepository.findByUserId(userId);
+    public int changeState(String id, String state) {
+        Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) return 0;
 
         User updateUser = user.get();
@@ -59,8 +59,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public int registerGuide(Integer userId, GuideDocument guideDocument) {
-        Optional<User> user = userRepository.findByUserId(userId);
+    public int registerGuide(String id, GuideDocument guideDocument) {
+        Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) return 0;
 
         User resultUser = user.get();
@@ -80,8 +80,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public int updateUser(Integer userId, UserUpdateRequest userUpdateRequest) {
-        Optional<User> user = userRepository.findByUserId(userId);
+    public int updateUser(String id, UserUpdateRequest userUpdateRequest) {
+        Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) return 0;
 
         User updateUser = user.get();
@@ -98,8 +98,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public int updatePassword(Integer userId, String password) {
-        Optional<User> user = userRepository.findByUserId(userId);
+    public int updatePassword(String id, String password) {
+        Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) return 0;
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -116,8 +116,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public int deleteUser(Integer userId) {
-        Optional<User> user = userRepository.findByUserId(userId);
+    public int deleteUser(String id) {
+        Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) return 0;
 
         User updateUser = user.get();
