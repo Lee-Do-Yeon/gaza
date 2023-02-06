@@ -41,9 +41,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         // Spring Security - UserDetailsService를 통해 DB에서 아이디로 사용자 조회
         UserDetailsDto userDetailsDto = (UserDetailsDto) userDetailsService.loadUserByUsername(userId);
 
-        System.out.println(userDetailsDto.getPassword() + "  " + userPw);
+        log.debug(userDetailsDto.getUsername());
 
-        if (!(userDetailsDto.getPassword().equalsIgnoreCase(userPw) && userDetailsDto.getPassword().equalsIgnoreCase(userPw))) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+        System.out.println(bCryptPasswordEncoder.matches(userPw, userDetailsDto.getPassword()));
+
+        if (!bCryptPasswordEncoder.matches(userPw, userDetailsDto.getPassword())) {
             throw new BadCredentialsException(userDetailsDto.getUsername() + "Invalid password");
         }
         return new UsernamePasswordAuthenticationToken(userDetailsDto, userPw, userDetailsDto.getAuthorities());

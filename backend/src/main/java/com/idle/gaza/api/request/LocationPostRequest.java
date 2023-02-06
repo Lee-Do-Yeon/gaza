@@ -11,7 +11,6 @@ import lombok.ToString;
 @ToString
 public class LocationPostRequest {
 
-
     private Integer recommendId;
 
     private Integer guideId;
