@@ -42,7 +42,7 @@ public class ReviewController {
 
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "리뷰 조회 (작성자)", notes = "작성한 리뷰 리스트를 볼 수 있다.")
-    public ResponseEntity<?> getReviewsByUser(String userId){
+    public ResponseEntity<?> getReviewsByUser(@PathVariable String userId){
         List<ReviewResponse> reviews = reviewService.getReviewsByUser(userId);
         return new ResponseEntity<List<?>>(reviews, HttpStatus.OK);
     }
