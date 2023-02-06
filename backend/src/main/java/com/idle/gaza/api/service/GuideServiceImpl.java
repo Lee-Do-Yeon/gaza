@@ -153,8 +153,8 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public List<LocationResponse> locationSearch(int guideId) {
-        List<GuideRecommendLocation> locations = guideRecommendRepository.findByGuide_GuideId(guideId);
+    public List<LocationResponse> locationSearch(String guideId) {
+        List<GuideRecommendLocation> locations = guideRecommendRepository.findByGuide_UserId_Id(guideId);
         List<LocationResponse> locationRes = new ArrayList<>(locations.size());
         for(int i=0; i<locations.size(); i++){
             GuideRecommendLocation location = locations.get(i);

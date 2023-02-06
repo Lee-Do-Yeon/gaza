@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
-    @Query(value = "select * from review where reservation_id in (select reservation_id from reservation where user_id = :userId);", nativeQuery = true)
-    List<Review> findReviewsByUser(@Param("userId") int userId);
+    @Query(value = "select * from review where reservation_id in (select reservation_id from reservation where user_id = (select user_id from user where id= :userId))", nativeQuery = true)
+    List<Review> findReviewsByUser(@Param("userId") String userId);
 
-    @Query(value = "select * from review where reservation_id in (select reservation_id from reservation where guide_id = :guideId);", nativeQuery = true)
-    List<Review> findReviewsByGuide(@Param("guideId") int guideId);
+    @Query(value = "select * from review where reservation_id in (select reservation_id from reservation where guide_id = (select guide_id from guide where user_id = (select user_id from user where id= :guideId)));", nativeQuery = true)
+    List<Review> findReviewsByGuide(@Param("guideId") String guideId);
     
 }
