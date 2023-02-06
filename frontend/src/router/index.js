@@ -44,8 +44,6 @@ import GuideScheduleView from '../views/GuideScheduleView.vue'
 import GuideReviewView from '../views/GuideReviewView.vue'
 import GuideQNAView from '../views/GuideQNAView.vue'
 
-import ChatEnter from "../components/chat/ChatEnter.vue"
-
 const routes = [
   {
     path: '/',
@@ -256,11 +254,6 @@ const routes = [
     path : '/guide_QNA',
     name : 'guide_QNA',
     component :GuideQNAView
-  },
-  {
-    path: '/chatEnter',
-    name:'chatEnter',
-    component:ChatEnter
   }
 ]
 
