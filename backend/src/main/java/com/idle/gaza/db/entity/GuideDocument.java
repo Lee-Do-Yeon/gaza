@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Setter
@@ -15,6 +16,9 @@ import javax.persistence.*;
 public class GuideDocument {
 
     @Id
+    Integer userId;
+
+    @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="user_id")
