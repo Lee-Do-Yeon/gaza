@@ -7,7 +7,7 @@
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
           <div class="section_heading_center">
-            <h2>Our best promotional tours</h2>
+            <h2>인기 가이드</h2>
           </div>
         </div>
       </div>
@@ -15,14 +15,14 @@
         <div class="col-lg-12">
           <div class="promotional_tour_slider owl-theme owl-carousel dot_style">
             <swiper :slides-per-view="4"  :space-between="20" :pagination="{ clickable: true }">
-              <swiper-slide>
+              <swiper-slide v-for="guide in state.form.swiperItems" :key="guide.name">
                 <div class="theme_common_box_two img_hover">
                   <div class="theme_two_box_img">
                     <router-link to="/hotel-details"><img src="../../assets/img/tab-img/hotel1.png" alt="img"></router-link>
-                    <p><i class="fas fa-map-marker-alt"></i>New beach, Thailand</p>
+                    <p><i class="fas fa-map-marker-alt"></i>{{ guide.country }}, {{ guide.city }}</p>
                   </div>
                   <div class="theme_two_box_content">
-                    <h4><router-link to="/hotel-details">Kantua hotel, Thailand</router-link></h4>
+                    <h4><router-link to="/hotel-details">{{ guide.name }}</router-link></h4>
                     <p><span class="review_rating">4.8/5 Excellent</span> <span class="review_count">(1214
                         reviewes)</span></p>
                     <h3>$99.00 <span>Price starts from</span></h3>
@@ -30,7 +30,7 @@
                 </div>
               </swiper-slide>
 
-              <swiper-slide>
+              <!-- <swiper-slide>
                 <div class="theme_common_box_two img_hover">
                   <div class="theme_two_box_img">
                     <router-link to="/hotel-details"><img src="../../assets/img/tab-img/hotel2.png" alt="img"></router-link>
@@ -109,7 +109,7 @@
                     <h3>$99.00 <span>Price starts from</span></h3>
                   </div>
                 </div>
-              </swiper-slide>
+              </swiper-slide> -->
             </swiper>
           </div>
         </div>
@@ -121,6 +121,10 @@
 <script>
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/swiper-bundle.css";
+import { reactive, computed, ref, onMounted, watch } from 'vue';
+import { useStore } from 'vuex';
+import router from "@/router";
+import { popularGuide } from '../../../common/api/commonAPI';
 
 export default {
   name: "PromotionalTours",
@@ -130,10 +134,27 @@ export default {
     SwiperSlide,
   },
 
-  data() {
-    return {
-      swiper: null,
-    };
-  }
+  setup(props, { emit }) {
+
+    const state = reactive({
+      form: {
+        swiperItems: null,
+      }
+    })
+
+    const popularGuides = async function () {
+      console.log('popularguides');
+      const response = await popularGuide()
+      state.form.swiperItems = response.data
+      console.log(state.form.swiperItems);
+    }
+
+    onMounted(() => {
+      console.log('guides mounted')
+      popularGuides()
+    })
+
+    return { popularGuides, state}
+  },
 };
 </script>
