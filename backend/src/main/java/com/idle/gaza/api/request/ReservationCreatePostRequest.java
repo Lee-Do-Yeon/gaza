@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 @ApiModel("ReservationCreatePostRequest")
 public class ReservationCreatePostRequest {
-    private int userId;
-    private int guideId;
+    private String userId;
+    private String guideId;
     @ApiModelProperty(name="상담하는 날짜시간", example="2023-02-01T08:11:11")
     private LocalDateTime consultingDate;
     @ApiModelProperty(name="여행 시작 날짜시간", example="2023-02-01T08:11:11")
