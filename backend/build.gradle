@@ -56,11 +56,7 @@ dependencies {
     implementation("com.google.guava:guava:29.0-jre")
     annotationProcessor("com.google.guava:guava:29.0-jre")
 
-<<<<<<< HEAD
     //websocket
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.webjars:sockjs-client:1.1.2'
-=======
     //STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
     implementation("org.springframework.boot:spring-boot-starter-mustache")
     //STOMP 관련 프론트 라이브러리
@@ -69,7 +65,6 @@ dependencies {
     implementation('org.webjars:stomp-websocket:2.3.3-1')
     implementation('org.webjars:webjars-locator:0.30')
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
->>>>>>> cacf7ec07f373151ad535db5b8d222e1a0f0266f
 
 }
 
