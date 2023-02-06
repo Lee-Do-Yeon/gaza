@@ -383,6 +383,27 @@ public class UserController {
     }
 
     /**
+     * [API] 가이드 신청 승인
+     *
+     * @param userId Integer
+     * @return ResponseEntity
+     * <p>
+     * 프론트에서 만료 시간을 가지고 있다면 자체적으로 확인 가능할듯(만료X면 그대로 사용, 만료됐으면 auth/reissue
+     */
+    @PutMapping("/guide/{userId}")
+    public ResponseEntity<ApiResponse<Object>> acceptGuide(@PathVariable("userId") Integer userId) {
+
+
+
+        ApiResponse<Object> ar = ApiResponse.builder()
+                .result(null)
+                .resultCode(SuccessCode.SELECT.getStatus())
+                .resultMsg(SuccessCode.SELECT.getMessage())
+                .build();
+        return new ResponseEntity<>(ar, HttpStatus.OK);
+    }
+
+    /**
      * [API] 로그아웃
      *
      * @param tokenDto TokenDto
