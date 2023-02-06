@@ -14,13 +14,13 @@ const requestLogin = (payload) => api.post("/users/login", payload);
 const requestConfirm = accessToken => api.get("/users/isLogin", {headers: {Authorization: accessToken}})
 
 // 예약내역조회 Notification
-const reser = () => api.get("/reservation");
+const reser = () => api.get("/books/user/1");
 
 // 인기 가이드 조회
 const popularGuide = () => api.get("/guides/popular")
 
 // 유저 예약내역 조회
-const reviewss = (payload) => api.get('/review',payload);
+const reviewss = (payload) => api.get('/reviews/user/1',payload);
 
 
 const requestConfirmId = userid => api.get(`/users/${userid}`)
