@@ -23,17 +23,19 @@ public class TravelRoute {
     private Reservation reservationId;
     private String name;
     private String address;
-    private int order;
+
+    @Column(name = "order_no")
+    private int orderNo;
     @Column(columnDefinition = "DECIMAL")
     private String latitude;
     @Column(columnDefinition = "DECIMAL")
     private String longitude;
 
-    public TravelRoute(Reservation reservationId, String name, String address, int order, String latitude, String longitude) {
+    public TravelRoute(Reservation reservationId, String name, String address, int orderNo, String latitude, String longitude) {
         this.reservationId = reservationId;
         this.name = name;
         this.address = address;
-        this.order = order;
+        this.orderNo = orderNo;
         this.latitude = latitude;
         this.longitude = longitude;
     }
