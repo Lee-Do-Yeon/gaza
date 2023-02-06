@@ -5,6 +5,7 @@ import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.request.TimeRegisterPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
+import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.*;
@@ -239,6 +240,19 @@ public class GuideController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    // 추천 장소 조회
+    @GetMapping("/location/{guideId}")
+    @ApiOperation(value = "추천 장소 조회", notes = "추천 장소를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message = "사용자 없음")
+    })
+    public ResponseEntity<?> locationSearch(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId) {
+        List<LocationResponse> list = guideService.locationSearch(guideId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 
     /////////////////////여행 테마 기능///////////////////////////
 
