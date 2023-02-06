@@ -52,20 +52,16 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
         // [STEP3-2] 사용자의 상태가 '휴면 상태'가 아닌 경우 응답 값으로 전달 할 데이터
         else {
             // 1. 일반 계정일 경우 데이터 세팅
-            responseMap.put("userInfo", userVoObj);
             responseMap.put("resultCode", 200);
             responseMap.put("failMsg", null);
             jsonObject = new JSONObject(responseMap);
 
             String accessToken = TokenUtil.generateJwtToken(user, TokenUtil.TOKEN_VALIDATION_SECOND, TokenUtil.ACCESS_TOKEN_NAME);
             jsonObject.put("accessToken", accessToken);
-            response.addHeader(AuthConstants.AUTH_HEADER_ACCESS_TOKEN, AuthConstants.TOKEN_TYPE + " " + accessToken);
             String refreshToken = TokenUtil.generateJwtToken(user, TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND, TokenUtil.REFRESH_TOKEN_NAME);
             jsonObject.put("refreshToken", refreshToken);
-            response.addHeader(AuthConstants.AUTH_HEADER_REFRESH_TOKEN, AuthConstants.TOKEN_TYPE + " " + refreshToken);
 
             RedisUtil.setDataExpire(refreshToken, user.getId(), TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND);
-            System.out.println("최초 설정 ref : " + refreshToken);
         }
 
         // [STEP4] 구성한 응답 값을 전달합니다.
