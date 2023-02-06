@@ -37,17 +37,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation createReservation(ReservationCreatePostRequest reservationInfo) {
-        Optional<User> userOptional = userRepository.findByUserId(reservationInfo.getUserId());
+        Optional<User> userOptional = userRepository.findById(reservationInfo.getUserId());
         User user = null;
         if(userOptional.isPresent()){
             user = userOptional.get();
         }
 
-        Optional<Guide> guideOptional = guideRepository.findGuideByGuideId(reservationInfo.getGuideId());
-        Guide guide = null;
-        if(guideOptional.isPresent()){
-            guide = guideOptional.get();
-        }
+        Guide guide = guideRepository.findByUserId_Id(reservationInfo.getGuideId());
 
         Reservation reservation = Reservation.builder()
                 .userId(user)
@@ -79,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationResponse> getReservationListByGuide(int guideId) {
+    public List<ReservationResponse> getReservationListByGuide(String guideId) {
         List<Reservation> reservations = reservationRepository.findResevationsByGuide(guideId);
         List<ReservationResponse> reservationRes = new ArrayList<>(reservations.size());
         for(int i=0; i<reservations.size(); i++){
@@ -103,7 +99,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationResponse> getReservationListByUser(int userId) {
+    public List<ReservationResponse> getReservationListByUser(String userId) {
         List<Reservation> reservations = reservationRepository.findResevationsByUser(userId);
         List<ReservationResponse> reservationRes = new ArrayList<>(reservations.size());
         for(int i=0; i<reservations.size(); i++){
@@ -127,7 +123,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Integer> getImpossibleTime(int guideId, Date selectedDate) {
+    public List<Integer> getImpossibleTime(String guideId, Date selectedDate) {
         List<Timestamp> timestamps = reservationRepository.getImpossibleTime(guideId, selectedDate);
         List<Integer> times = new ArrayList<>(timestamps.size());
         for(int i=0; i<timestamps.size(); i++){

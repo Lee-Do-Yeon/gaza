@@ -21,7 +21,7 @@ public interface GuideService {
     int locationRegister(LocationPostRequest locations);
     int locationDelete(int guideId, int recommendId);
     int locationUpdate(LocationPostRequest locations);
-    List<LocationResponse> locationSearch(int guideId);
+    List<LocationResponse> locationSearch(String guideId);
 
     String findExistFile(int recommendId);
 

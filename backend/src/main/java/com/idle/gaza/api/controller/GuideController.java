@@ -249,7 +249,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> locationSearch(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId) {
+    public ResponseEntity<?> locationSearch(@PathVariable @ApiParam(value = "가이드의 유저 아이디(String)", required = true) String guideId) {
         List<LocationResponse> list = guideService.locationSearch(guideId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }

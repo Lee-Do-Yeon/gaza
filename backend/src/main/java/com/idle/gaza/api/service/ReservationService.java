@@ -16,7 +16,7 @@ import java.util.List;
 public interface ReservationService {
     Reservation createReservation(ReservationCreatePostRequest reservationInfo);
     void cancelReservation(int reservationId) throws Exception;
-    List<ReservationResponse> getReservationListByGuide(int guideId);
-    List<ReservationResponse> getReservationListByUser(int userId);
-    List<Integer> getImpossibleTime(int guideId, Date selectedDate);
+    List<ReservationResponse> getReservationListByGuide(String guideId);
+    List<ReservationResponse> getReservationListByUser(String userId);
+    List<Integer> getImpossibleTime(String guideId, Date selectedDate);
 }
