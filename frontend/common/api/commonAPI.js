@@ -22,7 +22,6 @@ const popularGuide = () => api.get("/guides/popular")
 // 유저 예약내역 조회
 const reviewss = (payload) => api.get('/review',payload);
 
-const requestConfirm = token => api.get("/users/me", {headers: {Authorization: token}})
 
 const requestConfirmId = userid => api.get(`/users/${userid}`)
 
