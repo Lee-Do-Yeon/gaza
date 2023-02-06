@@ -44,6 +44,10 @@ import GuideScheduleView from '../views/GuideScheduleView.vue'
 import GuideReviewView from '../views/GuideReviewView.vue'
 import GuideQNAView from '../views/GuideQNAView.vue'
 
+import MapDetail from "@/components/map/MapDetail";
+import MapTest from "@/components/map/MapTest";
+import AppMap from "../views/AppMap.vue";
+
 const routes = [
   {
     path: '/',
@@ -254,6 +258,24 @@ const routes = [
     path : '/guide_QNA',
     name : 'guide_QNA',
     component :GuideQNAView
+  },
+  {
+    path: "/map",
+    name: "map",
+    component: AppMap,
+    redirect: "map/test",
+    children: [
+      {
+        path: "test",
+        name: "maptest",
+        component: MapTest,
+      },
+      {
+        path: "detail/:roomId",
+        name: "mapdetail",
+        component: MapDetail,
+      },
+    ],
   }
 ]
 
