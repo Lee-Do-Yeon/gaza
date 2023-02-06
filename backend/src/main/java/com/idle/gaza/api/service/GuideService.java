@@ -3,6 +3,7 @@ package com.idle.gaza.api.service;
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
+import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.db.entity.Guide;
 
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ public interface GuideService {
     int locationRegister(LocationPostRequest locations);
     int locationDelete(int guideId, int recommendId);
     int locationUpdate(LocationPostRequest locations);
+    List<LocationResponse> locationSearch(int guideId);
 
     String findExistFile(int recommendId);
 
