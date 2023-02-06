@@ -19,9 +19,7 @@ const reser = () => api.get("/reservation");
 // 인기 가이드 조회
 const popularGuide = () => api.get("/guides/popular")
 
-
-const reser = (payload) => api.get("/reservation", payload);
-
+// 유저 예약내역 조회
 const reviewss = (payload) => api.get('/review',payload);
 
 const requestConfirm = token => api.get("/users/me", {headers: {Authorization: token}})
@@ -29,4 +27,4 @@ const requestConfirm = token => api.get("/users/me", {headers: {Authorization: t
 const requestConfirmId = userid => api.get(`/users/${userid}`)
 
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide};
