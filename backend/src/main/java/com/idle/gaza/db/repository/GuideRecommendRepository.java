@@ -20,5 +20,5 @@ public interface GuideRecommendRepository extends JpaRepository<GuideRecommendLo
     Optional<GuideRecommendLocation> findByRecommendId(int recommendId);
     void deleteByRecommendId(int recommendId);
 
-    List<GuideRecommendLocation> findByGuide_GuideId(int guideId);
+    List<GuideRecommendLocation> findByGuide_UserId_Id(String guideId);
 }
