@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @Api(value = "리뷰 API", tags = {"Review"})
 @RestController
@@ -40,14 +42,14 @@ public class ReviewController {
 
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "리뷰 조회 (작성자)", notes = "작성한 리뷰 리스트를 볼 수 있다.")
-    public ResponseEntity<?> getReviewsByUser(@PathVariable int userId){
+    public ResponseEntity<?> getReviewsByUser(String userId){
         List<ReviewResponse> reviews = reviewService.getReviewsByUser(userId);
         return new ResponseEntity<List<?>>(reviews, HttpStatus.OK);
     }
 
     @GetMapping("/guide/{guideId}")
     @ApiOperation(value = "리뷰 조회 (가이드)", notes = "가이드에게 달린 리스트를 볼 수 있다.")
-    public ResponseEntity<?> getReviewsByGuide(@PathVariable int guideId){
+    public ResponseEntity<?> getReviewsByGuide(@PathVariable String guideId){
         List<ReviewResponse> reviews = reviewService.getReviewsByGuide(guideId);
         return new ResponseEntity<List<?>>(reviews, HttpStatus.OK);
     }
