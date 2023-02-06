@@ -4,8 +4,19 @@
         <div>
             <h2>방</h2>
         </div>
-        <div id="map" style="width: 100%; height: 400px; position: relative; overflow: hidden">
+        <div id="map" style="width: 75%; height: 400px; position: relative; overflow: hidden; float:left">
         </div>
+        <h3>여행일정</h3>
+        <div>
+            <ul class="list-group">
+                <li
+                    v-for="route in travel_route"
+                    v-bind:key="route.order"
+                >
+                    {{ route.order }} | {{ route.name }} | {{ route.address }} 
+                </li>
+            </ul>
+         </div><div style="clear:both:"></div>
         <div id="clickLatlng"></div>
         <div class="input-group">
             <div class="input-group-append">
@@ -34,6 +45,8 @@ export default {
             map: Object,
             recvLng: 0.0,
             recvLat: 0.0,
+            travel_route: [],
+            reservationId: 3,
         };
     },
     created() {
@@ -41,6 +54,7 @@ export default {
         this.roomId = localStorage.getItem("wschat.roomId");
         this.sender = localStorage.getItem("wschat.sender");
         this.findRoom();
+        this.getRoutes();
     },
     mounted() {
         if (window.kakao && window.kakao.maps) {
@@ -199,8 +213,16 @@ export default {
                 }
             );
         }, // connect() 끝
-    },
-};
+        getRoutes(){
+            axios.get(`/routes/${this.reservationId}`).then((res) => {
+                this.travel_route = res.data;
+                console.log("여행 일정 : " + JSON.stringify(res.data));
+            });
+            
+            console.log("travel_route : " + this.travel_route);
+            },
+        }
+    };
 </script>
 
 <style>
