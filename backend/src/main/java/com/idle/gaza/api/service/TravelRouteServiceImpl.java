@@ -56,7 +56,7 @@ public class TravelRouteServiceImpl implements TravelRouteService{
             TravelRouteResponse res = new TravelRouteResponse(
                     route.getName(),
                     route.getAddress(),
-                    route.getOrder(),
+                    route.getOrderNo(),
                     route.getLatitude(),
                     route.getLongitude()
             );

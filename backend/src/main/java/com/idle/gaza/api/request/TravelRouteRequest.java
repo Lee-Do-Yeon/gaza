@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @ApiModel("TravleRouteRequest")
 public class TravelRouteRequest {
-    private Integer TravelRouteId;
     private Integer reservationId;
     private String name;
     private String address;
