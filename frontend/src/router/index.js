@@ -50,6 +50,8 @@ import AppMap from "../views/AppMap.vue";
 
 
 import AppChat from "../views/AppChat.vue";
+import ChatDetail from "@/components/chat/ChatDetail.vue";
+import ChatEnter from "@/components/chat/ChatEnter.vue";
 
 const routes = [
   {
@@ -280,11 +282,25 @@ const routes = [
       },
     ],
   },
+
   {
-    path:"/chat",
-    name:"AppChat",
-    component:AppChat
+    path: "/chat",
+    name: "chat",
+    component: AppChat,
+    children: [
+      {
+        path: "enter",
+        name: "chateEnter",
+        component: ChatEnter,
+      },
+      {
+        path: "room/:roomId",
+        name: "chatDetail",
+        component: ChatDetail,
+      },
+    ],
   }
+
 ]
 
 

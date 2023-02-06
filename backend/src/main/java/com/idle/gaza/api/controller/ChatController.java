@@ -22,9 +22,18 @@ public class ChatController {
 
     //채팅방 생성
     @PostMapping("/room")
-    public ResponseEntity<?> roomList(@RequestParam String name) {
+    public ResponseEntity<?> roomCreate(@RequestBody String name) {
         ChatRoom chatRoom = chatService.createRoom(name);
         if (chatRoom == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(chatRoom, HttpStatus.OK);
+    }
+
+    //채팅방 목록 확인
+    @GetMapping("/room")
+    public ResponseEntity<?> roomList(){
+        List<ChatRoom> chatRoom = chatService.findAllRoom();
+        log.info("room size = " + chatRoom.size());
+        if(chatRoom.size() == 0) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(chatRoom, HttpStatus.OK);
     }
 
@@ -32,9 +41,10 @@ public class ChatController {
     //채팅방에 입장
     @GetMapping("/room/{roomId}")
     public ResponseEntity<?> enterRoom(@PathVariable String roomId) {
-        List<ChatRoom> chatRoomList = chatService.findAllRoom();
-        if (chatRoomList.size() == 0) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        return new ResponseEntity<>(chatRoomList, HttpStatus.OK);
+        log.info("room enter = " + roomId);
+        ChatRoom chatRoom = chatService.findByRoomId(roomId);
+        if (chatRoom == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(chatRoom, HttpStatus.OK);
     }
 
 
