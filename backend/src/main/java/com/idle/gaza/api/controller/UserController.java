@@ -105,10 +105,12 @@ public class UserController {
     }
 
     /**
-     * [API] 사용자 조회
+     * [API] 사용자 정보 조회
      *
      * @param userId Integer
      * @return ResponseEntity
+     * 
+     * header에서 토큰 가져와서 유저 정보 가져와서 보여주기
      */
     @GetMapping("/{userId}")
     @ApiOperation(value = "사용자 조회", notes = "사용자를 조회한다.")
@@ -282,10 +284,12 @@ public class UserController {
     }
 
     /**
-     * [API] 가이드 신청
      *
-     * @param user User
-     * @return ResponseEntity
+     * @param userId Integer
+     * @param idFileFile MultipartFile
+     * @param certificateResidenceFile MultipartFile
+     * @param certificateFile MultipartFile
+     * @return
      */
     @PostMapping("/guide/{userId}")
     public ResponseEntity<ApiResponse<Object>> joinGuide(@PathVariable("userId") Integer userId,
@@ -365,7 +369,6 @@ public class UserController {
 
         int insertResult = userService.registerGuide(userId, guideDocument);
 
-
         if (insertResult == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
                     .result(null)
@@ -408,6 +411,8 @@ public class UserController {
      *
      * @param tokenDto TokenDto
      * @return ResponseEntity
+     * 
+     * refresh는 데이터로
      */
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Object>> logout(@RequestBody TokenDto tokenDto) {
