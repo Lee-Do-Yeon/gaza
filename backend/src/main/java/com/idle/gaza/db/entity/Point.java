@@ -1,10 +1,13 @@
 package com.idle.gaza.db.entity;
 
 public class Point {
-
-    private String lat; // 메시지 보낸사람
-    private String lng; // 메시지
-    private String roomId; // 방번호
+	public enum PointType {
+		FOCUS, CLICK
+	}
+	private PointType type; // 메시지 타입
+    private String lat;
+    private String lng;
+    private String roomId;
     
 	public String getLat() {
 		return lat;
@@ -24,6 +27,12 @@ public class Point {
 	public void setRoomId(String roomId) {
 		this.roomId = roomId;
 	}
-    
-    
+
+	public PointType getType() {
+		return type;
+	}
+
+	public void setType(PointType type) {
+		this.type = type;
+	}
 }
