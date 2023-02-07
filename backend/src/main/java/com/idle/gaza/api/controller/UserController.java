@@ -5,6 +5,7 @@ import com.idle.gaza.api.request.UserUpdateRequest;
 import com.idle.gaza.api.service.UserService;
 import com.idle.gaza.common.codes.SuccessCode;
 import com.idle.gaza.common.response.ApiResponse;
+import com.idle.gaza.common.util.S3Uploader;
 import com.idle.gaza.common.util.TokenUtil;
 import com.idle.gaza.db.entity.GuideDocument;
 import com.idle.gaza.db.entity.User;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -37,37 +39,34 @@ public class UserController {
     @Autowired
     private TokenUtil tokenUtil;
 
-    @Value("${spring.servlet.multipart.location}")
+    @Autowired
+    private S3Uploader s3Uploader;
+
+    @Value("${cloud.aws.directory}")
     String rootPath;
 
-    @PostMapping("")
+    @PostMapping(value = "",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "회원가입", notes = "회원가입")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 200, message = "성공"),
             @io.swagger.annotations.ApiResponse(code = 500, message = "서버 오류"),
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<ApiResponse<Object>> join(@RequestBody User user, @RequestParam(name = "picture") MultipartFile pictureFile) {
+    public ResponseEntity<ApiResponse<Object>> join(@RequestPart User user, @RequestPart(name = "picture") MultipartFile pictureFile) {
         if (!pictureFile.isEmpty()) {
             //make upload folder
-            String uploadPath = "/" + "user" + "/" + "picture";
+            String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
             File uploadFilePath = new File(rootPath, uploadPath);
-
-            if (!uploadFilePath.exists()) {
-                uploadFilePath.mkdirs();
-            }
 
             String fileName = pictureFile.getOriginalFilename();
 
             UUID uuid = UUID.randomUUID();
             String uploadFileName = uuid.toString() + "_" + fileName;
 
-            File saveFile = new File(uploadFilePath, uploadFileName);
-
             log.info("file name = " + uploadFileName);
 
             try {
-                pictureFile.transferTo(saveFile);
+                s3Uploader.upload(pictureFile, uploadPath + uploadFileName);
                 user.setPicture(uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -169,6 +168,7 @@ public class UserController {
 
         String originPictureName = user.getPicture();
 
+        /* 존재하면 삭제
         if (originPictureName != null) {
             String originPicture = new String(rootPath + "/" + "user" + "/" + "picture" + "/" + originPictureName);
             File file = new File(originPicture);
@@ -179,24 +179,18 @@ public class UserController {
                 file.delete();
             }
         }
-        String uploadPath = "/" + "user" + "/" + "picture";
-        File uploadFilePath = new File(rootPath, uploadPath);
+        */
 
-        if (!uploadFilePath.exists()) {
-            uploadFilePath.mkdirs();
-        }
+        String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
+        File uploadFilePath = new File(rootPath, uploadPath);
 
         String fileName = pictureFile.getOriginalFilename();
 
         UUID uuid = UUID.randomUUID();
         String uploadFileName = uuid.toString() + "_" + fileName;
 
-        File saveFile = new File(uploadFilePath, uploadFileName);
-
-        log.info("file name = " + uploadFileName);
-
         try {
-            pictureFile.transferTo(saveFile);
+            s3Uploader.upload(pictureFile, uploadFilePath + uploadFileName);
             userUpdateRequest.setPicture(uploadFileName);
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -258,7 +252,7 @@ public class UserController {
      * @param password String
      * @return ResponseEntity
      */
-    @PutMapping("/pw/{userId}")
+    @PutMapping("/pw")
     public ResponseEntity<ApiResponse<Object>> changePassword(@RequestHeader("Authorization") String accessToken, @RequestParam String password) {
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
@@ -341,9 +335,9 @@ public class UserController {
 
         //make upload folder
         String guideFileUploadPath = "/" + "guide_document" + "/";
-        String idFileUploadPath = guideFileUploadPath + "id_file" + "/";
-        String certificateResidenceUploadPath = guideFileUploadPath + "certificate_residence" + "/";
-        String certificateUploadPath = guideFileUploadPath + "certificate" + "/";
+        String idFileUploadPath = rootPath + guideFileUploadPath + "id_file" + "/";
+        String certificateResidenceUploadPath = rootPath + guideFileUploadPath + "certificate_residence" + "/";
+        String certificateUploadPath = rootPath + guideFileUploadPath + "certificate" + "/";
 
         File idFileUploadFilePath = new File(rootPath, idFileUploadPath);
         File certificateResidenceUploadFilePath = new File(rootPath, certificateResidenceUploadPath);
@@ -370,14 +364,10 @@ public class UserController {
         String certificateResidenceUploadFileName = uuid.toString() + "_" + certificateResidenceFileName;
         String certificateUploadFileName = uuid.toString() + "_" + certificateFileName;
 
-        File idFileSaveFile = new File(idFileUploadFilePath, idFileUploadFileName);
-        File certificateResidenceSaveFile = new File(certificateResidenceUploadFilePath, certificateResidenceUploadFileName);
-        File certificateSaveFile = new File(certificateUploadFilePath, certificateUploadFileName);
-
         try {
-            idFileFile.transferTo(idFileSaveFile);
-            certificateResidenceFile.transferTo(certificateResidenceSaveFile);
-            certificateFile.transferTo(certificateSaveFile);
+            s3Uploader.upload(idFileFile, idFileUploadPath + idFileUploadFileName);
+            s3Uploader.upload(certificateResidenceFile, certificateResidenceUploadPath + certificateResidenceUploadFileName);
+            s3Uploader.upload(certificateFile, certificateUploadPath + certificateUploadFileName);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
