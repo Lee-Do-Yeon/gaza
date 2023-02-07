@@ -66,6 +66,8 @@ dependencies {
     implementation('org.webjars:webjars-locator:0.30')
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+    //embedded-redis
+    //implementation 'it.ozimov:embedded-redis:0.7.2'
 }
 
 tasks.named('test') {
