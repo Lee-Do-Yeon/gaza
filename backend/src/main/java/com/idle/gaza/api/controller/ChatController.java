@@ -3,17 +3,20 @@ package com.idle.gaza.api.controller;
 import com.idle.gaza.api.model.ChatMessage;
 import com.idle.gaza.api.model.ChatRoomRepository;
 import com.idle.gaza.api.pubsub.RedisPublisher;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
+@RequiredArgsConstructor
 @Controller
+@Log4j2
 public class ChatController {
 
-    @Autowired
-    private RedisPublisher redisPublisher;
-    @Autowired
-    private ChatRoomRepository chatRoomRepository;
+    private final RedisPublisher redisPublisher;
+    private final ChatRoomRepository chatRoomRepository;
 
 
     /*
@@ -21,6 +24,7 @@ public class ChatController {
     * */
     @MessageMapping("/chat/message")
     public void message(ChatMessage message) {
+        log.info("chatMessage=", message.toString());
         if (ChatMessage.MessageType.ENTER.equals(message.getMessageType())) {
             chatRoomRepository.enterChatRoom(message.getChatRoomId());
             message.setMessage(message.getWriterName() + "님 입장하셨습니다.");

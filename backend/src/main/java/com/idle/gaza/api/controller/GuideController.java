@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +35,22 @@ public class GuideController {
 
     @Value("${spring.servlet.multipart.location}")
     String rootPath;
+
+
+    @GetMapping(value = "/search")
+    @ApiOperation(value = "검색바로 가이드 조회", notes = "나라 또는 도시를 통해 가이드를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message = "사용자 없음")
+    })
+    public ResponseEntity<?> search(@RequestParam String searchName){
+        List<Guide> searchList = guideService.guideSearchBar(searchName);
+
+        if(searchList.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(searchList, HttpStatus.OK);
+    }
+
 
     //가이드 등록
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,6 +88,7 @@ public class GuideController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     //////////////////////가이드 조회///////////////////////////
 
@@ -124,6 +140,7 @@ public class GuideController {
         return new ResponseEntity<>(guide, HttpStatus.OK);
     }
 
+    ////////////////////////추천 장소/////////////////////////////
 
     @PostMapping(value = "/location", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "추천 장소 등록", notes = "추천 장소를 등록한다.")
@@ -348,6 +365,7 @@ public class GuideController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
 
 }

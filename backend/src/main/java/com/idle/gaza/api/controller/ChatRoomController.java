@@ -33,7 +33,7 @@ public class ChatRoomController {
     public ResponseEntity<?> roomList(){
         List<ChatRoom> chatRoom = chatRoomRepository.findAllRoom();
         log.info("room size = " + chatRoom.size());
-        if(chatRoom.size() == 0) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(chatRoom.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(chatRoom, HttpStatus.OK);
     }
 

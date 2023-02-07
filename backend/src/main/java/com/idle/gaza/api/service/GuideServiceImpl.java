@@ -55,6 +55,11 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
+    public List<Guide> guideSearchBar(String searchName) {
+        return guideRepository.searchByCountryOrCity(searchName);
+    }
+
+    @Override
     public List<GuideResponse> famousGuideSearch() {
         //예약 많은 순으로 정렬
         List<Guide> orderByGuide = guideRepository.findOrderByMaxReservation();

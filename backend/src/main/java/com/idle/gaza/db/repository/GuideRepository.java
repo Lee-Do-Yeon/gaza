@@ -31,4 +31,9 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     List<Guide> findOrderByMaxReservation();
 
     Guide findByUserId_Id(String guiedId);
+
+    /* 도시 또는 나라로 가이드를 조회함 */
+    @Query(value = "SELECT * FROM guide as g WHERE g.city=:searchName OR g.country=:searchName", nativeQuery = true)
+    List<Guide> searchByCountryOrCity(@Param("searchName") String searchName);
+
 }
