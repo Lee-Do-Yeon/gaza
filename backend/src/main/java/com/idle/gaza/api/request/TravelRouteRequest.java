@@ -3,17 +3,21 @@ package com.idle.gaza.api.request;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @ApiModel("TravleRouteRequest")
 public class TravelRouteRequest {
-    private Integer reservationId;
-    private String name;
-    private String address;
-    private int order;
-    private String latitude;
-    private String longitude;
+    String name;
+    String address;
+    String latitude;
+    String longitude;
+
+    public TravelRouteRequest() {
+    }
 }

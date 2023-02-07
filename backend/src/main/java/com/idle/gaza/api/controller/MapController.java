@@ -1,6 +1,8 @@
 package com.idle.gaza.api.controller;
 import com.idle.gaza.db.entity.MapMessage;
 import com.idle.gaza.db.entity.Point;
+import com.idle.gaza.db.entity.Route;
+import com.idle.gaza.db.entity.TravelRoute;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,11 @@ public class MapController {
 	@MessageMapping("/map/point")
 	public void point(@RequestBody Point point) {
 		messagingTemplate.convertAndSend("/sub/map/room2/" + point.getRoomId(), point);
+	}
+
+	@MessageMapping("/map/route")
+	public void route(@RequestBody Route route) {
+		messagingTemplate.convertAndSend("/sub/map/room3/" + route.getRoomId(), route);
 	}
 
 	public MapController(SimpMessageSendingOperations messagingTemplate) {
