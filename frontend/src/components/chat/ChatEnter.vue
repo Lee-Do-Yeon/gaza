@@ -1,15 +1,16 @@
 <template>
   <div class="container" id="app" v-cloak>
     <div class="row">
+      <div style="height:100px"></div>
       <div class="col-md-12">
-        <h3>채팅방 리스트</h3>
+          <h2>💬 채팅방</h2>
       </div>
     </div>
     <div class="input-group">
       <div class="input-group-prepend">
         <label class="input-group-text">방제목</label>
       </div>
-      <input type="text" class="form-control" v-model="room_name" @keyup.enter="createRoom" />
+      <input type="text" class="form-control" v-model="room_name" v-on:keyup.enter="createRoom" />
       <div class="input-group-append">
         <button class="btn btn-primary" type="button" @click="createRoom">채팅방 개설</button>
       </div>
@@ -28,6 +29,8 @@
 </template>
 
 <script>
+import axios from "@/api/http";
+
 export default {
   data() {
     return {
@@ -42,6 +45,7 @@ export default {
     findAllRoom() {
       axios.get("/chat/room").then((response) => {
         this.chatrooms = response.data;
+        console.log("findAllRoom");
         console.log(this.chatrooms);
       });
     },
@@ -51,13 +55,10 @@ export default {
         alert("방 제목을 입력해 주십시요.");
         return;
       } else {
-        var params = new URLSearchParams();
-        params.append("name", this.room_name);
         axios
-          .post("/chat/room", this.room_name)
-          .then((data) => {
-            console.log("[" + data.data.name + "] 개설");
-            this.room_name = "";
+          .post("/chat/room", {name:this.room_name})
+          .then((response) => {
+            console.log("[" + response.data.name + "] 개설");
             this.findAllRoom();
           })
           .catch(() => {
@@ -67,9 +68,11 @@ export default {
     },
     enterRoom(roomId) {
       var sender = prompt("대화명을 입력해 주세요.");
-      localStorage.setItem("wschat.sender", sender);
-      localStorage.setItem("wschat.roomId", roomId);
-      this.$router.push({ name: "chatDetail", params: { roomId: roomId } });
+      if (sender != "") {
+        localStorage.setItem("wschat.sender", sender);
+        localStorage.setItem("wschat.roomId", roomId);
+        this.$router.push({ name: "chatDetail", params: { roomId: roomId } });
+      }
     },
   },
 };

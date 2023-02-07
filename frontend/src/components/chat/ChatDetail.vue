@@ -7,14 +7,14 @@
             <div class="input-group-prepend">
                 <label class="input-group-text">내용</label>
             </div>
-            <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage">
+            <input type="text" class="form-control" v-model="msg" v-on:keypress.enter="sendMessage">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
             </div>
         </div>
         <ul class="list-group">
             <li class="list-group-item" v-for="item in messages" :key="item">
-                {{item.sender}} - {{item.message}}</a>
+                {{item.writerName}} - {{item.message}}
             </li>
         </ul>
         <div></div>
@@ -22,7 +22,7 @@
 </template>
 
 
-    <script>
+<script>
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import axios from "@/api/http";
@@ -31,18 +31,19 @@ import axios from "@/api/http";
         var ws = Stomp.over(sock);
                     
         export default {
-            el: '#app',
-            data: {
-                roomId: '',
-                room: {},
-                sender: '',
-                msg: '',
-                messages: []
+            data() {
+                return {
+                    roomId: '',
+                    room: {},
+                    writerName: '',
+                    msg: '',
+                    messages: []
+                };
             },
         created() {
             this.connect();
                 this.roomId = localStorage.getItem('wschat.roomId');
-                this.sender = localStorage.getItem('wschat.sender');
+                this.writerName = localStorage.getItem('wschat.sender');
                 this.findRoom();
         },
             methods: {
@@ -51,7 +52,7 @@ import axios from "@/api/http";
                 },
                 sendMessage() {
                     //메시지를 보냄
-                    this.stompClient.send("/pub/chat/message", {}, JSON.stringify({messageType:'CHAT', chatRoomId:this.roomId, writerName:this.sender, message:this.msg}));
+                    this.stompClient.send("/pub/chat/message", {}, JSON.stringify({messageType:'CHAT', chatRoomId:this.roomId, writerName:this.writerName, message:this.msg}));
                     this.msg = '';
                 },
                 recvMessage(recv) {
@@ -62,16 +63,19 @@ import axios from "@/api/http";
                     this.stompClient = Stomp.over(sock);
                     console.log(`소켓 연결을 시도합니다.`);
             
-                    // pub/sub event
+                    // connection이 맺어지면 실행
                     this.stompClient.connect({},
                         (frame) => {
                             console.log("소켓 연결 성공", frame);
-                            this.stompClient.send("/pub/chat/message", {}, JSON.stringify({ messageType: 'ENTER', chatRoomId: this.roomId, writerName: this.sender }));
-
+                            //subscribe로 메시지를 받을 수 있음(구독함)
                             this.stompClient.subscribe(`/sub/chat/room/${this.roomId}`, res => {
+                                console.log("구독",res.body);
                                 this.messages.push(JSON.parse(res.body));
                                 this.recvMessage(JSON.parse(res.body));
                             });
+
+                            //채팅방 입장(서버에 유저가 들어왔음을 알림)
+                            this.stompClient.send("/pub/chat/message", {}, JSON.stringify({ messageType: 'ENTER', chatRoomId: this.roomId, writerName: this.writerName }));
                         },
                         // 소켓 연결 실패
                         (error) => {
