@@ -218,7 +218,7 @@ export default {
             }
         },
         connect() {
-            var sock = new SockJS("http://localhost:8080/ws-stomp");
+            var sock = new SockJS("https://i8c207.p.ssafy.io/ws-stomp");
             this.stompClient = Stomp.over(sock);
             console.log(`소켓 연결을 시도합니다.`);
             // pub/sub event

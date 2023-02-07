@@ -24,7 +24,7 @@ import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import axios from "@/api/http";
 
-        var sock = new SockJS("http://localhost:8080/ws-stomp");
+        var sock = new SockJS("https://i8c207.p.ssafy.io/ws-stomp");
         var ws = Stomp.over(sock);
                     
         export default {
@@ -54,7 +54,7 @@ import axios from "@/api/http";
                 },
                 
                 connect(){
-                    var sock = new SockJS("http://localhost:8080/ws-stomp");
+                    var sock = new SockJS("https://i8c207.p.ssafy.io/ws-stomp");
                     this.stompClient = Stomp.over(sock);
                     console.log(`소켓 연결을 시도합니다.`);
             
