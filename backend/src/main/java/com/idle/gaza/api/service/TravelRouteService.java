@@ -6,6 +6,6 @@ import com.idle.gaza.api.response.TravelRouteResponse;
 import java.util.List;
 
 public interface TravelRouteService {
-    Integer saveRoute(TravelRouteRequest routeInfo) throws Exception;
+    Integer saveRoutes(List<TravelRouteRequest> routeInfo, int reservationId) throws Exception;
     List<TravelRouteResponse> getRoutes(Integer reservationId);
 }
