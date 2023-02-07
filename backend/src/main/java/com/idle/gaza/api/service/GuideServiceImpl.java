@@ -152,60 +152,62 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public GuideResponse guideDetailSearch(int guideId) {
+    public Guide guideDetailSearch(int guideId) {
 
         //가이드 정보 리턴
         Optional<Guide> guide = guideRepository.findGuideByGuideId(guideId);
         if(!guide.isPresent()) return null;
 
         Guide existGuide = guide.get();
-        
-        //언어 정보 가져오기
-        List<String> codeList = new ArrayList<>();
-        for (GuideLanguage guideLanguage : existGuide.getLanguageList()) {
-            String code = guideRepository.searchNameByCode(guideLanguage.getLangCode());
-            codeList.add(code);
-        }
 
-        //여행 테마 정보 가져오기
-        List<String> themaList = new ArrayList<>();
-        for (GuideThema thema : existGuide.getGuideThemaList()) {
-            String code = guideRepository.searchNameByCode(thema.getThemaCode());
-            themaList.add(code);
-        }
-
-        //예약 정보 가져오기
-        List<Reservation> reservationList = new ArrayList<>();
-        reservationList = reservationRepository.searchReservationByGuideId(guideId);
-
-        //리뷰 정보 가져오기
-        List<Review> reviewList = new ArrayList<>();
-        reviewList = reviewRepository.findReviewsByGuide(existGuide.getUser().getName());
-        
-        //휴무일 정보 가져오기
-        List<DayOff> getDayOffList = dayOffRepository.searchDayOffByGuide(guideId);
-
-        GuideResponse response = GuideResponse.builder()
-                .guideId(existGuide.getGuideId())
-                .thema(themaList)
-                .onelineIntroduction(existGuide.getIntroduction())
-                .introduction(existGuide.getIntroduction())
-                .language(codeList)
-                .userId(existGuide.getUser().getUserId())
-                .price(existGuide.getPrice())
-                .name(existGuide.getUser().getName())
-                .closeTimeEnd(existGuide.getCloseTimeEnd())
-                .picture(existGuide.getPicture())
-                .closeTimeStart(existGuide.getCloseTimeStart())
-                .country(existGuide.getCountry())
-                .city(existGuide.getCity())
-                .reservationList(reservationList)
-                .thema(themaList)
-                //.reviewList(reviewList)
-                .dayOffList(getDayOffList)
-                .build();
-
-        return response;
+//
+//        //언어 정보 가져오기
+//        List<String> codeList = new ArrayList<>();
+//        for (GuideLanguage guideLanguage : existGuide.getLanguageList()) {
+//            String code = guideRepository.searchNameByCode(guideLanguage.getLangCode());
+//            codeList.add(code);
+//        }
+//
+//        //여행 테마 정보 가져오기
+//        List<String> themaList = new ArrayList<>();
+//        for (GuideThema thema : existGuide.getGuideThemaList()) {
+//            String code = guideRepository.searchNameByCode(thema.getThemaCode());
+//            themaList.add(code);
+//        }
+//
+//        //예약 정보 가져오기
+//        List<Reservation> reservationList = new ArrayList<>();
+//        reservationList = reservationRepository.searchReservationByGuideId(guideId);
+//
+//        //리뷰 정보 가져오기
+//        List<Review> reviewList = new ArrayList<>();
+//        reviewList = reviewRepository.findReviewsByGuide(existGuide.getUser().getName());
+//
+//        //휴무일 정보 가져오기
+//        List<DayOff> getDayOffList = dayOffRepository.searchDayOffByGuide(guideId);
+//
+//        GuideResponse response = GuideResponse.builder()
+//                .guideId(existGuide.getGuideId())
+//                .thema(themaList)
+//                .onelineIntroduction(existGuide.getIntroduction())
+//                .introduction(existGuide.getIntroduction())
+//                .language(codeList)
+//                .userId(existGuide.getUser().getUserId())
+//                .price(existGuide.getPrice())
+//                .name(existGuide.getUser().getName())
+//                .closeTimeEnd(existGuide.getCloseTimeEnd())
+//                .picture(existGuide.getPicture())
+//                .closeTimeStart(existGuide.getCloseTimeStart())
+//                .country(existGuide.getCountry())
+//                .city(existGuide.getCity())
+//                .reservationList(reservationList)
+//                .thema(themaList)
+//                .reviewList(reviewList)
+//                .dayOffList(getDayOffList)
+//                .build();
+//
+//        return response;
+        return existGuide;
     }
 
 
