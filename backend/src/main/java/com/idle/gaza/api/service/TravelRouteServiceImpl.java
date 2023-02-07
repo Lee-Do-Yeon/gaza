@@ -25,26 +25,30 @@ public class TravelRouteServiceImpl implements TravelRouteService{
     @Autowired
     ReservationRepository reservationRepository;
 
+
     @Override
-    @Transactional
-    public Integer saveRoute(TravelRouteRequest routeInfo) throws Exception {
+    public Integer saveRoutes(List<TravelRouteRequest> routeInfo, int reservationId) throws Exception {
         // 예약 조회
-        int reservationId = routeInfo.getReservationId();
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new NoSuchElementException("Reservation not found"));
 
-        // 루트 생성
-        TravelRoute route = new TravelRoute(
-                reservation,
-                routeInfo.getName(),
-                routeInfo.getAddress(),
-                routeInfo.getOrder(),
-                routeInfo.getLatitude(),
-                routeInfo.getLongitude());
-
+        List<TravelRoute> list = new ArrayList<>();
+        for(int i=0; i<routeInfo.size(); i++){
+            // 루트 생성
+            TravelRouteRequest req = routeInfo.get(i);
+            TravelRoute route = new TravelRoute(
+                    reservation,
+                    req.getName(),
+                    req.getAddress(),
+                    i+1,
+                    req.getLatitude(),
+                    req.getLongitude()
+            );
+            list.add(route);
+        }
         // 루트 저장
-        travelRouteRepository.save(route);
+        travelRouteRepository.saveAll(list);
 
-        return route.getTravelRouteId();
+        return 1;
     }
 
     @Override
