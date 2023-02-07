@@ -1,7 +1,6 @@
 package com.idle.gaza.api.controller;
 import com.idle.gaza.db.entity.MapMessage;
 import com.idle.gaza.db.entity.Point;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;

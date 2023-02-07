@@ -1,6 +1,7 @@
 package com.idle.gaza.db.repository;
 
 import com.idle.gaza.db.entity.Guide;
+import com.idle.gaza.db.entity.TravelRoute;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,11 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     /* 예약순 조회 */
     @Query(value = "select * from guide left join ( select guide_id, count(guide_id) from reservation group by guide_id order by count(*)) reservation on reservation.guide_id=guide.guide_id order by reservation.guide_id", nativeQuery = true)
     List<Guide> findOrderByMaxReservation();
+
+    Guide findByUserId_Id(String guiedId);
+
+    /* 도시 또는 나라로 가이드를 조회함 */
+    @Query(value = "SELECT * FROM guide as g WHERE g.city=:searchName OR g.country=:searchName", nativeQuery = true)
+    List<Guide> searchByCountryOrCity(@Param("searchName") String searchName);
+
 }

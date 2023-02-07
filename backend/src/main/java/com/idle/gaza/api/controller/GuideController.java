@@ -5,6 +5,7 @@ import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.request.TimeRegisterPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
+import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.*;
@@ -19,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +35,23 @@ public class GuideController {
 
     @Value("${cloud.aws.directory}")
     String rootPath;
+
+
+    @GetMapping(value = "/search")
+    @ApiOperation(value = "검색바로 가이드 조회", notes = "나라 또는 도시를 통해 가이드를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message = "사용자 없음")
+    })
+    public ResponseEntity<?> search(@RequestParam String searchName){
+        List<GuideResponse> searchList = guideService.guideSearchBar(searchName);
+
+        if(searchList.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        log.info("search size = " + searchList.size());
+        return new ResponseEntity<>(searchList, HttpStatus.OK);
+    }
+
 
     //가이드 등록
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,6 +90,7 @@ public class GuideController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     //////////////////////가이드 조회///////////////////////////
 
     //가이드 전체 조회
@@ -84,7 +102,7 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> guideSearch() {
-        List<Guide> guideList = guideService.guideSearch();
+        List<GuideResponse> guideList = guideService.guideSearch();
 
         if (guideList == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(guideList, HttpStatus.OK);
@@ -123,6 +141,7 @@ public class GuideController {
         return new ResponseEntity<>(guide, HttpStatus.OK);
     }
 
+    ////////////////////////추천 장소/////////////////////////////
 
     @PostMapping(value = "/location", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "추천 장소 등록", notes = "추천 장소를 등록한다.")
@@ -240,6 +259,19 @@ public class GuideController {
     }
 
 
+    // 추천 장소 조회
+    @GetMapping("/location/{guideId}")
+    @ApiOperation(value = "추천 장소 조회", notes = "추천 장소를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message = "사용자 없음")
+    })
+    public ResponseEntity<?> locationSearch(@PathVariable @ApiParam(value = "가이드의 유저 아이디(String)", required = true) String guideId) {
+        List<LocationResponse> list = guideService.locationSearch(guideId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
     /////////////////////여행 테마 기능///////////////////////////
 
     @PutMapping("/thema/{guideId}")
@@ -334,6 +366,7 @@ public class GuideController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
 
 }
