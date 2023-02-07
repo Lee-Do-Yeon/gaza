@@ -4,7 +4,6 @@ import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LocationResponse;
-import com.idle.gaza.db.entity.Guide;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -7,7 +7,6 @@ import com.idle.gaza.api.request.TimeRegisterPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.api.service.GuideService;
-import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,6 +137,7 @@ public class GuideController {
         GuideResponse guide = guideService.guideDetailSearch(guideId);
 
         if (guide == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
         return new ResponseEntity<>(guide, HttpStatus.OK);
     }
 
