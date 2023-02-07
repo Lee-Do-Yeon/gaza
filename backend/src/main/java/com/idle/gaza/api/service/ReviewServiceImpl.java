@@ -48,12 +48,12 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public List<ReviewResponse> getReviewsByUser(int userId) {
+    public List<ReviewResponse> getReviewsByUser(String userId) {
         List<Review> reviews = reviewRepository.findReviewsByUser(userId);
         List<ReviewResponse> reviewRes = new ArrayList<>(reviews.size());
         for(int i=0; i<reviews.size(); i++){
             Review review = reviews.get(i);
-            ReviewResponse res = new ReviewResponse(review.getReservationId().getUserId().getId(),
+            ReviewResponse res = new ReviewResponse(userId,
                     review.getReservationId().getGuideId().getGuideId(),
                     review.getReviewId(), review.getContent(), review.getCreatedDate(), review.getScore());
             reviewRes.add(res);
@@ -62,7 +62,7 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public List<ReviewResponse> getReviewsByGuide(int guideId) {
+    public List<ReviewResponse> getReviewsByGuide(String guideId) {
         List<Review> reviews = reviewRepository.findReviewsByGuide(guideId);
         List<ReviewResponse> reviewRes = new ArrayList<>(reviews.size());
         for(int i=0; i<reviews.size(); i++){

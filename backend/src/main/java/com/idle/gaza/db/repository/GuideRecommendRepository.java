@@ -4,6 +4,7 @@ import com.idle.gaza.db.entity.GuideRecommendLocation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,4 +19,6 @@ public interface GuideRecommendRepository extends JpaRepository<GuideRecommendLo
 
     Optional<GuideRecommendLocation> findByRecommendId(int recommendId);
     void deleteByRecommendId(int recommendId);
+
+    List<GuideRecommendLocation> findByGuide_UserId_Id(String guideId);
 }

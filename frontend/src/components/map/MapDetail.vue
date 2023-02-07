@@ -4,16 +4,26 @@
         <div>
             <h2>방</h2>
         </div>
-        <div id="map" style="width: 100%; height: 400px; position: relative; overflow: hidden">
+        <div id="map" style="width: 75%; height: 400px; position: relative; overflow: hidden; float:left">
         </div>
+        <h3>[여행일정]</h3>
+        <div>
+            <ul class="list-group">
+                <li
+                    v-for="route in travel_route"
+                    v-bind:key="route.order"
+                >
+                    {{ route.order }} | {{ route.name }} | {{ route.address }} 
+                </li>
+            </ul>
+         </div><div style="clear:both:"></div>
         <div id="clickLatlng"></div>
         <div class="input-group">
             <div class="input-group-append">
-                <button class="btn btn-primary" type="button" @click="panTo">클릭좌표포커스</button>
-                <button class="btn btn-primary" type="button" @click="sendPoint">좌표전송</button>
+                <button class="btn btn-primary" type="button" @click="sendPoint('FOCUS')">상대방에게 현재 위치에 focus 시키기</button>
             </div>
         </div>
-        <span>{{ recvLat }} {{ recvLng }}</span>
+        <span>{{ recvPoint.recvLat }}-{{ recvPoint.recvLng }}-{{ recvPoint.type }}</span>
         <div></div>
     </div>
 </template>
@@ -22,6 +32,7 @@
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import axios from "@/api/http";
+import { recordExpression } from "@babel/types";
 
 export default {
     data() {
@@ -32,8 +43,15 @@ export default {
             clickLng: 33.450701,
             clickLat: 126.570667,
             map: Object,
-            recvLng: 0.0,
-            recvLat: 0.0,
+            recvPoint: {
+                recvLng: 0.0,
+                recvLat: 0.0,
+                type: "",
+            },
+            travel_route: [],
+            reservationId: 3,
+            recommend_location: [],
+            guideId: 1,
         };
     },
     created() {
@@ -41,6 +59,8 @@ export default {
         this.roomId = localStorage.getItem("wschat.roomId");
         this.sender = localStorage.getItem("wschat.sender");
         this.findRoom();
+        this.getRoutes();
+        this.getRecommend();
     },
     mounted() {
         if (window.kakao && window.kakao.maps) {
@@ -71,18 +91,12 @@ export default {
             var geocoder = new kakao.maps.services.Geocoder();
 
             // ***********가이드의 추천 장소 출력을 위한 forEach 시작
-            // 이걸.. 뷰엑스에서 가져왔는데. 이 리스트를.
-            let mapHouses = [
-                { dong: "매탄동", number: 1284 },
-                { dong: "매탄동", number: 416 },
-            ];
-
-            mapHouses.forEach(function (addr) {
+            this.recommend_location.forEach(function (addr) {
                 geocoder.addressSearch(
-                    // 주소로 좌표 검색. (주소 - 법정동 + 지번)
-                    addr.dong + " " + addr.number,
+                    // 주소로 좌표 검색.
+                    addr.address,
                     function (result, status) {
-                        console.log(addr.dong + " " + addr.number);
+                        console.log(addr.address);
                         // 정상적으로 검색이 완료됐으면
                         if (status === kakao.maps.services.Status.OK) {
                             console.log(result[0].y, result[0].x);
@@ -92,13 +106,13 @@ export default {
                                 position: coords,
                             });
                         } else {
-                            console.log("안됨!!!!!" + status);
+                            console.log("추천 장소 출력이 제대로 안됨 - " + status);
                         }
 
                         var infowindow = new kakao.maps.InfoWindow({
                             content:
                                 '<div style="width:150px;text-align:center;padding:6px 0; color:black;">' +
-                                "마커 위로 뜨는 네임" +
+                                addr.name +
                                 "</div>",
                         });
                         infowindow.open(map, marker);
@@ -106,10 +120,10 @@ export default {
                     }
                 );
             });
-            // forEach 끝
+            // ***********forEach 끝
 
             // *******************************************************카테고리 검색
-    // *******************************************************카테고리 검색 /끝
+            // *******************************************************카테고리 검색 /끝
 
             // 지도를 클릭한 위치에 표출할 마커입니다
             var marker = new kakao.maps.Marker({
@@ -134,16 +148,16 @@ export default {
 
                 var resultDiv = document.getElementById("clickLatlng");
                 resultDiv.innerHTML = message;
+
+                base.sendPoint("CLICK");
             });
             // init map ()
         },
         // this.clickLat, this.clickLng의 좌표로 부드럽게 중심좌표를 이동하는 함수.
         panTo() {
-            console.log("좌표 : " + this.clickLat, this.clickLng);
-
             var moveLatLon = new kakao.maps.LatLng(
-                parseFloat(this.clickLat),
-                parseFloat(this.clickLng)
+                parseFloat(this.recvPoint.recvLat),
+                parseFloat(this.recvPoint.recvLng)
             );
 
             this.map.panTo(moveLatLon);
@@ -158,8 +172,8 @@ export default {
                 };
             });
         },
-        sendPoint() {
-            console.log("Send message:" + this.message);
+        sendPoint(type) {
+            console.log("Send Point:" + this.clickLng +" "+ this.clickLat +" "+type);
             this.stompClient.send(
                 "/pub/map/point",
                 JSON.stringify(
@@ -167,14 +181,21 @@ export default {
                         roomId: this.roomId,
                         lng: this.clickLng,
                         lat: this.clickLat,
-                    },
-                    {}
+                        type: type,
+                    }
                 )
             );
-            this.message = "";
         },
-        recvPoint(recv) {
-            (this.recvLng = recv.lng), (this.recvLat = recv.lat);
+        convertRecvPoint(recv) {
+            this.recvPoint = {
+                recvLng : recv.lng,
+                recvLat : recv.lat,
+                type : recv.type,
+            }
+
+            if(recv.type == "FOCUS"){
+                this.panTo();
+            }
         },
         connect() {
             var sock = new SockJS("http://localhost:8080/ws-stomp");
@@ -189,7 +210,8 @@ export default {
                     console.log("소켓 연결 성공", frame);
                     this.stompClient.subscribe(`/sub/map/room2/${this.roomId}`, (point) => {
                         console.log("구독으로 받은 좌표 입니다.", point.body);
-                        this.recvPoint(JSON.parse(point.body));
+                        console.log("구독으로 받은 좌표의 타입은 ", JSON.parse(point.body).type);
+                        this.convertRecvPoint(JSON.parse(point.body));
                     });
                 },
                 // 소켓 연결 실패
@@ -199,7 +221,23 @@ export default {
                 }
             );
         }, // connect() 끝
-    },
+        getRoutes(){
+            axios.get(`/routes/${this.reservationId}`).then((res) => {
+                this.travel_route = res.data;
+                console.log("여행 일정 : " + JSON.stringify(res.data));
+            });
+            
+            console.log("travel_route : " + this.travel_route);
+        },
+        getRecommend(){
+            axios.get(`/guides/location/${this.guideId}`).then((res) => {
+                this.recommend_location = res.data;
+                console.log("추천 장소 : " + JSON.stringify(res.data));
+            });
+            
+            console.log("recommend_location : " + this.travel_route);
+        },
+    }
 };
 </script>
 
