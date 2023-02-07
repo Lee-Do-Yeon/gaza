@@ -3,6 +3,7 @@ package com.idle.gaza.api.service;
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
+import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.db.entity.*;
 import com.idle.gaza.db.repository.*;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -48,8 +50,48 @@ public class GuideServiceImpl implements GuideService {
 
 
     @Override
-    public List<Guide> guideSearch() {
-        return guideRepository.findBy();
+    public List<GuideResponse> guideSearch() {
+        List<Guide> guideList = guideRepository.findBy();
+        List<GuideResponse> searchList = new ArrayList<>();
+
+        for (Guide guide: guideList) {
+            GuideResponse res = GuideResponse.builder()
+                    .guideId(guide.getGuideId())
+                    .city(guide.getCity())
+                    .country(guide.getCountry())
+                    .closeTimeEnd(guide.getCloseTimeEnd())
+                    .closeTimeStart(guide.getCloseTimeStart())
+                    .picture(guide.getPicture())
+                    .name(guide.getUser().getName())
+                    .price(guide.getPrice())
+                    .userId(guide.getUser().getUserId())
+                    .build();
+            searchList.add(res);
+        }
+
+        return searchList;
+    }
+
+    @Override
+    public List<GuideResponse> guideSearchBar(String searchName) {
+        List<Guide> guideList = guideRepository.searchByCountryOrCity(searchName);
+        List<GuideResponse> searchList = new ArrayList<>();
+
+        for (Guide guide: guideList) {
+            GuideResponse res = GuideResponse.builder().guideId(guide.getGuideId())
+                    .city(guide.getCity())
+                    .country(guide.getCountry())
+                    .closeTimeEnd(guide.getCloseTimeEnd())
+                    .closeTimeStart(guide.getCloseTimeStart())
+                    .picture(guide.getPicture())
+                    .name(guide.getUser().getName())
+                    .price(guide.getPrice())
+                    .userId(guide.getUser().getUserId())
+                    .build();
+            searchList.add(res);
+        }
+
+        return searchList;
     }
 
     @Override
@@ -148,6 +190,24 @@ public class GuideServiceImpl implements GuideService {
         guideRecommendRepository.save(updateLocation);
 
         return 1;//성공 시
+    }
+
+    @Override
+    public List<LocationResponse> locationSearch(String guideId) {
+        List<GuideRecommendLocation> locations = guideRecommendRepository.findByGuide_UserId_Id(guideId);
+        List<LocationResponse> locationRes = new ArrayList<>(locations.size());
+        for(int i=0; i<locations.size(); i++){
+            GuideRecommendLocation location = locations.get(i);
+            LocationResponse res = new LocationResponse(
+                    location.getName(),
+                    location.getAddress(),
+                    location.getCategoryCode(),
+                    location.getLatitude(),
+                    location.getLongitude()
+            );
+            locationRes.add(res);
+        }
+        return locationRes;
     }
 
     @Override
