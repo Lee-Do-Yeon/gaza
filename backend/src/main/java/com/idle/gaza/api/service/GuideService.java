@@ -15,7 +15,7 @@ public interface GuideService {
     //가이드 조회 기능
     List<GuideResponse> guideSearch();
     List<GuideResponse> famousGuideSearch();
-    GuideResponse guideDetailSearch(int guideId);
+    Guide guideDetailSearch(int guideId);
     List<GuideResponse> guideSearchBar(String searchName);
 
     //가이드 추천 장소 기능
