@@ -201,7 +201,7 @@ public class GuideServiceImpl implements GuideService {
                 .city(existGuide.getCity())
                 .reservationList(reservationList)
                 .thema(themaList)
-                .reviewList(reviewList)
+                //.reviewList(reviewList)
                 .dayOffList(getDayOffList)
                 .build();
 
