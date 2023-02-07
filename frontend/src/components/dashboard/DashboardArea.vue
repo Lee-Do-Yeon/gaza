@@ -18,17 +18,11 @@
                     ><i class="fas fa-list"></i>이용후기</router-link
                   >
                 </li>
-                <!-- <MyBookingOption /> -->
                 <li>
                   <router-link to="/my-profile"
                     ><i class="fas fa-user-circle"></i>내 정보 수정</router-link
                   >
                 </li>
-                <!-- <li>
-                  <router-link to="/wallet"
-                    ><i class="fas fa-wallet"></i>Wallet</router-link
-                  >
-                </li> -->
                 <li>
                   <router-link to="/notification"
                     ><i class="fas fa-bell"></i>예약내역</router-link
@@ -83,11 +77,9 @@
                     <th>작성일</th>
                     <th>별점</th>
                     <th>내용</th>
-                    <!-- <th>Status</th>
-                    <th>Action</th> -->
                   </tr>
                 </thead>
-                <tbody v-for="rev in review" :key="rev.id">
+                <tbody v-for="rev in review2" :key="rev.id">
                   <tr>
                     <td>{{ rev.userId}}</td>
                     <td>{{ getDate(rev.createdDate) }}</td>
@@ -100,8 +92,6 @@
                       ></i>
                     </td>
                     <td>{{ rev.content }}</td>
-                    <!-- <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td> -->
                   </tr>
                 </tbody>
               </table>
@@ -162,7 +152,8 @@ export default {
   },
   setup() {
 
-    const review = ref([]);
+    const review1 = ref([]);
+    const review2 = ref([])
     const numberofreviews = ref(0);
     const currentpage = ref(1);
     const limit = 5;
@@ -171,29 +162,29 @@ export default {
 
     const getDate = ( date ) => {
       const DAT = new Date(date)
-      return DAT.getFullYear() +'-'+(DAT.getMonth()+1) +'-' +data.getDay()
+      return DAT.getFullYear() +'-'+(DAT.getMonth()+1) +'-' +DAT.getDay()
     }
 
     const filter_date=() => {
       const [syear,smonth,sday] =StartDate.value.split('-');
       const SD = new Date(+syear,smonth-1,+sday);
 
-
       const [eyear,emonth,eday] =EndDate.value.split('-');
       const ED = new Date(+eyear,emonth-1,+eday);
 
       let newarray = []
-      review.value.filter( re =>{
-        const [nyear,nmonth,nday] =re.created_date.split('-');
-        const ND = new Date(+nyear,nmonth-1,+nday);
-
+      review1.value.filter( re =>{
+        const reND = new Date(re.createdDate);
+        const [nyear,nmonth,nday] =[reND.getFullYear(),(reND.getMonth()),reND.getDay()]
+        const ND = new Date(+nyear,nmonth,+nday);
+        
         if(ND >=SD && ND <=ED){
           newarray.push(re)
         }
 
       })
 
-      review.value = newarray
+      review2.value = newarray
     }
 
 
@@ -204,7 +195,9 @@ export default {
           `?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
         );
         numberofreviews.value = res.data['length'];
-        review.value = res.data;
+        review1.value = res.data;
+        review2.value = res.data;
+
       } catch (err) {
         console.log(err);
       }
@@ -212,7 +205,7 @@ export default {
     getValue();
 
     const coputeReview = computed(() =>{
-      return review
+      return review,StartDate,EndDate
     })
 
 
@@ -226,7 +219,8 @@ export default {
       numberofpages,
       currentpage,
       numberofreviews,
-      review,
+      review1,
+      review2,
       StartDate,
       EndDate,
       coputeReview,
