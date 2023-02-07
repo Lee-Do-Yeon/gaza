@@ -7,8 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -23,4 +21,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     List<Reservation> findResevationsByUser(@Param("userId") String userId);
     @Query(value="SELECT consulting_date FROM reservation WHERE guide_id = (select guide_id from guide where user_id = (select user_id from user where id= :guideId)) AND DATE(consulting_date) = DATE(:selectedDate); ", nativeQuery = true)
     List<Timestamp> getImpossibleTime(@Param("guideId") String guideId, @Param("selectedDate") Date selectedDate);
+
+
+    /* 해당 가이드의 예약 정보를 가져옴 */
+    @Query(value = "SELECT * FROM reservation WHERE guide_id=:guideId", nativeQuery = true)
+    List<Reservation> searchReservationByGuideId(@Param("guideId") int guideId);
 }
