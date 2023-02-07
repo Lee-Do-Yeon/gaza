@@ -2,6 +2,7 @@ package com.idle.gaza.api.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idle.gaza.api.model.ChatMessage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
@@ -16,14 +17,12 @@ import org.springframework.stereotype.Service;
 * */
 @Log4j2
 @Service
+@RequiredArgsConstructor
 public class RedisSubscriber implements MessageListener {
 
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private RedisTemplate redisTemplate;
-    @Autowired
-    private SimpMessageSendingOperations messageTemplate;
+    private final ObjectMapper objectMapper;
+    private final RedisTemplate redisTemplate;
+    private final SimpMessageSendingOperations messageTemplate;
 
     /*
     * redis에서 메시지가 발행(publish)되면 대기하고 있던 메서드가 해당 메시지를 받아 처리함
@@ -36,7 +35,7 @@ public class RedisSubscriber implements MessageListener {
             //ChatMessage 객체로 맵핑
             ChatMessage chatMessage = objectMapper.readValue(publishMessage, ChatMessage.class);
             //websocket 구독자에서 채팅 메시지를 보낸다
-            messageTemplate.convertAndSend("/sub/chat/room" + chatMessage.getChatRoomId(), chatMessage);
+            messageTemplate.convertAndSend("/sub/chat/room/" + chatMessage.getChatRoomId(), chatMessage);
         }catch (Exception e){
             log.error(e.getMessage());
         }

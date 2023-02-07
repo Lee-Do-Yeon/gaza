@@ -1,6 +1,7 @@
 package com.idle.gaza.api.pubsub;
 
 import com.idle.gaza.api.model.ChatMessage;
+import com.idle.gaza.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
