@@ -41,9 +41,10 @@ public class TokenUtil {
     final static public String ACCESS_TOKEN_NAME = "access";
     final static public String REFRESH_TOKEN_NAME = "refresh";
 
-    @Value("${spring.jwt.secret}")
-    private static String ACCESS_TOKEN_SECRET_KEY = "gazagazagazagazagazagazagazagazagazagazagazagazagaza";
-    private static String REFRESH_TOKEN_SECRET_KEY = "zagazagazagazagazagazagazagazagazagazagazagazagazaga";
+    @Value("${spring.jwt.accessSecret}")
+    private static String ACCESS_TOKEN_SECRET_KEY;
+    @Value("${spring.jwt.refreshSecret}")
+    private static String REFRESH_TOKEN_SECRET_KEY;
 
     public static UserService userService;
 
@@ -52,11 +53,11 @@ public class TokenUtil {
         this.userService = userService;
     }
 
-    public String generateAccessToken(User user) {
+    public static String generateAccessToken(User user) {
         return generateJwtToken(user, TOKEN_VALIDATION_SECOND, "access");
     }
 
-    public String generateRefreshToken(User user) {
+    public static String generateRefreshToken(User user) {
         return generateJwtToken(user, REFRESH_TOKEN_VALIDATION_SECOND, "refresh");
     }
 
@@ -66,7 +67,7 @@ public class TokenUtil {
      * @param user User : 사용자 정보
      * @return String : 토큰
      */
-    public String generateJwtToken(User user, long expireTime, String type) {
+    public static String generateJwtToken(User user, long expireTime, String type) {
         // 사용자 시퀀스를 기준으로 JWT 토큰을 발급하여 반환해줍니다.
         JwtBuilder builder = Jwts.builder()
                 .setHeader(createHeader())                              // Header 구성
@@ -121,21 +122,21 @@ public class TokenUtil {
      */
     public static boolean isValidToken(String token) {
         try {
-                System.out.println(token);
+            System.out.println(token);
 
-                Claims claims = getClaimsFormToken(token);
+            Claims claims = getClaimsFormToken(token);
 
-                String TokenDataFromRedis = RedisUtil.getData(token);
+            String TokenDataFromRedis = RedisUtil.getData(token);
 
-                if(TokenDataFromRedis != null && TokenDataFromRedis.equals("logout")) {
-                    log.info("로그아웃된 토큰입니다.");
-                    return false;
-                }
+            if(TokenDataFromRedis != null && TokenDataFromRedis.equals("logout")) {
+                log.info("로그아웃된 토큰입니다.");
+                return false;
+            }
 
-                System.out.println(claims.getExpiration());
-                log.info("expireTime :" + claims.getExpiration());
-                log.info("userId :" + claims.get("userId"));
-                log.info("userNm :" + claims.get("userNm"));
+            System.out.println(claims.getExpiration());
+            log.info("expireTime :" + claims.getExpiration());
+            log.info("userId :" + claims.get("userId"));
+            log.info("userNm :" + claims.get("userNm"));
 
             return true;
         } catch (ExpiredJwtException exception) {
@@ -156,11 +157,11 @@ public class TokenUtil {
      * @param header 헤더
      * @return String
      */
-    public String getTokenFromHeader(String header) {
+    public static String getTokenFromHeader(String header) {
         return header.substring(7);
     }
 
-    public Long getExpiration(String token, String type) {
+    public static Long getExpiration(String token, String type) {
 
         if(type.equals(ACCESS_TOKEN_NAME)) {
             // accessToken 남은 유효시간
@@ -182,7 +183,7 @@ public class TokenUtil {
      *
      * @return Calendar
      */
-    private Date createExpiredDate(long expireTime) {
+    private static Date createExpiredDate(long expireTime) {
         return new Date(System.currentTimeMillis() + expireTime);
     }
 
@@ -243,7 +244,7 @@ public class TokenUtil {
     private static Claims getClaimsFormToken(String token) {
         try {
             return Jwts.parserBuilder().setSigningKey(DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY)).build()
-                        .parseClaimsJws(token).getBody();
+                    .parseClaimsJws(token).getBody();
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -257,7 +258,7 @@ public class TokenUtil {
      * @param token : 토큰
      * @return String : 사용자 아이디
      */
-    public String getUserIdFromToken(String token) {
+    public static String getUserIdFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
         return claims.get("userId").toString();
     }
@@ -276,7 +277,7 @@ public class TokenUtil {
 
      */
 
-    public TokenDto reissue(TokenDto tokenDto) {
+    public static TokenDto reissue(TokenDto tokenDto) {
         /*
          *  accessToken 은 JWT Filter 에서 검증되고 옴
          * */
@@ -293,6 +294,8 @@ public class TokenUtil {
             throw new RuntimeException("잘못된 리프레시 토큰"); // 잘못된 리프레시 토큰
         }
 
+        System.out.println(getUserIdFromToken(originAccessToken));
+
         // 5. 새로운 토큰 생성
         String userId = getUserIdFromToken(originAccessToken);
 
@@ -303,9 +306,9 @@ public class TokenUtil {
         if(user == null) {
             throw new RuntimeException("잘못된 유저 정보"); // 잘못된 리프레시 토큰
         }
-        
-        String newAccessToken = generateAccessToken(user);
-        String newRefreshToken = generateRefreshToken(user);
+
+        String newAccessToken = TokenUtil.generateAccessToken(user);
+        String newRefreshToken = TokenUtil.generateRefreshToken(user);
         TokenDto newTokenDto = TokenDto.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
@@ -320,7 +323,7 @@ public class TokenUtil {
         return newTokenDto;
     }
 
-    public void logout(TokenDto tokenDto) {
+    public static void logout(TokenDto tokenDto) {
         // 1. Access Token 검증
         if (!TokenUtil.isValidToken(tokenDto.getAccessToken())) {
             throw new RuntimeException("잘못된 토큰 정보입니다.");
@@ -333,7 +336,7 @@ public class TokenUtil {
         }
 
         // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
-        Long expiration = getExpiration(tokenDto.getAccessToken(), ACCESS_TOKEN_NAME);
+        Long expiration = TokenUtil.getExpiration(tokenDto.getAccessToken(), ACCESS_TOKEN_NAME);
         RedisUtil.setDataExpire(tokenDto.getAccessToken(), "logout", expiration);
     }
 }
