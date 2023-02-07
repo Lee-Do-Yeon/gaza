@@ -1,7 +1,6 @@
 package com.idle.gaza.db.repository;
 
 import com.idle.gaza.db.entity.Guide;
-import com.idle.gaza.db.entity.TravelRoute;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,5 +34,10 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     /* 도시 또는 나라로 가이드를 조회함 */
     @Query(value = "SELECT * FROM guide as g WHERE g.city=:searchName OR g.country=:searchName", nativeQuery = true)
     List<Guide> searchByCountryOrCity(@Param("searchName") String searchName);
+
+
+    /* 테마 코드에 해당하는 테마 이름을 가져옴 */
+    @Query(value = "SELECT c.description FROM code as c WHERE c.name=:searchCode", nativeQuery = true)
+    String searchNameByCode(@Param("searchCode") String searchCode);
 
 }
