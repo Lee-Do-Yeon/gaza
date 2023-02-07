@@ -45,9 +45,10 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> search(@RequestParam String searchName){
-        List<Guide> searchList = guideService.guideSearchBar(searchName);
+        List<GuideResponse> searchList = guideService.guideSearchBar(searchName);
 
         if(searchList.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        log.info("search size = " + searchList.size());
         return new ResponseEntity<>(searchList, HttpStatus.OK);
     }
 
