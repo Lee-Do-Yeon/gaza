@@ -1,6 +1,7 @@
 package com.idle.gaza.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
 import lombok.*;
 
 import javax.persistence.*;

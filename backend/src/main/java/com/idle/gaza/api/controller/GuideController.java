@@ -7,7 +7,6 @@ import com.idle.gaza.api.request.TimeRegisterPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.api.service.GuideService;
-import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,11 +134,10 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> guideProfileSearch(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId) {
-        Guide guide = guideService.guideDetailSearch(guideId);
+        GuideResponse guide = guideService.guideDetailSearch(guideId);
 
         if (guide == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setContentType(new MediaType("text", "plain", StandardCharsets.UTF_8));
+
         return new ResponseEntity<>(guide, HttpStatus.OK);
     }
 
