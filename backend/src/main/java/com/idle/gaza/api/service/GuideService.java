@@ -13,10 +13,10 @@ import java.util.List;
 public interface GuideService {
 
     //가이드 조회 기능
-    List<Guide> guideSearch();
+    List<GuideResponse> guideSearch();
     List<GuideResponse> famousGuideSearch();
-    Guide guideDetailSearch(int guideId);
-    List<Guide> guideSearchBar(String searchName);
+    GuideResponse guideDetailSearch(int guideId);
+    List<GuideResponse> guideSearchBar(String searchName);
 
     //가이드 추천 장소 기능
     int locationRegister(LocationPostRequest locations);

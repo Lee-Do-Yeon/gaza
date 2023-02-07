@@ -33,7 +33,7 @@ public class GuideController {
     @Autowired
     GuideService guideService;
 
-    @Value("${spring.servlet.multipart.location}")
+    @Value("${cloud.aws.directory}")
     String rootPath;
 
 
@@ -45,9 +45,10 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> search(@RequestParam String searchName){
-        List<Guide> searchList = guideService.guideSearchBar(searchName);
+        List<GuideResponse> searchList = guideService.guideSearchBar(searchName);
 
         if(searchList.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        log.info("search size = " + searchList.size());
         return new ResponseEntity<>(searchList, HttpStatus.OK);
     }
 
@@ -101,7 +102,7 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> guideSearch() {
-        List<Guide> guideList = guideService.guideSearch();
+        List<GuideResponse> guideList = guideService.guideSearch();
 
         if (guideList == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(guideList, HttpStatus.OK);
@@ -134,7 +135,7 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> guideProfileSearch(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId) {
-        Guide guide = guideService.guideDetailSearch(guideId);
+        GuideResponse guide = guideService.guideDetailSearch(guideId);
 
         if (guide == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(guide, HttpStatus.OK);

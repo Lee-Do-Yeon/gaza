@@ -24,7 +24,7 @@ public class ChatController {
     * */
     @MessageMapping("/chat/message")
     public void message(ChatMessage message) {
-        log.info("chatMessage=", message.toString());
+
         if (ChatMessage.MessageType.ENTER.equals(message.getMessageType())) {
             chatRoomRepository.enterChatRoom(message.getChatRoomId());
             message.setMessage(message.getWriterName() + "님 입장하셨습니다.");

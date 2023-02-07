@@ -66,8 +66,8 @@ dependencies {
     implementation('org.webjars:webjars-locator:0.30')
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-    //embedded-redis
-    //implementation 'it.ozimov:embedded-redis:0.7.2'
+    // AWS S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {
