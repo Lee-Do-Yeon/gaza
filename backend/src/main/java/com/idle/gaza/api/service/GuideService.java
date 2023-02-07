@@ -13,7 +13,7 @@ import java.util.List;
 public interface GuideService {
 
     //가이드 조회 기능
-    List<Guide> guideSearch();
+    List<GuideResponse> guideSearch();
     List<GuideResponse> famousGuideSearch();
     Guide guideDetailSearch(int guideId);
     List<GuideResponse> guideSearchBar(String searchName);
