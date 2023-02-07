@@ -66,7 +66,7 @@ public class UserController {
             log.info("file name = " + uploadFileName);
 
             try {
-                s3Uploader.upload(pictureFile, uploadPath + uploadFileName);
+                log.debug(s3Uploader.upload(pictureFile, uploadPath + uploadFileName));
                 user.setPicture(uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -168,18 +168,17 @@ public class UserController {
 
         String originPictureName = user.getPicture();
 
-        /* 존재하면 삭제
         if (originPictureName != null) {
             String originPicture = new String(rootPath + "/" + "user" + "/" + "picture" + "/" + originPictureName);
-            File file = new File(originPicture);
-            log.info("exist file path = " + file);
+            log.info("exist file path = " + originPicture);
 
-            if (file.exists()) {
+            try {
+                s3Uploader.deleteS3(originPictureName);
                 log.info("delete file");
-                file.delete();
+            } catch(Exception e) {
+                e.printStackTrace();
             }
         }
-        */
 
         String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
         File uploadFilePath = new File(rootPath, uploadPath);
