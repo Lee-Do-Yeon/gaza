@@ -50,8 +50,26 @@ public class GuideServiceImpl implements GuideService {
 
 
     @Override
-    public List<Guide> guideSearch() {
-        return guideRepository.findBy();
+    public List<GuideResponse> guideSearch() {
+        List<Guide> guideList = guideRepository.findBy();
+        List<GuideResponse> searchList = new ArrayList<>();
+
+        for (Guide guide: guideList) {
+            GuideResponse res = GuideResponse.builder()
+                    .guideId(guide.getGuideId())
+                    .city(guide.getCity())
+                    .country(guide.getCountry())
+                    .closeTimeEnd(guide.getCloseTimeEnd())
+                    .closeTimeStart(guide.getCloseTimeStart())
+                    .picture(guide.getPicture())
+                    .name(guide.getUser().getName())
+                    .price(guide.getPrice())
+                    .userId(guide.getUser().getUserId())
+                    .build();
+            searchList.add(res);
+        }
+
+        return searchList;
     }
 
     @Override

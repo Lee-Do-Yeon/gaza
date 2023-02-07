@@ -102,7 +102,7 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> guideSearch() {
-        List<Guide> guideList = guideService.guideSearch();
+        List<GuideResponse> guideList = guideService.guideSearch();
 
         if (guideList == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(guideList, HttpStatus.OK);
