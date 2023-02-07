@@ -8,6 +8,7 @@ import com.idle.gaza.common.util.RedisUtil;
 import com.idle.gaza.common.util.TokenUtil;
 import com.idle.gaza.db.entity.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
+    @Autowired
+    TokenUtil tokenUtil;
+
     /**
      * [API] 사용자 정보를 기반으로 JWT를 발급하는 API
      *
@@ -35,7 +39,7 @@ public class AuthController {
     @PostMapping("/generateToken")
     public ResponseEntity<ApiResponse> selectCodeList(@RequestBody User user) {
 
-        String resultToken = TokenUtil.generateJwtToken(user, 10, "access");
+        String resultToken = tokenUtil.generateJwtToken(user, 10, "access");
 
         ApiResponse ar = ApiResponse.builder()
                 // BEARER {토큰} 형태로 반환을 해줍니다.
@@ -49,7 +53,7 @@ public class AuthController {
 
     @PostMapping("/reissue")
     public ResponseEntity<ApiResponse> reissue(@RequestBody TokenDto tokenDto) {
-        TokenDto newTokenDto = TokenUtil.reissue(tokenDto);
+        TokenDto newTokenDto = tokenUtil.reissue(tokenDto);
 
         System.out.println(newTokenDto.getAccessToken());
 

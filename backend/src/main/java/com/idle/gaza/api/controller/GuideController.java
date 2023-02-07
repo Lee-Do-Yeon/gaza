@@ -33,7 +33,7 @@ public class GuideController {
     @Autowired
     GuideService guideService;
 
-    @Value("${spring.servlet.multipart.location}")
+    @Value("${cloud.aws.directory}")
     String rootPath;
 
 
