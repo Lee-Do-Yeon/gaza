@@ -44,6 +44,11 @@ public class S3Uploader {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
+    // S3에서 파일 삭제
+    public void deleteS3(String fileName) {
+        amazonS3Client.deleteObject(bucket, fileName);
+    }
+
     // 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
