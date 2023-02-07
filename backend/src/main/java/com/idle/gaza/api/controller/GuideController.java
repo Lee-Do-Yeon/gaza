@@ -7,7 +7,7 @@ import com.idle.gaza.api.request.TimeRegisterPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.api.service.GuideService;
-import com.idle.gaza.db.entity.Guide;
+import com.idle.gaza.common.util.S3Uploader;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Api(value = "가이드 API", tags = {"Guide"})
 @RestController
@@ -36,9 +37,12 @@ public class GuideController {
     @Value("${cloud.aws.directory}")
     String rootPath;
 
+    @Autowired
+    private S3Uploader s3Uploader;
+
 
     @GetMapping(value = "/search")
-    @ApiOperation(value = "검색바로 가이드 조회", notes = "나라 또는 도시를 통해 가이드를 조회한다.")
+    @ApiOperation(value = "검색 창으로 가이드 조회", notes = "나라 또는 도시를 통해 가이드를 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류"),
@@ -64,19 +68,14 @@ public class GuideController {
     public ResponseEntity<?> guideRegister(@RequestPart GuideRegisterPostRequest guide, @RequestPart(value = "uploadFile", required = false) MultipartFile multipartFile) {
         log.info("guide = " + guide.toString());
         if (!multipartFile.isEmpty()) {
-            //make upload folder
-            String uploadPath = "/guide/";
-            File uploadFilePath = new File(rootPath, uploadPath);
+            String uploadPath = rootPath + "/" + "guide" + "/" + "picture" + "/";
 
-            if(!uploadFilePath.exists()){
-                uploadFilePath.mkdirs();
-            }
-            String fileName = multipartFile.getOriginalFilename();//저장될 파일명
-            File saveFile = new File(uploadFilePath, fileName);
+            String fileName = multipartFile.getOriginalFilename();//원본 파일명
+            String uploadFileName = UUID.randomUUID().toString() + "_" + fileName;
+            log.info("file name = " + uploadFileName);
 
-            log.info("file name = " + fileName);
             try {
-                multipartFile.transferTo(saveFile);
+                s3Uploader.upload(multipartFile, uploadPath+ uploadFileName);
                 guide.setPicture(fileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -135,11 +134,10 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> guideProfileSearch(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId) {
-        Guide guide = guideService.guideDetailSearch(guideId);
+        GuideResponse guide = guideService.guideDetailSearch(guideId);
 
         if (guide == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setContentType(new MediaType("text", "plain", StandardCharsets.UTF_8));
+
         return new ResponseEntity<>(guide, HttpStatus.OK);
     }
 
@@ -154,26 +152,21 @@ public class GuideController {
     })
     public ResponseEntity<?> locationRegister(@RequestPart(name = "location") LocationPostRequest location, @RequestPart(name = "uploadFile", required = false) MultipartFile multipartFile) {
         log.info("location = " + location.toString());
+
         if (!multipartFile.isEmpty()) {
-            //make upload folder
-            String uploadPath = "/location/";
-            File uploadFilePath = new File(rootPath, uploadPath);
+            String uploadPath = rootPath + "/" + "location" + "/" + "picture" + "/";
 
-            if (!uploadFilePath.exists()) {
-                uploadFilePath.mkdirs();
-            }
-            String fileName = multipartFile.getOriginalFilename();//저장될 파일명
-            File saveFile = new File(uploadFilePath, fileName);
+            String fileName = multipartFile.getOriginalFilename();//원본 파일명
+            String uploadFileName = UUID.randomUUID().toString() + "_" + fileName;
+            log.info("file name = " + uploadFileName);
 
-            log.info("file name = " + fileName);
             try {
-                multipartFile.transferTo(saveFile);
-                location.setPicture(uploadFilePath + "\\" + fileName);
+                s3Uploader.upload(multipartFile, uploadPath+ uploadFileName);
+                location.setPicture(uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
         }
-
         int result = guideService.locationRegister(location);
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
@@ -225,33 +218,33 @@ public class GuideController {
             @ApiResponse(code = 404, message = "Not Found")
     })
     public ResponseEntity<?> locationUpdate(@RequestPart LocationPostRequest location, @RequestPart(name="uploadFile", required = false) MultipartFile multipartFile) {
+
         //파일이 존재한다면 기존 경로에서 파일 삭제
-        String existFile = guideService.findExistFile(location.getRecommendId());
+//        String existFile = guideService.findExistFile(location.getRecommendId());
+//        if (existFile != null) {
+//            String existPath = new String(rootPath + "/" + "loc" + "/" + existFile);
+//            File file = new File(existPath);
+//            log.info("exist file path = " + file);
+//
+//            if (file.exists()) {
+//                log.info("delete file");
+//                file.delete();
+//            }
+//        }
 
-        if (existFile != null) {
-            String existPath = new String(rootPath + "/" + "loc" + "/" + existFile);
-            File file = new File(existPath);
-            log.info("exist file path = " + file);
+        if (!multipartFile.isEmpty()) {
+            String uploadPath = rootPath + "/" + "location" + "/" + "picture" + "/";
 
-            if (file.exists()) {
-                log.info("delete file");
-                file.delete();
+            String fileName = multipartFile.getOriginalFilename();//원본 파일명
+            String uploadFileName = UUID.randomUUID().toString() + "_" + fileName;
+            log.info("file name = " + uploadFileName);
+
+            try {
+                s3Uploader.upload(multipartFile, uploadPath+ uploadFileName);
+                location.setPicture(uploadFileName);
+            } catch (IOException e) {
+                log.error(e.getMessage());
             }
-        }
-        String uploadPath = "/location/";
-        File uploadFilePath = new File(rootPath, uploadPath);
-
-        if (!uploadFilePath.exists()) {
-            uploadFilePath.mkdirs();
-        }
-        String fileName = multipartFile.getOriginalFilename();
-        File saveFile = new File(uploadFilePath, fileName);
-        log.info("file name = " + fileName);
-        try {
-            multipartFile.transferTo(saveFile);
-            location.setPicture(rootPath + uploadPath + "/" + fileName);
-        } catch (IOException e) {
-            log.error(e.getMessage());
         }
 
         int result = guideService.locationUpdate(location);
