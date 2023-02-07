@@ -135,7 +135,7 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> guideProfileSearch(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId) {
-        Guide guide = guideService.guideDetailSearch(guideId);
+        GuideResponse guide = guideService.guideDetailSearch(guideId);
 
         if (guide == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(guide, HttpStatus.OK);
