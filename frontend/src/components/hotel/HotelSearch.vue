@@ -22,17 +22,13 @@
                 <h3>guide.name</h3>
                 <br />
                 <h5>guide.country / guide.city / guide.gender</h5>
-                <div>
-                  guide.introduction
-                </div>
+                <div>guide.introduction</div>
               </div>
             </form>
-            <div
-              class="d-flex mt-2 justify-content-end"
-            >
-              <button @click="MoveReser(review.id)" class="me-2 btn btn_theme btn-lg">
-                예약하기
-              </button>
+            <div class="d-flex mt-2 justify-content-end">
+              <router-link to="/testimonials">
+                <button class="me-2 btn btn_theme btn-lg">예약하기</button>
+              </router-link>
             </div>
 
             <div class="new_main_news_box">
@@ -133,13 +129,7 @@
                 </a>
               </li>
               <li v-for="page in numberofpages" :key="page" class="page-item">
-                <a
-                  style="cursor: pointer"
-                  class="page-link"
-                  @click="getValue(page)"
-                >
-                  {{ page }}</a
-                >
+                <a style="cursor: pointer" class="page-link" @click="getValue(page)"> {{ page }}</a>
               </li>
               <a
                 v-if="currentpage !== numberofpages"
@@ -160,14 +150,14 @@
 </template>
 
 <script>
-import { reviewss,guideDetail } from "../../../common/api/commonAPI";
+import { reviewss, guideDetail } from "../../../common/api/commonAPI";
 
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 export default {
   setup() {
-    const route = useRoute()
+    const route = useRoute();
     const review = ref([]);
     const numberofreviews = ref(0);
     const currentpage = ref(1);
@@ -180,17 +170,13 @@ export default {
 
     const getDate = (date) => {
       const DAT = new Date(date);
-      return (
-        DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay()
-      );
+      return DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay();
     };
 
     const getValue = async (page = currentpage.value) => {
       currentpage.value = page;
       try {
-        const res = await reviewss(
-          `?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
-        );
+        const res = await reviewss(`?_sort=id&_order=desc&_page=${page}&_limit=${limit}`);
         numberofreviews.value = res.data["length"];
         review.value = res.data;
       } catch (err) {
@@ -216,13 +202,13 @@ export default {
       });
     };
 
-    console.log(review)
-     
+    console.log(review);
+
     onMounted(() => {
       const detail = async () => {
-        const response = await guideDetail(parseInt(route.params.guideId))
+        const response = await guideDetail(parseInt(route.params.guideId));
         guideInfo.value = response.data;
-      }
+      };
       detail();
       console.log(guideInfo);
     });
@@ -240,7 +226,7 @@ export default {
       getDate,
       router,
       MoveReser,
-      guideInfo
+      guideInfo,
     };
   },
 };
