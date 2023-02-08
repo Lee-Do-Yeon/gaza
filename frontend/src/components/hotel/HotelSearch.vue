@@ -29,12 +29,10 @@
                 </div>
               </div>
             </form>
-            <div
-              class="d-flex mt-2 justify-content-end"
-            >
-              <button @click="MoveReser(review.id)" class="me-2 btn btn_theme btn-lg">
-                예약하기
-              </button>
+            <div class="d-flex mt-2 justify-content-end">
+              <router-link to="/testimonials">
+                <button class="me-2 btn btn_theme btn-lg">예약하기</button>
+              </router-link>
             </div>
 
             <div class="new_main_news_box">
@@ -214,7 +212,7 @@ export default {
         },
       });
     };
-    console.log(review)
+    console.log(review);
 
     return {
       getValue,

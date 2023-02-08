@@ -35,6 +35,7 @@ import WalletView from '../views/WalletView.vue'
 import NotificationView from '../views/NotificationView.vue'
 import PrivacyPolicyView from '../views/PrivacyPolicyView.vue'
 import ErrorView from '../views/ErrorView.vue'
+import CompleteView from '../views/CompleteView.vue'
 import ContactView from '../views/ContactView.vue'
 import BecomeVendorView from '../views/BecomeVendorView.vue'
 import NotFound from '../components/NotFound.vue'
@@ -278,6 +279,11 @@ const routes = [
     path : '/openvidu',
     name : 'openvidu',
     component :OpenViduView
+  },
+  {
+    path : '/complete',
+    name : 'complete',
+    component :  CompleteView
   },
   {
     path: "/map",
