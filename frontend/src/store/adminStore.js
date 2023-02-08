@@ -21,10 +21,13 @@ const actions = {
     try {
         const response = await requestGuideRegisterList();
 
+        const list = response.data.result;
+        
+        console.log(list);
         console.log('리스트 읽어오기 성공');
-        commit('setRegisterGuideList', response.data)
+        commit('setRegisterGuideList', list)
     } catch (error) {
-        console.log(error.reponse);
+        console.log(error);
     }
   }
 };
