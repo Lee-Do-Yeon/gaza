@@ -20,6 +20,7 @@ import GuideScheduleView from '../views/GuideScheduleView.vue'
 import GuideReviewView from '../views/GuideReviewView.vue'
 import GuideQNAView from '../views/GuideQNAView.vue'
 import OpenViduView from '../views/OpenViduView.vue'
+import OpenViduViewCopy from '../views/OpenViduViewCopy.vue'
 import MapDetail from "@/components/map/MapDetail";
 import MapTest from "@/components/map/MapTest";
 import AppMap from "../views/AppMap.vue";
@@ -202,6 +203,11 @@ const routes = [
     path : '/openvidu',
     name : 'openvidu',
     component :OpenViduView
+  },
+  {
+    path : '/openviducopy',
+    name : 'openviducopy',
+    component :OpenViduViewCopy
   },
   {
     path : '/complete',
