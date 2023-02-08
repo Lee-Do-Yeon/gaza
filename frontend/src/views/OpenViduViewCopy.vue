@@ -53,7 +53,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io:8443/openvidu/";
 
 export default {
-  name: "OpenViduView",
+  name: "OpenViduViewCopy",
 
   components: {
     UserVideo,
@@ -180,9 +180,9 @@ export default {
      * more about the integration of OpenVidu in your application server.
      */
     async getToken(mySessionId) {
-      const sessionId = await this.createSession(mySessionId);
-      console.log('sessionID');
-      console.log(sessionId);
+      // const sessionId = await this.createSession(mySessionId);
+      // console.log('sessionID');
+      // console.log(sessionId);
       return await this.createToken(mySessionId);
     },
 
