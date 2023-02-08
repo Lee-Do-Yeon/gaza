@@ -42,4 +42,4 @@ const guideSearch = payload => api.get('/api/guides/search/', {params: {searchNa
 
 const guideDetail = guideId => api.get(`/guides/${guideId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser};

@@ -1,6 +1,5 @@
 package com.idle.gaza.api.response;
 
-import com.idle.gaza.db.entity.DayOff;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Getter;
@@ -78,4 +77,5 @@ public class GuideResponse {
         this.dayOffList = dayOffList;
         this.guideLocationList = guideLocationList;
     }
+
 }

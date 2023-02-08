@@ -18,11 +18,14 @@
                 src="../../assets/img/common/dashboard-user.png"
                 alt="img"
               />
-              <div class="ms-3" v-for="guide in guideInfo" :key="guide.guideId">
-                <h3>guide.name</h3>
+              <div class="ms-3">
+                <h3>{{ guideInfo.name }}</h3>
                 <br />
-                <h5>guide.country / guide.city / guide.gender</h5>
-                <div>guide.introduction</div>
+                <h5>{{ guideInfo.country }} / {{ guideInfo.city }} / {{ guideInfo.gender }}</h5>
+                <p v-for="data in themaInfo" :key="data.length">
+                  {{ data }}
+                </p>
+                <div>{{ guideInfo.introduction }}</div>
               </div>
             </form>
             <div class="d-flex mt-2 justify-content-end">
@@ -31,12 +34,17 @@
               </router-link>
             </div>
 
+            <!--start 추천장소 -->
             <div class="new_main_news_box">
               <br />
               <h3 style="font-weight: bold">가이드의 추천 명소</h3>
 
               <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                <div
+                  class="col-lg-4 col-md-6 col-sm-12 col-12"
+                  v-for="loc in recommendInfo"
+                  :key="loc.name"
+                >
                   <div class="news_item_boxed">
                     <div class="news_item_img">
                       <router-link to="/news-details"
@@ -45,43 +53,14 @@
                     </div>
                     <div class="news_item_content">
                       <h3>
-                        <router-link to="/news-details">한강 </router-link>
+                        <router-link to="/news-details">{{ loc.name }} </router-link>
                       </h3>
-                      <p>대한민국 치킨 맛집</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                  <div class="news_item_boxed">
-                    <div class="news_item_img">
-                      <router-link to="/news-details"
-                        ><img src="../../assets/img/news/news-2.png" alt="img"
-                      /></router-link>
-                    </div>
-                    <div class="news_item_content">
-                      <h3>
-                        <router-link to="/news-details"> 전주 </router-link>
-                      </h3>
-                      <p>대한민국 비빔밥 맛집</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                  <div class="news_item_boxed">
-                    <div class="news_item_img">
-                      <router-link to="/news-details"
-                        ><img src="../../assets/img/news/news-3.png" alt="img"
-                      /></router-link>
-                    </div>
-                    <div class="news_item_content">
-                      <h3>
-                        <router-link to="/news-details"> 완도 </router-link>
-                      </h3>
-                      <p>대한민국 김 맛집</p>
+                      <p>{{ loc.address }}</p>
                     </div>
                   </div>
                 </div>
               </div>
+              <!--end 추천장소 -->
             </div>
           </div>
           <hr />
@@ -154,6 +133,7 @@ import { reviewss, guideDetail } from "../../../common/api/commonAPI";
 
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import axios from "@/api/http";
 
 export default {
   setup() {
@@ -164,7 +144,10 @@ export default {
     const limit = 5;
     const StartDate = ref("");
     const EndDate = ref("");
+
     const guideInfo = ref([]);
+    const recommendInfo = ref([]);
+    const themaInfo = ref([]);
 
     const router = useRouter();
 
@@ -202,15 +185,29 @@ export default {
       });
     };
 
-    console.log(review);
+    // const detail = async (guideId) => {
+    //   try {
+    //     const response = await guideDetail(parseInt(guideId));
+    //     guideInfo.value = response.data.result;
+    //     recommendInfo.value = guideInfo.guideLocationList;
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
 
     onMounted(() => {
-      const detail = async () => {
-        const response = await guideDetail(parseInt(route.params.guideId));
-        guideInfo.value = response.data;
-      };
-      detail();
+      const guideId = parseInt(route.params.guideId);
+      //console.log(guideId);
+
+      axios.get(`/guides/${guideId}`).then((res) => {
+        guideInfo.value = res.data;
+        console.log(res.data.gender);
+        recommendInfo.value = res.data.guideLocationList;
+        themaInfo.value = res.data.thema;
+      });
+
       console.log(guideInfo);
+      console.log(recommendInfo);
     });
 
     return {
@@ -227,6 +224,9 @@ export default {
       router,
       MoveReser,
       guideInfo,
+      recommendInfo,
+      //detail,
+      themaInfo,
     };
   },
 };
