@@ -49,7 +49,7 @@ import UserVideo from "../openvidu/UserVideo";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/openvidu-api/";
+const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io:8443/openvidu/";
 
 export default {
   name: "OpenViduView",
