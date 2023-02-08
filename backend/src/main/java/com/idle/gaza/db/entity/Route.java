@@ -1,6 +1,10 @@
 package com.idle.gaza.db.entity;
 
 public class Route {
+    public enum RouteType {
+        UP, DOWN, DELETE, SAVE
+    }
+    private RouteType type;
     private String roomId;
     private String name;
     private String address;
@@ -45,5 +49,13 @@ public class Route {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public RouteType getType() {
+        return type;
+    }
+
+    public void setType(RouteType type) {
+        this.type = type;
     }
 }
