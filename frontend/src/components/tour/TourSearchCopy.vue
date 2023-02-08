@@ -231,7 +231,7 @@ import { guideSearch } from "../../../common/api/commonAPI"
 
 
 export default {
-    name: "TourSearch",
+    name: "TourSearchCopy",
     components: {
         Slider
     },

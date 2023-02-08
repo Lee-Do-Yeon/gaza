@@ -144,6 +144,7 @@ import { useStore } from 'vuex'
 import { requestSignin, requesttest } from "../../../common/api/commonAPI"
 import router from "@/router";
 
+
 export default {
     name: "CommonAuthorThree",
 
@@ -172,6 +173,7 @@ export default {
         })
 
         onMounted(() => {
+            console.log('signupplease');
             idc.value = false
             passwordc.value = false
             emailc.value =false
@@ -236,7 +238,7 @@ export default {
             passwordc.value = false
         }
 
-        return { state, Signin, idc, passwordc, emailc, upemail, uppassword}
+        return { state, Signin, idc, passwordc, emailc, upemail, uppassword }
      },
     
 };
