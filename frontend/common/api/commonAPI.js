@@ -14,7 +14,7 @@ const requestLogin = (payload) => api.post("/users/login", payload);
 const requestConfirm = accessToken => api.get("/users/isLogin", {headers: {Authorization: accessToken}})
 
 // 가이드 신청 중인 유저 목록
-const requestGuideRegisterList = (payload) => api.get("/api/users/getRegisterGuideList", payload);
+const requestGuideRegisterList = (payload) => api.get("/api/users/guide", payload);
 
 // 예약내역조회 Notification
 const reser = (payload) => api.get("/books/user/ssafy",payload);
@@ -36,4 +36,4 @@ const uploadReview =(payload) => api.post('/reviews',payload)
 const requestConfirmId = userid => api.get(`/users/${userid}`)
 
 
-export { requestLogin, requestSignin, requestConfirm, requestConfirmId, reser};
+export { requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, requestGuideRegisterList};
