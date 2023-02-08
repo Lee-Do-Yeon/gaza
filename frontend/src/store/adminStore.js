@@ -1,4 +1,4 @@
-import { requestGuideRegisterList } from "../../common/api/commonAPI";
+import { requestGuideRegisterList, allowGuideRequest, rejectGuideRequest } from "../../common/api/commonAPI";
 
 const state = {
     registerGuideList : []
@@ -26,6 +26,24 @@ const actions = {
         console.log(list);
         console.log('리스트 읽어오기 성공');
         commit('setRegisterGuideList', list)
+    } catch (error) {
+        console.log(error);
+    }
+  },
+  allowGuideRequest: async ({}) => {
+    try {
+        const response = await allowGuideRequest();
+
+        console.log('가이드 신청 승인');
+    } catch (error) {
+        console.log(error);
+    }
+  },
+  rejectGuideRequest: async ({}) => {
+    try {
+        const response = await rejectGuideRequest();
+        
+        console.log('가이드 신청 거절');
     } catch (error) {
         console.log(error);
     }

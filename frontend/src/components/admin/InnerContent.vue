@@ -1,6 +1,6 @@
 <template>
     <div class="col-8">
-        <table class="table">
+        <table class="table text-center" >
             <thead class="thead-black">
                 <tr>
                     <th scope="col">id</th>
@@ -11,12 +11,11 @@
             </thead>
             <tbody>
                 <tr v-for="user in registerGuideList" :key="user.userId">
-                    <td> {{user["userId"]}} </td>
-                    <td> {{user["idFile"]}} </td>
-                    <td> {{user["certificateResidence"]}} </td>
-                    <td> {{user["certificate"]}} </td>
-                    <td> <a href="https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/user/picture/a49240f1-9ca7-413b-8345-3712492ebafc_Image+Pasted+at+2023-1-17+14-03.png">과연 그럴까</a></td>
-                    <td> <button>승인</button> <button>거부</button> </td>
+                    <td> <router-link to="/" >{{user["userId"]}}</router-link> </td>
+                    <td><a href="https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide_document/id_file/user['idfile']"><img src="../../assets/img/admin/file.png" alt=""></a></td>
+                    <td><a href="https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide_document/certificate_residence/user['certificateResidence']"><img src="../../assets/img/admin/file.png" alt=""></a></td>
+                    <td><a href="https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide_document/certificate/user['certificateResidence']"><img src="../../assets/img/admin/file.png" alt=""></a></td>
+                    <td> <button @click="allow()">승인</button> <button @click="reject()">거부</button> </td>
                 </tr>
             </tbody>
         </table>
@@ -39,9 +38,21 @@ export default {
             return store.getters['adminStore/getRegisterGuideList'];
         })
 
+        const allow = function () {
+            console.log("신청 승인");
+            store.dispatch('adminStore/allowGuideRequest');
+        }
+
+        const reject = function () {
+            console.log("신청 거부");
+            store.dispatch('adminStore/rejectGuideRequest');
+        }
+
         return {
             store,
             registerGuideList,
+            allow,
+            reject
         };
   },
 }
