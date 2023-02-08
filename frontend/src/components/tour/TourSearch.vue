@@ -14,65 +14,6 @@
                     <div class="left_side_search_area">
                         <div class="left_side_search_boxed">
                             <div class="left_side_search_heading">
-                                <h5>Filter by Review</h5>
-                            </div>
-                            <div class="filter_review">
-                                <form class="review_star">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
-                                        <label class="form-check-label" for="flexCheckDefault1">
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                                        <label class="form-check-label" for="flexCheckDefault2">
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault3">
-                                        <label class="form-check-label" for="flexCheckDefault3">
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault5">
-                                        <label class="form-check-label" for="flexCheckDefault5">
-                                            <i class="fas fa-star color_theme"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                            <i class="fas fa-star color_asse"></i>
-                                        </label>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="left_side_search_boxed">
-                            <div class="left_side_search_heading">
                                 <h5>Tour type</h5>
                             </div>
                             <div class="tour_search_type">
@@ -182,16 +123,34 @@
                         <div v-for='tourInfo in resultArray' :key="tourInfo.guideId" class="col-lg-4 col-md-6 col-sm-6 col-12">
                             <div class="theme_common_box_two img_hover">
                                 <div class="theme_two_box_img">
-                                    <router-link to="/tour-details">
+                                    <router-link 
+                                    :to="{
+                                            name: 'hotel-details',
+                                            params: { guideId: tourInfo.guideId  },
+                                        }"
+                                    >
                                         <img src="@/assets/img/tab-img/hotel1.png" onerror="this.onerror=null; this.src='@/assets/img/tab-img/hotel1.png';"/>
                                     </router-link>
                                     <p><i class="fas fa-map-marker-alt"></i>{{ tourInfo.country }}</p>
                                 </div>
                                 <div class="theme_two_box_content">
-                                    <h4><router-link to="/tour-details">{{ tourInfo.name }}</router-link></h4>
-                                    <p><span class="review_rating">{{ tourInfo.reviewRating }}</span> <span
-                                            class="review_count">({{ tourInfo.reviewCount }})</span></p>
-                                    <h3>{{ tourInfo.price }} <span>{{ tourInfo.startForm }}</span></h3>
+                                    <h4><router-link 
+                                    :to="{
+                                            name: 'hotel-details',
+                                            params: { guideId: tourInfo.guideId  },
+                                        }"
+                                    >{{ tourInfo.name }}</router-link></h4>
+                                    <p>
+                                        <span class="review_rating">
+                                            <span v-for="lang in tourInfo.language" :key="lang">#{{ lang }}</span>
+                                        </span> 
+                                        <span class="review_count">                                            
+                                            <span v-for="theme in tourInfo.thema" :key="theme" >
+                                                #{{ theme }}
+                                            </span>                                            
+                                        </span>
+                                    </p>
+                                    <h3>{{ tourInfo.introduction }} <span>{{ tourInfo.startForm }}</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -253,11 +212,30 @@ export default {
 
         const resultArray = ref([])
 
+        const resultLanguage = ref([])
+
+        const resultThema = ref([])
+
         const findSearch = async function (item) {
             try {
                 const response = await guideSearch(item)
                 console.log(response.data);
                 resultArray.value = response.data
+                let languageSet = new Set()
+                let themaSet = new Set()
+
+                for (let guide of resultArray.value) {
+                    for (let lang of guide.language) {
+                        languageSet.add(lang)
+                    }
+                    for (let them of guide.thema) {
+                        themaSet.add(them)
+                    }
+                }
+                console.log(languageSet, themaSet);
+                resultLanguage.value = languageSet
+                resultThema.value =themaSet
+
             } catch(error) {
                 console.log(error);
             }
@@ -266,13 +244,14 @@ export default {
         onMounted(() => {
             console.log(route.params.searchitem, '서치결과잇는곳');
             findSearch(route.params.searchitem)
+
         })
 
         const resultCount = computed(() => {
             return resultArray.value.length
         })
 
-        return { findSearch, resultArray, resultCount }
+        return { findSearch, resultArray, resultCount, resultLanguage, resultThema }
     }
 
 };
