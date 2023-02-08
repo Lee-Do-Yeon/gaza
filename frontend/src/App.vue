@@ -1,10 +1,10 @@
 <template>
 
-  <Header />
+  <Header v-show="Admin"/>
 
   <router-view />
 
-  <Footer />
+  <Footer v-show="Admin"/>
 </template>
 
 <script>

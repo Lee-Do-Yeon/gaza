@@ -10,7 +10,8 @@ const requestSignin = payload => api.post("/api/users", payload);
 //유저 로그인
 const requestLogin = (payload) => api.post("/api/login", payload);
 
-
+// 가이드 신청 중인 유저 목록
+const requestGuideRegisterList = (payload) => api.get("/api/users/getRegisterGuideList", payload);
 
 
 // 예약내역조회 Notification
@@ -23,4 +24,5 @@ const requestConfirm = token => api.get("/users/me", {headers: {Authorization: t
 const requestConfirmId = userid => api.get(`/users/${userid}`)
 
 
-export { requestLogin, requestSignin, requestConfirm, requestConfirmId, reser};
+
+export { requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, requestGuideRegisterList};
