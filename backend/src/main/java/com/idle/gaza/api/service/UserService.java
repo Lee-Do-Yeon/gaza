@@ -20,6 +20,8 @@ public interface UserService {
 
     int registerGuide(String id, GuideDocument guideDocument);
 
+    List<GuideDocument> searchGuideRegisterList();
+
     int updateUser(String id, UserUpdateRequest userUpdateRequest);
 
     int updatePassword(String id, String password);
