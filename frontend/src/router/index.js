@@ -110,7 +110,7 @@ const routes = [
     component: HotelSearchView
   },
   {
-    path: '/hotel-details',
+    path: '/hotel-details/:guideId',
     name: 'hotel-details',
     component: HotelDetailsView
   },
