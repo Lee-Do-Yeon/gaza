@@ -58,7 +58,7 @@ export default {
         axios
           .post("/chat/room", {name:this.room_name})
           .then((response) => {
-            console.log("[" + response.data.name + "] 개설");
+            console.log("[" , response.data.name , "] 개설");
             this.findAllRoom();
           })
           .catch(() => {

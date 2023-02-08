@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import HomeTwoView from '../views/HomeTwoView.vue'
 import TourSearchView from '../views/TourSearchView.vue'
+import TourSearchViewCopy from '../views/TourSearchViewCopy.vue'
 import TourDetailsView from '../views/TourDetailsView.vue'
 import TourBookingSubmissionView from '../views/TourBookingSubmissionView.vue'
 import TopDestinationsView from '../views/TopDestinationsView.vue'
@@ -44,6 +45,9 @@ import GuideScheduleView from '../views/GuideScheduleView.vue'
 import GuideReviewView from '../views/GuideReviewView.vue'
 import GuideQNAView from '../views/GuideQNAView.vue'
 
+
+import OpenViduView from '../views/OpenViduView.vue'
+
 import MapDetail from "@/components/map/MapDetail";
 import MapTest from "@/components/map/MapTest";
 import AppMap from "../views/AppMap.vue";
@@ -72,9 +76,14 @@ const routes = [
     component: HomeTwoView
   },
   {
-    path: '/tour-search',
+    path: '/tour-search/:searchitem',
     name: 'tour-search',
     component: TourSearchView
+  },
+  {
+    path: '/tour-search-copy/:searchitem',
+    name: 'tour-search-copy',
+    component: TourSearchViewCopy
   },
   {
     path: '/tour-details',
@@ -122,7 +131,7 @@ const routes = [
     component: RoomBookingView
   },
   {
-    path: '/about',
+    path: '/about/:id',
     name: 'about',
     component: AboutView
   },
@@ -252,7 +261,7 @@ const routes = [
     component: NotFound
   },
   {
-    path :'/review/',
+    path :'/review/:id/:name',
     name: 'review',
     component: reviewView
   },
@@ -270,6 +279,11 @@ const routes = [
     path : '/guide_QNA',
     name : 'guide_QNA',
     component :GuideQNAView
+  },
+  {
+    path : '/openvidu',
+    name : 'openvidu',
+    component :OpenViduView
   },
   {
     path: "/map",
@@ -307,7 +321,6 @@ const routes = [
       },
     ],
   }
-
 ]
 
 
