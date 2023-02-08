@@ -9,11 +9,11 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="tour_search_form">
-                                            <form action="#!">
+                                            <form @submit.prevent="itemSearch">
                                                 <div class="row">
                                                     <div class="col-lg-10 col-md-12 col-sm-12 col-12 flight_Search_boxed d-flex">
                                                         <img src="../../assets/img/icon/Icon.png" class="d-inline m-auto pe-2" alt="">
-                                                        <input type="text" class="d-inline" placeholder="Where are you going?">
+                                                        <input type="text" class="d-inline" placeholder="가고 싶은 도시나 나라를 검색해주세요." v-model="state.form.searchPlace">
                                                     </div>
                                                     <div class="top_form_search_button col-lg-2 col-md-12 col-sm-12 col-12">
                                                         <button class="btn btn_theme btn_md">Search</button>
@@ -32,32 +32,34 @@
     </section>
 </template>
 <script>
+import { reactive, computed, ref, onMounted, watch } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from "vue-router";
+
 export default {
     name: "Form",
-    data() {
-        return {
-            isHidden: false,
-            rowData: [{ name: '' }]
-        };
-    },
-    methods: {
-        addRow: function () {
+    setup(props, { emit }) {
+        const router = useRouter();
+        
+        const store = useStore()
 
-            let a = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-
-            if (document.querySelectorAll('.multi_city_form').length === 5) {
-                alert("Max Citry Limit Reached!!")
-                return;
+        const state = reactive({
+            form: {
+                searchPlace: ''
             }
+        })
 
-            this.isHidden = true
-
-            this.rowData.push({ name: '' })
-        },
-        deleteRow(index) {
-            this.rowData.splice(index, 1);
+        const itemSearch = function () {
+            router.push({
+                name: "tour-search",
+                params: {  
+                    searchitem : state.form.searchPlace
+                }
+            })
         }
 
+        return { state, itemSearch }
     }
+    
 };
 </script>

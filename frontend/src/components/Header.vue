@@ -49,13 +49,21 @@
                                                             Pages</a>
                                                         <ul class="dropdown-menu shadow">
 
-                                                            <li class="nav-item">
+                                                            <li class="nav-item" v-if="!islogin">
                                                                 <router-link to="/login"
                                                                     class="dropdown-item">Login</router-link>
                                                             </li>
-                                                            <li class="nav-item">
+                                                            <li class="nav-item" v-if="islogin">
+                                                                <router-link to="/" @click="clickLogout"
+                                                                    class="dropdown-item">로그아웃</router-link>
+                                                            </li>
+                                                            <li class="nav-item" v-if="!islogin">
                                                                 <router-link to="/register"
-                                                                    class="dropdown-item">Register</router-link>
+                                                                    class="dropdown-item">회원가입</router-link>
+                                                            </li>
+                                                            <li class="nav-item" v-if="islogin">
+                                                                <router-link to="/my-profile"
+                                                                    class="dropdown-item">내 정보</router-link>
                                                             </li>
                                                             <li class="nav-item">
                                                                 <router-link to="/forgot-password"
@@ -131,11 +139,17 @@
                                             <li class="nav-item">
                                                 <router-link to="/contact" class="dropdown-item">Contact</router-link>
                                             </li>
-                                            <li class="nav-item">
+                                            <li class="nav-item" v-if="!islogin">
                                                 <router-link to="/login" class="dropdown-item">Login</router-link>
                                             </li>
-                                            <li class="nav-item">
-                                                <router-link to="/register" class="dropdown-item">Signin</router-link>
+                                            <li class="nav-item" v-if="islogin">
+                                                <router-link to="/" @click="clickLogout" class="dropdown-item">로그아웃</router-link>
+                                            </li>
+                                            <li class="nav-item" v-if="!islogin">
+                                                <router-link to="/register" class="dropdown-item">회원가입</router-link>
+                                            </li>
+                                            <li class="nav-item" v-if="islogin">
+                                                <router-link to="/my-profile" class="dropdown-item">내 정보</router-link>
                                             </li>
                                         </ul>
                                     </div>
@@ -157,11 +171,17 @@
                                         <router-link to="/become-vendor" class="btn  btn_navber">Become a
                                             partner</router-link>
                                     </div>
-                                    <div class="option-item">
+                                    <div class="option-item" v-if="!islogin">
                                         <router-link to="/login" class="btn btn_navber">Login</router-link>
                                     </div>
-                                    <div class="option-item">
-                                        <router-link to="/register" class="btn btn_navber">Sign up</router-link>
+                                    <div class="option-item" v-if="islogin">
+                                        <router-link to="/" @click="clickLogout" class="btn btn_navber">로그아웃</router-link>
+                                    </div>
+                                    <div class="option-item" v-if="!islogin">
+                                        <router-link to="/register" class="btn btn_navber">회원가입</router-link>
+                                    </div>
+                                    <div class="option-item" v-if="islogin">
+                                        <router-link to="/my-profile" class="btn btn_navber">내 정보</router-link>
                                     </div>
                                 </div>
                             </div>
@@ -189,6 +209,12 @@
     </div>
 </template>
 <script>
+import { reactive, computed, ref, onMounted, watch } from 'vue'
+import { useStore } from 'vuex'
+import router from "@/router";
+import { STATEMENT_OR_BLOCK_KEYS } from '@babel/types';
+
+
 export default {
     name: 'Header',
     data() {
@@ -215,7 +241,23 @@ export default {
                 e.target.children[0].classList.toggle('active');
             }
         })
-    }
+    },
+    setup() {
+        const store = useStore()
+
+        const islogin = computed(() => {
+           return store.getters["accountStore/getIsLogin"]
+        })
+
+
+        
+        const clickLogout = () => {
+            store.commit('accountStore/logOutData')
+        }
+
+        return { islogin, clickLogout }
+    },
+    
 }
 </script>
 
