@@ -10,12 +10,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in registerGuideList" :key="user.id"></tr>
-                <tr>
-                    <td> {{user[0]}} </td>
-                    <td> {{user[1]}} </td>
-                    <td> {{user[2]}} </td>
-                    <td> {{user[3]}} </td>
+                <tr v-for="user in registerGuideList" :key="user.userId">
+                    <td> {{user["userId"]}} </td>
+                    <td> {{user["idFile"]}} </td>
+                    <td> {{user["certificateResidence"]}} </td>
+                    <td> {{user["certificate"]}} </td>
+                    <td> <a href="https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/user/picture/a49240f1-9ca7-413b-8345-3712492ebafc_Image+Pasted+at+2023-1-17+14-03.png">과연 그럴까</a></td>
+                    <td> <button>승인</button> <button>거부</button> </td>
                 </tr>
             </tbody>
         </table>
@@ -27,17 +28,15 @@ import { computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
-
-
     setup() {
         const store = useStore();
 
+        onMounted(() => {
+            store.dispatch('adminStore/getRegisterGuideListAction');
+        })
+        
         const registerGuideList = computed(() => {
             return store.getters['adminStore/getRegisterGuideList'];
-        })
-
-        onMounted(() => {
-            store.dispatch['adminStore/getRegisterGuideListAction'];
         })
 
         return {

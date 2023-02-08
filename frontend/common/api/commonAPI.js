@@ -40,4 +40,4 @@ const requestConfirmId = userid => api.get(`/users/${userid}`)
 const guideSearch = payload => api.get('/guides/search/', {params: {searchName: payload }})
 
 
-export {updateUser,uploadReview, reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch};
+export {updateUser,uploadReview, reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, requestGuideRegisterList};
