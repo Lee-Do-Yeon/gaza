@@ -6,9 +6,6 @@ import adminStore from "./adminStore";
 export default createStore({
   modules: {
     accountStore,
-    menuStore,
-    platformInfoStore,
-    loadingEffect,
     adminStore
   },
   plugins: [

@@ -1,7 +1,7 @@
-import { requestGuideRegisterList } from "../common/api/accountAPI";
+import { requestGuideRegisterList } from "../../common/api/commonAPI";
 
 const state = {
-    registerGuideList
+    registerGuideList : []
 };
 
 const getters = {
@@ -20,8 +20,9 @@ const actions = {
   getRegisterGuideListAction: async ({ commit }) => {
     try {
         const response = await requestGuideRegisterList();
+
         console.log('리스트 읽어오기 성공');
-        commit('setRegisterGuideList')
+        commit('setRegisterGuideList', response.data)
     } catch (error) {
         console.log(error.reponse);
     }
