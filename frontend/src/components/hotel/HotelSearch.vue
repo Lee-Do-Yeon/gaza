@@ -161,11 +161,12 @@
 <script>
 import { reviewss } from "../../../common/api/commonAPI";
 
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 export default {
   setup() {
+    const route = useRoute()
     const review = ref([]);
     const numberofreviews = ref(0);
     const currentpage = ref(1);
@@ -213,6 +214,10 @@ export default {
       });
     };
     console.log(review);
+
+    onMounted(() => {
+      console.log(route.params.guideId, '가이드아이디결과잇는곳');
+    })
 
     return {
       getValue,
