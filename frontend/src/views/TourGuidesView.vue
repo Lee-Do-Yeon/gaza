@@ -6,8 +6,7 @@
     <!-- Tour Guides Area -->
     <TourGuides />
 
-    <!-- Cta Area -->
-    <Cta />
+
 
 
 </template>
@@ -15,12 +14,11 @@
 
 import TourGuideBanner from '@/components/tour/TourGuideBanner.vue'
 import TourGuides from '@/components/tour/TourGuides.vue'
-import Cta from '@/components/home/Cta.vue'
 
 export default {
     name: "TourGuidesView",
     components: {
-        TourGuideBanner, TourGuides, Cta
+        TourGuideBanner, TourGuides
     }
 };
 </script>
