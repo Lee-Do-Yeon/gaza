@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Api(value = "유저 API", tags = {"User"})
@@ -393,6 +394,35 @@ public class UserController {
                     .result(null)
                     .resultCode(SuccessCode.INSERT.getStatus())
                     .resultMsg("가이드 신청되었습니다.").build();
+            return new ResponseEntity<>(ar, HttpStatus.OK);
+        }
+    }
+
+    /**
+     * [API] 가이드 신청 리스트
+     *
+     * @param accessToken String
+     * @return ResponseEntity
+     * <p>
+     *
+     */
+    @GetMapping("/guide")
+    public ResponseEntity<ApiResponse<Object>> getGuideRegisterList() {
+        List<GuideDocument> list = userService.searchGuideRegisterList();
+
+        if (list == null) {
+            ApiResponse<Object> ar = ApiResponse.builder()
+                    .result(null)
+                    .resultCode(HttpStatus.NO_CONTENT.value())
+                    .resultMsg("신청자가 없습니다.")
+                    .build();
+            return new ResponseEntity<>(ar, HttpStatus.NO_CONTENT);
+        } else {
+            ApiResponse<Object> ar = ApiResponse.builder()
+                    .result(list)
+                    .resultCode(SuccessCode.SELECT.getStatus())
+                    .resultMsg("리스트가 조회되었습니다.")
+                    .build();
             return new ResponseEntity<>(ar, HttpStatus.OK);
         }
     }
