@@ -1,749 +1,235 @@
 <template>
-    <section id="tour_details_main" class="section_padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="tour_details_leftside_wrapper">
-                        <div class="tour_details_heading_wrapper">
-                            <div class="tour_details_top_heading">
-                                <h2>Hotel castle salam</h2>
-                                <h5><i class="fas fa-map-marker-alt"></i> Los angeles</h5>
-                            </div>
-                            <div class="tour_details_top_heading_right">
-                                <h4>Excellent</h4>
-                                <h6>4.8/5</h6>
-                                <p>(1214 reviewes)</p>
-                            </div>
-                        </div>
-                        <div class="tour_details_top_bottom">
-                            <div class="toru_details_top_bottom_item">
-                                <div class="tour_details_top_bottom_icon">
-                                    <img src="../../assets/img/icon/ac.png" alt="icon">
-                                </div>
-                                <div class="tour_details_top_bottom_text">
-                                    <p>Air condition</p>
-                                </div>
-                            </div>
-                            <div class="toru_details_top_bottom_item">
-                                <div class="tour_details_top_bottom_icon">
-                                    <img src="../../assets/img/icon/tv.png" alt="icon">
-                                </div>
-                                <div class="tour_details_top_bottom_text">
-                                    <p>Flat television</p>
-                                </div>
-                            </div>
-                            <div class="toru_details_top_bottom_item">
-                                <div class="tour_details_top_bottom_icon">
-                                    <img src="../../assets/img/icon/gym.png" alt="icon">
-                                </div>
-                                <div class="tour_details_top_bottom_text">
-                                    <p>Fitness center</p>
-                                </div>
-                            </div>
-                            <div class="toru_details_top_bottom_item">
-                                <div class="tour_details_top_bottom_icon">
-                                    <img src="../../assets/img/icon/wifi.png" alt="icon">
-                                </div>
-                                <div class="tour_details_top_bottom_text">
-                                    <p>Free Wi-fi</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tour_details_img_wrapper">
-                            <div class="image__gallery">
-                                <div class="gallery">
-                                    <div class="gallery__slideshow">
-                                        <div class="gallery__slides">
-                                            <div class="gallery__slide">
-                                                <img class="gallery__img" :src="slide.img" alt=""
-                                                    v-for="(slide, index) in gallerySlides" :key="index" :style="
-                                                        slideIndex === index
-                                                            ? 'display:block;'
-                                                            : 'display:none;'
-                                                    " />
-
-                                            </div>
-                                        </div>
-                                        <a @click.prevent="move(-1)" class="gallery__prev">&#10095;</a>
-                                        <a @click.prevent="move(1)" class="gallery__next">&#10094;</a>
-                                    </div>
-
-                                    <div class="gallery__content">
-                                        <div class="gallery__items">
-
-                                            <div class="gallery__item" :class="{
-                                                'gallery__item--is-acitve': slideIndex === index
-                                            }" v-for="(slide, index) in gallerySlides" :key="`item-${index}`">
-                                                <img :src="slide.img" @click="currentSlide(index)"
-                                                    class="gallery__item-img" />
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tour_details_boxed">
-                            <h3 class="heading_theme">Overview</h3>
-                            <div class="tour_details_boxed_inner">
-                                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-                                    tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
-                                    eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-                                    takimata sanctus est.
-                                </p>
-                                <p>
-                                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod.
-                                </p>
-                                <ul>
-                                    <li><i class="fas fa-circle"></i>Buffet breakfast as per the Itinerary</li>
-                                    <li><i class="fas fa-circle"></i>Visit eight villages showcasing Polynesian culture
-                                    </li>
-                                    <li><i class="fas fa-circle"></i>Complimentary Camel safari, Bonfire, and Cultural
-                                        Dance at Camp</li>
-                                    <li><i class="fas fa-circle"></i>All toll tax, parking, fuel, and driver allowances
-                                    </li>
-                                    <li><i class="fas fa-circle"></i>Comfortable and hygienic vehicle (SUV/Sedan) for
-                                        sightseeing on all days as per the itinerary.</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="tour_details_boxed">
-                            <h3 class="heading_theme">Select your room</h3>
-                            <div class="room_select_area">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-                                            data-bs-target="#home" type="button" role="tab" aria-controls="home"
-                                            aria-selected="true">Book</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-                                            data-bs-target="#profile" type="button" role="tab" aria-controls="profile"
-                                            aria-selected="false">Enquiry</button>
-                                    </li>
-                                </ul>
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="home" role="tabpanel"
-                                        aria-labelledby="home-tab">
-                                        <div class="room_booking_area">
-                                            <div class="tour_search_form">
-                                                <form action="!#">
-                                                    <div class="row">
-                                                        <div class="col-lg-8 col-md-6 col-sm-12 col-12">
-                                                            <div class="form_search_date">
-                                                                <div class="flight_Search_boxed date_flex_area">
-                                                                    <div class="Journey_date">
-                                                                        <p>Check In date</p>
-                                                                        <input type="date" value="2022-05-03">
-                                                                        <span>Thursday</span>
-                                                                    </div>
-                                                                    <div class="Journey_date">
-                                                                        <p>Check Out date</p>
-                                                                        <input type="date" value="2022-05-05">
-                                                                        <span>Thursday</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                                                            <div class="flight_Search_boxed dropdown_passenger_area">
-                                                                <p>Guests</p>
-                                                                <div class="dropdown">
-                                                                    <button class="dropdown-toggle"
-                                                                        data-toggle="dropdown" type="button"
-                                                                        id="dropdownMenuButton1"
-                                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                                        1 Guests
-                                                                    </button>
-                                                                    <div class="dropdown-menu dropdown_passenger_info"
-                                                                        aria-labelledby="dropdownMenuButton1">
-                                                                        <div class="traveller-calulate-persons">
-                                                                            <div class="passengers">
-                                                                                <h6>Passengers</h6>
-                                                                                <div class="passengers-types">
-                                                                                    <div class="passengers-type">
-                                                                                        <div class="text"><span
-                                                                                                class="count">2</span>
-                                                                                            <div class="type-label">
-                                                                                                <p>Adult</p>
-                                                                                                <span>12+
-                                                                                                    yrs</span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="button-set">
-                                                                                            <button type="button">
-                                                                                                <i
-                                                                                                    class="fas fa-plus"></i>
-                                                                                            </button>
-                                                                                            <button type="button">
-                                                                                                <i
-                                                                                                    class="fas fa-minus"></i>
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="passengers-type">
-                                                                                        <div class="text"><span
-                                                                                                class="count">0</span>
-                                                                                            <div class="type-label">
-                                                                                                <p class="fz14 mb-xs-0">
-                                                                                                    Children
-                                                                                                </p><span>2
-                                                                                                    - Less than 12
-                                                                                                    yrs</span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="button-set">
-                                                                                            <button type="button">
-                                                                                                <i
-                                                                                                    class="fas fa-plus"></i>
-                                                                                            </button>
-                                                                                            <button type="button">
-                                                                                                <i
-                                                                                                    class="fas fa-minus"></i>
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="passengers-type">
-                                                                                        <div class="text"><span
-                                                                                                class="count">0</span>
-                                                                                            <div class="type-label">
-                                                                                                <p class="fz14 mb-xs-0">
-                                                                                                    Infant
-                                                                                                </p><span>Less
-                                                                                                    than 2
-                                                                                                    yrs</span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="button-set">
-                                                                                            <button type="button">
-                                                                                                <i
-                                                                                                    class="fas fa-plus"></i>
-                                                                                            </button>
-                                                                                            <button type="button">
-                                                                                                <i
-                                                                                                    class="fas fa-minus"></i>
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <span>Adult</span>
-
-                                                            </div>
-                                                        </div>
-                                                        <div class="top_form_search_button text-right">
-                                                            <button class="btn btn_theme btn_md" type="button">Check
-                                                                availability</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="room_book_item">
-                                                <div class="room_book_img">
-                                                    <img src="../../assets/img/hotel/room-1.png" alt="img">
-                                                </div>
-                                                <div class="room_booking_right_side">
-                                                    <div class="room_booking_heading">
-                                                        <h3><router-link to="/room-booking">Culpa cupidatat laborum eiusmod
-                                                                amet</router-link></h3>
-                                                        <div class="room_fasa_area">
-                                                            <ul>
-                                                                <li><img src="../../assets/img/icon/ac.png"
-                                                                        alt="icon">Air
-                                                                    condition</li>
-                                                                <li><img src="../../assets/img/icon/gym.png"
-                                                                        alt="icon">Fitness
-                                                                    center</li>
-                                                            </ul>
-                                                            <ul>
-                                                                <li><img src="../../assets/img/icon/tv.png"
-                                                                        alt="icon">Flat
-                                                                    television</li>
-                                                                <li><img src="../../assets/img/icon/wifi.png"
-                                                                        alt="icon">Free
-                                                                    Wi-fi</li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="room_person_select">
-                                                        <h3>$1200.00/ <sub>Per night</sub></h3>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="room_book_item">
-                                                <div class="room_book_img">
-                                                    <img src="../../assets/img/hotel/room-2.png" alt="img">
-                                                </div>
-                                                <div class="room_booking_right_side">
-                                                    <div class="room_booking_heading">
-                                                        <h3><router-link to="/room-booking">Aliquip sit nisi est laboris
-                                                                eiusmod</router-link></h3>
-                                                        <div class="room_fasa_area">
-                                                            <ul>
-                                                                <li><img src="../../assets/img/icon/ac.png"
-                                                                        alt="icon">Air
-                                                                    condition</li>
-                                                                <li><img src="../../assets/img/icon/gym.png"
-                                                                        alt="icon">Fitness
-                                                                    center</li>
-                                                            </ul>
-                                                            <ul>
-                                                                <li><img src="../../assets/img/icon/tv.png"
-                                                                        alt="icon">Flat
-                                                                    television</li>
-                                                                <li><img src="../../assets/img/icon/wifi.png"
-                                                                        alt="icon">Free
-                                                                    Wi-fi</li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="room_person_select">
-                                                        <h3>$1200.00/ <sub>Per night</sub></h3>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="room_book_item">
-                                                <div class="room_book_img">
-                                                    <img src="../../assets/img/hotel/room-3.png" alt="img">
-                                                </div>
-                                                <div class="room_booking_right_side">
-                                                    <div class="room_booking_heading">
-                                                        <h3><router-link to="/room-booking">Ea sint elit duis nostrud
-                                                                consequat</router-link></h3>
-                                                        <div class="room_fasa_area">
-                                                            <ul>
-                                                                <li><img src="../../assets/img/icon/ac.png"
-                                                                        alt="icon">Air
-                                                                    condition</li>
-                                                                <li><img src="../../assets/img/icon/gym.png"
-                                                                        alt="icon">Fitness
-                                                                    center</li>
-                                                            </ul>
-                                                            <ul>
-                                                                <li><img src="../../assets/img/icon/tv.png"
-                                                                        alt="icon">Flat
-                                                                    television</li>
-                                                                <li><img src="../../assets/img/icon/wifi.png"
-                                                                        alt="icon">Free
-                                                                    Wi-fi</li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="room_person_select">
-                                                        <h3>$1200.00/ <sub>Per night</sub></h3>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="profile" role="tabpanel"
-                                        aria-labelledby="profile-tab">
-                                        <div class="write_review_inner_boxed">
-                                            <form action="!#" id="news_comment_form">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="form-froup">
-                                                            <input type="text" class="form-control bg_input"
-                                                                placeholder="Enter full name">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="form-froup">
-                                                            <input type="text" class="form-control bg_input"
-                                                                placeholder="Enter email address">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="form-froup">
-                                                            <textarea rows="6" placeholder="Write your comments"
-                                                                class="form-control bg_input"></textarea>
-                                                        </div>
-                                                        <div class="comment_form_submit">
-                                                            <button class="btn btn_theme btn_md">Enquiry</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tour_details_boxed">
-                            <h3 class="heading_theme">Included/Excluded</h3>
-                            <div class="tour_details_boxed_inner">
-                                <p>
-                                    Stet clitaStet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
-                                    sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-                                    eirmod.
-                                </p>
-                                <ul>
-                                    <li><i class="fas fa-circle"></i>Buffet breakfast as per the Itinerary</li>
-                                    <li><i class="fas fa-circle"></i>Visit eight villages showcasing Polynesian culture
-                                    </li>
-                                    <li><i class="fas fa-circle"></i>Complimentary Camel safari, Bonfire, and Cultural
-                                        Dance at Camp</li>
-                                    <li><i class="fas fa-circle"></i>All toll tax, parking, fuel, and driver allowances
-                                    </li>
-                                    <li><i class="fas fa-circle"></i>Comfortable and hygienic vehicle (SUV/Sedan) for
-                                        sightseeing on all days as per the itinerary.</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="tour_details_boxed">
-                            <h3 class="heading_theme">Hotel location</h3>
-                            <div class="map_area">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3677.6962663570607!2d89.56355961427838!3d22.813715829827952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ff901efac79b59%3A0x5be01a1bc0dc7eba!2sAnd+IT!5e0!3m2!1sen!2sbd!4v1557901943656!5m2!1sen!2sbd"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="tour_details_right_sidebar_wrapper">
-                        <div class="tour_detail_right_sidebar">
-                            <div class="tour_details_right_boxed">
-                                <div class="tour_details_right_box_heading">
-                                    <h3>Price</h3>
-                                </div>
-                                <div class="tour_package_bar_price">
-                                    <h6><del>$ 35,500</del></h6>
-                                    <h3>$ 30,500 <sub>/Per serson</sub> </h3>
-                                </div>
-
-                                <div class="tour_package_details_bar_list">
-                                    <h5>Hotel facilities</h5>
-                                    <ul>
-                                        <li><i class="fas fa-circle"></i>Buffet breakfast as per the Itinerary</li>
-                                        <li><i class="fas fa-circle"></i>Visit eight villages showcasing Polynesian
-                                            culture
-                                        </li>
-                                        <li><i class="fas fa-circle"></i>Complimentary Camel safari, Bonfire,</li>
-                                        <li><i class="fas fa-circle"></i>All toll tax, parking, fuel, and driver
-                                            allowances
-                                        </li>
-                                        <li><i class="fas fa-circle"></i>Comfortable and hygienic vehicle</li>
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="tour_detail_right_sidebar">
-                            <div class="tour_details_right_boxed">
-                                <div class="tour_details_right_box_heading">
-                                    <h3>Why choose us</h3>
-                                </div>
-
-                                <div class="tour_package_details_bar_list first_child_padding_none">
-                                    <ul>
-                                        <li><i class="fas fa-circle"></i>Buffet breakfast as per the Itinerary</li>
-                                        <li><i class="fas fa-circle"></i>Visit eight villages showcasing Polynesian
-                                            culture
-                                        </li>
-                                        <li><i class="fas fa-circle"></i>Complimentary Camel safari, Bonfire,</li>
-                                        <li><i class="fas fa-circle"></i>All toll tax, parking, fuel, and driver
-                                            allowances
-                                        </li>
-                                        <li><i class="fas fa-circle"></i>Comfortable and hygienic vehicle</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <section id="tour_details_main" class="section_padding">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="tour_details_leftside_wrapper">
+            <div class="tour_details_heading_wrapper">
+              <div>
+                <h3>
+                  <img src="../../assets/img/banner/guide_profile.jpg" />
+                </h3>
+              </div>
             </div>
+            <hr />
+            <form class="d-flex">
+              <img
+                style="border-radius: 50%"
+                src="../../assets/img/common/dashboard-user.png"
+                alt="img"
+              />
+              <div class="ms-3">
+                <h3>고길동</h3>
+                <br />
+                <h5>대한민국 / 광주 / 54 / 남성</h5>
+                <div>
+                  안녕하세요!! 저는 가이드 고길동입니다.<br />
+                  저는 대한민국 서울에서 30년을 살았고<br />
+                  한국어와 영어에 능통합니다.
+                </div>
+              </div>
+            </form>
+            <div
+              class="d-flex mt-2 justify-content-end"
+            >
+              <button @click="MoveReser(review.id)" class="me-2 btn btn_theme btn-lg">
+                예약하기
+              </button>
+            </div>
+
+            <div class="new_main_news_box">
+              <br />
+              <h3 style="font-weight: bold">가이드의 추천 명소</h3>
+
+              <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                  <div class="news_item_boxed">
+                    <div class="news_item_img">
+                      <router-link to="/news-details"
+                        ><img src="../../assets/img/news/news-1.png" alt="img"
+                      /></router-link>
+                    </div>
+                    <div class="news_item_content">
+                      <h3>
+                        <router-link to="/news-details">한강 </router-link>
+                      </h3>
+                      <p>대한민국 치킨 맛집</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                  <div class="news_item_boxed">
+                    <div class="news_item_img">
+                      <router-link to="/news-details"
+                        ><img src="../../assets/img/news/news-2.png" alt="img"
+                      /></router-link>
+                    </div>
+                    <div class="news_item_content">
+                      <h3>
+                        <router-link to="/news-details"> 전주 </router-link>
+                      </h3>
+                      <p>대한민국 비빔밥 맛집</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                  <div class="news_item_boxed">
+                    <div class="news_item_img">
+                      <router-link to="/news-details"
+                        ><img src="../../assets/img/news/news-3.png" alt="img"
+                      /></router-link>
+                    </div>
+                    <div class="news_item_content">
+                      <h3>
+                        <router-link to="/news-details"> 완도 </router-link>
+                      </h3>
+                      <p>대한민국 김 맛집</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+
+          <h3 style="font-weight: bold">리뷰</h3>
+          <div class="table-responsive-lg table_common_area">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>작성자</th>
+                  <th>작성일</th>
+                  <th>별점</th>
+                  <th>내용</th>
+                </tr>
+              </thead>
+              <tbody v-for="rev in review" :key="rev.id">
+                <tr>
+                  <td>{{ rev.userId }}</td>
+                  <td>{{ getDate(rev.createdDate) }}</td>
+                  <td>
+                    <i
+                      v-for="score in rev.score"
+                      :key="score"
+                      class="fas fa-sharp fa-solid fa-star"
+                      style="color: yellow"
+                    ></i>
+                  </td>
+                  <td>{{ rev.content }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination_area">
+            <ul class="pagination">
+              <li v-if="currentpage !== 1" class="page-item">
+                <a
+                  style="cursor: pointer"
+                  class="page-link"
+                  @click="getValue(currentpage - 1)"
+                  aria-label="Previous"
+                >
+                  <span aria-hidden="true">«</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li v-for="page in numberofpages" :key="page" class="page-item">
+                <a
+                  style="cursor: pointer"
+                  class="page-link"
+                  @click="getValue(page)"
+                >
+                  {{ page }}</a
+                >
+              </li>
+              <a
+                v-if="currentpage !== numberofpages"
+                style="cursor: pointer"
+                class="page-link"
+                @click="getValue(currentpage + 1)"
+                aria-label="Next"
+              >
+                <span aria-hidden="true">»</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </ul>
+          </div>
         </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="write_your_review_wrapper">
-                        <h3 class="heading_theme">Write your review</h3>
-                        <div class="write_review_inner_boxed">
-                            <form action="!#" id="news_comment_form">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-froup">
-                                            <input type="text" class="form-control bg_input"
-                                                placeholder="Enter full name">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-froup">
-                                            <input type="text" class="form-control bg_input"
-                                                placeholder="Enter email address">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="form-froup">
-                                            <textarea rows="6" placeholder="Write your comments"
-                                                class="form-control bg_input"></textarea>
-                                        </div>
-                                        <div class="comment_form_submit">
-                                            <button class="btn btn_theme btn_md">Post comment</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="all_review_wrapper">
-                        <h3 class="heading_theme">All review</h3>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="all_review_box">
-                        <div class="all_review_date_area">
-                            <div class="all_review_date">
-                                <h5>08 Dec, 2021</h5>
-                            </div>
-                            <div class="all_review_star">
-                                <h5>Excellent</h5>
-                                <div class="review_star_all">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="all_review_text">
-                            <img src="../../assets/img/review/review1.png" alt="img">
-                            <h4>Manresh Chandra</h4>
-                            <p>" Loved the overall tour for all 6 days covering jaipur jodhpur and jaisalmer. worth ur
-                                money for sure. thanks. Driver was very good and polite and safe driving for all 6 days.
-                                on time pickup and drop overall. Thanks for it. "</p>
-                        </div>
-                        <div class="all_review_small_img">
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small1.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small2.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small3.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small4.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small5.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <h5>+5</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="all_review_box">
-                        <div class="all_review_date_area">
-                            <div class="all_review_date">
-                                <h5>08 Dec, 2021</h5>
-                            </div>
-                            <div class="all_review_star">
-                                <h5>Excellent</h5>
-                                <div class="review_star_all">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="all_review_text">
-                            <img src="../../assets/img/review/review2.png" alt="img">
-                            <h4>Michel falak</h4>
-                            <p>" Loved the overall tour for all 6 days covering jaipur jodhpur and jaisalmer. worth ur
-                                money for sure. thanks. Driver was very good and polite and safe driving for all 6 days.
-                                on time pickup and drop overall. Thanks for it. "</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="all_review_box">
-                        <div class="all_review_date_area">
-                            <div class="all_review_date">
-                                <h5>08 Dec, 2021</h5>
-                            </div>
-                            <div class="all_review_star">
-                                <h5>Excellent</h5>
-                                <div class="review_star_all">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="all_review_text">
-                            <img src="../../assets/img/review/review3.png" alt="img">
-                            <h4>Chester dals</h4>
-                            <p>" Loved the overall tour for all 6 days covering jaipur jodhpur and jaisalmer. worth ur
-                                money for sure. thanks. Driver was very good and polite and safe driving for all 6 days.
-                                on time pickup and drop overall. Thanks for it. "</p>
-                        </div>
-                        <div class="all_review_small_img">
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small1.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small2.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small5.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <h5>+15</h5>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="all_review_box">
-                        <div class="all_review_date_area">
-                            <div class="all_review_date">
-                                <h5>08 Dec, 2021</h5>
-                            </div>
-                            <div class="all_review_star">
-                                <h5>Excellent</h5>
-                                <div class="review_star_all">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="all_review_text">
-                            <img src="../../assets/img/review/review4.png" alt="img">
-                            <h4>Casper mike</h4>
-                            <p>" Loved the overall tour for all 6 days covering jaipur jodhpur and jaisalmer. worth ur
-                                money for sure. thanks. Driver was very good and polite and safe driving for all 6 days.
-                                on time pickup and drop overall. Thanks for it. "</p>
-                        </div>
-                        <div class="all_review_small_img">
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small4.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <img src="../../assets/img/review/review-small5.png" alt="img">
-                            </div>
-                            <div class="all_review_small_img_item">
-                                <h5>+19</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="all_review_box">
-                        <div class="all_review_date_area">
-                            <div class="all_review_date">
-                                <h5>08 Dec, 2021</h5>
-                            </div>
-                            <div class="all_review_star">
-                                <h5>Excellent</h5>
-                                <div class="review_star_all">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="all_review_text">
-                            <img src="../../assets/img/review/review5.png" alt="img">
-                            <h4>Jason bruno</h4>
-                            <p>"Loved the overall tour for all 6 days covering jaipur jodhpur and jaisalmer. worth ur
-                                money for sure. thanks. Driver was very good and polite and safe driving for all 6 days.
-                                on time pickup and drop overall. Thanks for it."</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </template>
 <script>
+import { reviewss } from "../../../common/api/commonAPI";
+
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
-    name: "HotelSearch",
+  setup() {
+    const review = ref([]);
+    const numberofreviews = ref(0);
+    const currentpage = ref(1);
+    const limit = 5;
+    const StartDate = ref("");
+    const EndDate = ref("");
 
-    data() {
-        return {
+    const router = useRouter();
 
-            gallerySlides: [
-                { img: require('@/assets/img/hotel/hotel-big-1.png') },
-                { img: require('@/assets/img/hotel/hotel-big-1.png') },
-                { img: require('@/assets/img/hotel/hotel-big-1.png') },
-                { img: require('@/assets/img/hotel/hotel-big-1.png') },
-                { img: require('@/assets/img/hotel/hotel-big-1.png') },
-                { img: require('@/assets/img/hotel/hotel-big-1.png') },
-                { img: require('@/assets/img/hotel/hotel-big-1.png') }
-            ],
+    const getDate = (date) => {
+      const DAT = new Date(date);
+      return (
+        DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay()
+      );
+    };
 
-            slideIndex: 0,
+    const getValue = async (page = currentpage.value) => {
+      currentpage.value = page;
+      try {
+        const res = await reviewss(
+          `?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
+        );
+        numberofreviews.value = res.data["length"];
+        review.value = res.data;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getValue();
 
-            slides: [
-                { img: require('@/assets/img/hotel/small-1.png') },
-                { img: require('@/assets/img/hotel/small-2.png') },
-                { img: require('@/assets/img/hotel/small-3.png') },
-                { img: require('@/assets/img/hotel/small-4.png') },
-                { img: require('@/assets/img/hotel/small-5.png') },
-                { img: require('@/assets/img/hotel/small-6.png') }
-            ]
+    const coputeReview = computed(() => {
+      return review, StartDate, EndDate;
+    });
 
-        }
-    },
+    const numberofpages = computed(() => {
+      return Math.ceil(numberofreviews.value / limit);
+    });
 
-    methods: {
-
-        move(n) {
-            if (this.gallerySlides.length <= this.slideIndex + n) {
-                this.slideIndex = 0
-            } else if (this.slideIndex + n < 0) {
-                this.slideIndex = this.gallerySlides.length - 1
-            } else {
-                this.slideIndex += n
-            }
+    const MoveReser = (id) => {
+      router.push({
+        name: "about",
+        params: {
+          id: id,
         },
-        currentSlide(index) {
-            this.slideIndex = index
-        },
+      });
+    };
+    console.log(review)
 
-    }
+    return {
+      getValue,
+      limit,
+      numberofpages,
+      currentpage,
+      numberofreviews,
+      review,
+      StartDate,
+      EndDate,
+      coputeReview,
+      getDate,
+      router,
+      MoveReser,
+    };
+  },
 };
 </script>

@@ -4,26 +4,26 @@
     <TourBanner />
 
     <!-- Form Area -->
-    <TourForm />
+    <TourFormCopy />
 
     <!-- Tour Search Areas -->
-    <TourSearch :search="searchItem" />
+    <TourSearchCopy :search="searchItem" />
 
 
 </template>
 <script>
+import TourFormCopy from '@/components/tour/TourFormCopy.vue'
 import TourBanner from '@/components/tour/TourBanner.vue'
-import TourForm from '@/components/tour/TourForm.vue'
-import TourSearch from '@/components/tour/TourSearch.vue'
+import TourSearchCopy from '@/components/tour/TourSearchCopy.vue'
 
 import { reactive, computed, ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from "vue-router";
 
 export default {
-    name: "TourSearchView",
+    name: "TourSearchViewCopy",
     components: {
-        TourBanner, TourForm, TourSearch
+        TourBanner, TourFormCopy, TourSearchCopy
     },
 
     setup(props, { emit }) {
