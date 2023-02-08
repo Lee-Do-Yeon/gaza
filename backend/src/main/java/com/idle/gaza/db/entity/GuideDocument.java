@@ -33,7 +33,8 @@ public class GuideDocument {
     String certificate;
 
     @Builder
-    public GuideDocument(String idFile, String certificateResidence, String certificate) {
+    public GuideDocument(Integer userId, String idFile, String certificateResidence, String certificate) {
+        this.userId = userId;
         this.idFile = idFile;
         this.certificateResidence = certificateResidence;
         this.certificate = certificate;

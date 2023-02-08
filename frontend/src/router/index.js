@@ -27,6 +27,7 @@ import AppChat from "../views/AppChat.vue";
 import ChatDetail from "@/components/chat/ChatDetail.vue";
 import ChatEnter from "@/components/chat/ChatEnter.vue";
 
+import Admin from "../views/AdminView.vue"
 
 // --------------------------
 import ResetPasswordView from '../views/ResetPasswordView.vue'
@@ -101,7 +102,7 @@ const routes = [
     component: HotelSearchView
   },
   {
-    path: '/hotel-details',
+    path: '/hotel-details/:guideId',
     name: 'hotel-details',
     component: HotelDetailsView
   },

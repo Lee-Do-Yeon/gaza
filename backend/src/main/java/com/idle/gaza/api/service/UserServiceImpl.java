@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<GuideDocument> searchGuideRegisterList() {
-        Optional<List<GuideDocument>> list = userRepository.searchGuideRegisterList();
+        Optional<List<GuideDocument>> list = guideDocumentRepository.searchGuideRegisterList();
         return list.orElse(null);
     }
 
