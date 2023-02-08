@@ -66,7 +66,7 @@ public class UserController {
             log.info("file name = " + uploadFileName);
 
             try {
-                s3Uploader.upload(pictureFile, uploadPath + uploadFileName);
+                log.debug(s3Uploader.upload(pictureFile, uploadPath + uploadFileName));
                 user.setPicture(uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -168,18 +168,17 @@ public class UserController {
 
         String originPictureName = user.getPicture();
 
-        /* 존재하면 삭제
         if (originPictureName != null) {
             String originPicture = new String(rootPath + "/" + "user" + "/" + "picture" + "/" + originPictureName);
-            File file = new File(originPicture);
-            log.info("exist file path = " + file);
+            log.info("exist file path = " + originPicture);
 
-            if (file.exists()) {
+            try {
+                s3Uploader.deleteS3(originPictureName);
                 log.info("delete file");
-                file.delete();
+            } catch(Exception e) {
+                e.printStackTrace();
             }
         }
-        */
 
         String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
         File uploadFilePath = new File(rootPath, uploadPath);
@@ -380,6 +379,7 @@ public class UserController {
                 .build();
 
         int insertResult = userService.registerGuide(id, guideDocument);
+        userService.changeState(id, "US2");
 
         if (insertResult == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -403,19 +403,46 @@ public class UserController {
      * @param accessToken String
      * @return ResponseEntity
      * <p>
-     * 프론트에서 만료 시간을 가지고 있다면 자체적으로 확인 가능할듯(만료X면 그대로 사용, 만료됐으면 auth/reissue
+     *
      */
-    @PutMapping("/guide")
+    @PutMapping("/guide/success")
     public ResponseEntity<ApiResponse<Object>> acceptGuide(@RequestHeader("Authorization") String accessToken) {
 
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
         String id = tokenUtil.getUserIdFromToken(token);
 
+        userService.changeState(id, "US1");
+
         ApiResponse<Object> ar = ApiResponse.builder()
                 .result(null)
-                .resultCode(SuccessCode.SELECT.getStatus())
-                .resultMsg(SuccessCode.SELECT.getMessage())
+                .resultCode(SuccessCode.UPDATE.getStatus())
+                .resultMsg(SuccessCode.UPDATE.getMessage())
+                .build();
+        return new ResponseEntity<>(ar, HttpStatus.OK);
+    }
+
+    /**
+     * [API] 가이드 신청 거절
+     *
+     * @param accessToken String
+     * @return ResponseEntity
+     * <p>
+     *
+     */
+    @PutMapping("/guide/failure")
+    public ResponseEntity<ApiResponse<Object>> rejectGuide(@RequestHeader("Authorization") String accessToken) {
+
+        String token = tokenUtil.getTokenFromHeader(accessToken);
+
+        String id = tokenUtil.getUserIdFromToken(token);
+
+        userService.changeState(id, "US3");
+
+        ApiResponse<Object> ar = ApiResponse.builder()
+                .result(null)
+                .resultCode(SuccessCode.UPDATE.getStatus())
+                .resultMsg(SuccessCode.UPDATE.getMessage())
                 .build();
         return new ResponseEntity<>(ar, HttpStatus.OK);
     }
