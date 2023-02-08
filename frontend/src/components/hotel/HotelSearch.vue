@@ -18,14 +18,12 @@
                 src="../../assets/img/common/dashboard-user.png"
                 alt="img"
               />
-              <div class="ms-3">
-                <h3>고길동</h3>
+              <div class="ms-3" v-for="guide in guideInfo" :key="guide.guideId">
+                <h3>guide.name</h3>
                 <br />
-                <h5>대한민국 / 광주 / 54 / 남성</h5>
+                <h5>guide.country / guide.city / guide.gender</h5>
                 <div>
-                  안녕하세요!! 저는 가이드 고길동입니다.<br />
-                  저는 대한민국 서울에서 30년을 살았고<br />
-                  한국어와 영어에 능통합니다.
+                  guide.introduction
                 </div>
               </div>
             </form>
@@ -160,20 +158,23 @@
     </div>
   </section>
 </template>
-<script>
-import { reviewss } from "../../../common/api/commonAPI";
 
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
+<script>
+import { reviewss,guideDetail } from "../../../common/api/commonAPI";
+
+import { ref, computed, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 export default {
   setup() {
+    const route = useRoute()
     const review = ref([]);
     const numberofreviews = ref(0);
     const currentpage = ref(1);
     const limit = 5;
     const StartDate = ref("");
     const EndDate = ref("");
+    const guideInfo = ref([]);
 
     const router = useRouter();
 
@@ -214,7 +215,17 @@ export default {
         },
       });
     };
+
     console.log(review)
+     
+    onMounted(() => {
+      const detail = async () => {
+        const response = await guideDetail(parseInt(route.params.guideId))
+        guideInfo.value = response.data;
+      }
+      detail();
+      console.log(guideInfo);
+    });
 
     return {
       getValue,
@@ -229,6 +240,7 @@ export default {
       getDate,
       router,
       MoveReser,
+      guideInfo
     };
   },
 };

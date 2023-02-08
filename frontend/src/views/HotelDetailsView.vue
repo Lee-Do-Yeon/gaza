@@ -1,7 +1,5 @@
 <template>
 
-
-
     <!-- Hotel Search Areas -->
     <HotelSearch />
 
@@ -19,6 +17,6 @@ export default {
     name: "HotelDetailsView",
     components: {
         HotelSearch, Cta
-    }
+    },
 };
 </script>
