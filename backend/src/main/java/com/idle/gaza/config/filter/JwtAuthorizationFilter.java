@@ -85,7 +85,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 // [STEP2] Header 내에 토큰을 추출합니다.
                 String token = tokenUtil.getTokenFromHeader(header);
                 // [STEP3] 추출한 토큰이 유효한지 여부를 체크합니다.
-                if (TokenUtil.isValidToken(token)) {
+                if (tokenUtil.isValidToken(token)) {
 
                     // (추가) Redis 에 해당 accessToken logout 여부 확인
                     String isLogout = (String)RedisUtil.getData(token);
