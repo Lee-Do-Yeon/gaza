@@ -215,5 +215,16 @@
 <script>
 export default {
   name: "RoomDetails",
+
+  data(){
+    return{
+
+    }
+  },
+  method:{
+    
+  }
+
+
 };
 </script>

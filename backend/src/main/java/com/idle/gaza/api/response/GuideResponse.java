@@ -1,6 +1,5 @@
 package com.idle.gaza.api.response;
 
-import com.idle.gaza.db.entity.DayOff;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,6 +40,8 @@ public class GuideResponse {
 
     private String introduction;
 
+    private String gender;
+
     private List<String> language = new ArrayList<>();
 
     private List<String> thema = new ArrayList<>();
@@ -55,7 +56,7 @@ public class GuideResponse {
 
 
     @Builder
-    public GuideResponse(int guideId, int userId, String name, String picture, String country, String city, LocalTime closeTimeStart, LocalTime closeTimeEnd, Integer price, Integer license, String onelineIntroduction, String introduction, List<String> language, List<String> thema, List<ReservationResponse> reservationList, List<ReviewResponse> reviewList, List<DayOffResponse> dayOffList, List<LocationResponse> guideLocationList) {
+    public GuideResponse(int guideId, int userId, String name, String picture, String country, String city, LocalTime closeTimeStart, LocalTime closeTimeEnd, Integer price, Integer license, String onelineIntroduction, String introduction, String gender, List<String> language, List<String> thema, List<ReservationResponse> reservationList, List<ReviewResponse> reviewList, List<DayOffResponse> dayOffList, List<LocationResponse> guideLocationList) {
         this.guideId = guideId;
         this.userId = userId;
         this.name = name;
@@ -68,6 +69,7 @@ public class GuideResponse {
         this.license = license;
         this.onelineIntroduction = onelineIntroduction;
         this.introduction = introduction;
+        this.gender = gender;
         this.language = language;
         this.thema = thema;
         this.reservationList = reservationList;
