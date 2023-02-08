@@ -23,7 +23,7 @@
   <!-- <Offer /> -->
 
   <!--Promotional Tours Area -->
-  <PromotionalTours />
+  <PromotionalTours />``
   <PromotionalToursRecommand />
 
   <!-- Destinations Area -->
