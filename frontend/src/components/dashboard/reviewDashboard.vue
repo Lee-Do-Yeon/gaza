@@ -30,31 +30,31 @@
             </div>
           </div>
         </div>
-
         <div class="col-lg-8">
           <div class="dashboard_common_table">
             <div class="write_your_review_wrapper">
               <h3 class="heading_theme">후기작성</h3>
               <div class="write_review_inner_boxed">
-                <form action="!#" id="news_comment_form">
+                <form @submmit.prevent="upreview" id="news_comment_form">
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="form-froup">
                         <input
                           type="text"
                           class="form-control bg_input"
-                          placeholder="가이드"
+                          :placeholder="route.params.name"
+                        
                         />
+                        
                       </div>
                     </div>
                     <div class="col-lg-6">
-                      <select class="star form-select form-control">
-                        <option selected="selected" value="1">별점 선택하기</option>
-                        <option class="star 5">&#xf005 &#xf005 &#xf005 &#xf005 &#xf005</option>
-                        <option class="star 4">&#xf005 &#xf005 &#xf005 &#xf005</option>
-                        <option class="star 3">&#xf005 &#xf005 &#xf005</option>
-                        <option class="star 2">&#xf005 &#xf005</option>
-                        <option class="star 1">&#xf005</option>
+                      <select class="star form-select form-control" required v-model="state.form.score">
+                        <option value="5" class="star 5">&#xf005 &#xf005 &#xf005 &#xf005 &#xf005</option>
+                        <option value="4" class="star 4">&#xf005 &#xf005 &#xf005 &#xf005</option>
+                        <option value="3" class="star 3">&#xf005 &#xf005 &#xf005</option>
+                        <option value="2" class="star 2">&#xf005 &#xf005</option>
+                        <option value="1" class="star 1">&#xf005</option>
                       </select>
                     </div>
                     <div class="col-lg-12">
@@ -63,13 +63,13 @@
                           rows="6"
                           placeholder="리뷰를 작성해 주세요"
                           class="form-control bg_input"
+                          v-model="state.form.content"
+                          required
                         ></textarea>
                       </div>
-                      <div class="comment_form_submit">
                         <button class="btn btn_theme btn_md">
                           제출
                         </button>
-                      </div>
                     </div>
                   </div>
                 </form>
@@ -77,6 +77,7 @@
             </div>
           </div>
         </div>
+      
       </div>
     </div>
   </section>
@@ -85,6 +86,9 @@
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
+import {useRoute,useRouter } from 'vue-router';
+import { uploadReview } from "../../../common/api/commonAPI";
+import {reactive } from 'vue';
 
 export default {
   name: "reviewDashboard",
@@ -92,7 +96,59 @@ export default {
     LogoutBtn,
     MyBookingOption,
     picturemodalVue,
+    uploadReview
   },
+
+  setup(){
+
+    const route = useRoute();
+    const router = useRouter();
+
+    const state = reactive({
+      form:{
+
+        content :"",
+        score : "",
+        res_id :""
+      }
+
+    })
+
+    const upreview = async () => {
+      try{
+        console.log("123")
+        const res = await uploadReview({
+          content : state.form.content,
+          score : state.form.score,
+          res_id : route.params.id
+        });
+        console.log(res);
+        router.push(
+          {
+            name:"notification"
+          }
+        )
+      }catch(err){
+
+        console.log(err);
+      }
+    }
+    const moveBefore =() => {
+      router.push({
+        name : "notification"
+      })
+    }
+    
+
+    return{
+      route,
+      upreview,
+      state,
+      moveBefore 
+
+    }
+
+  }
 };
 </script>
 <style>

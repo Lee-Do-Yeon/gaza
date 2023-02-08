@@ -1,7 +1,7 @@
 <template>
 
     <!-- Common Banner Area -->
-    <!-- <RoomBanner /> -->
+
 
     <!-- Room Details Areas -->
     <RoomDetails />
@@ -12,14 +12,13 @@
 
 </template>
 <script>
-import RoomBanner from '@/components/hotel/RoomBanner.vue'
 import RoomDetails from '@/components/hotel/RoomDetails.vue'
 import Cta from '@/components/home/Cta.vue'
 
 export default {
     name: "RoomDetailsView",
     components: {
-        RoomBanner, RoomDetails, Cta
+        RoomDetails, Cta
     }
 };
 </script>

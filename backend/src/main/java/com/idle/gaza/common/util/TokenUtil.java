@@ -8,14 +8,8 @@ import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -42,9 +36,9 @@ public class TokenUtil {
     final static public String REFRESH_TOKEN_NAME = "refresh";
 
     @Value("${spring.jwt.accessSecret}")
-    private static String ACCESS_TOKEN_SECRET_KEY;
+    private String ACCESS_TOKEN_SECRET_KEY;
     @Value("${spring.jwt.refreshSecret}")
-    private static String REFRESH_TOKEN_SECRET_KEY;
+    private String REFRESH_TOKEN_SECRET_KEY;
 
     public static UserService userService;
 
@@ -53,11 +47,11 @@ public class TokenUtil {
         this.userService = userService;
     }
 
-    public static String generateAccessToken(User user) {
+    public String generateAccessToken(User user) {
         return generateJwtToken(user, TOKEN_VALIDATION_SECOND, "access");
     }
 
-    public static String generateRefreshToken(User user) {
+    public String generateRefreshToken(User user) {
         return generateJwtToken(user, REFRESH_TOKEN_VALIDATION_SECOND, "refresh");
     }
 
@@ -67,7 +61,7 @@ public class TokenUtil {
      * @param user User : 사용자 정보
      * @return String : 토큰
      */
-    public static String generateJwtToken(User user, long expireTime, String type) {
+    public String generateJwtToken(User user, long expireTime, String type) {
         // 사용자 시퀀스를 기준으로 JWT 토큰을 발급하여 반환해줍니다.
         JwtBuilder builder = Jwts.builder()
                 .setHeader(createHeader())                              // Header 구성
@@ -84,7 +78,7 @@ public class TokenUtil {
      * @param token String : 토큰
      * @return String : 사용자 정보
      */
-    public static String parseTokenToUserInfo(String token) {
+    public String parseTokenToUserInfo(String token) {
         return Jwts.parser()
                 .setSigningKey(ACCESS_TOKEN_SECRET_KEY)
                 .parseClaimsJws(token)
@@ -120,7 +114,7 @@ public class TokenUtil {
      * @param token String  : 토큰
      * @return boolean      : 유효한지 여부 반환
      */
-    public static boolean isValidToken(String token) {
+    public boolean isValidToken(String token) {
         try {
             System.out.println(token);
 
@@ -157,11 +151,11 @@ public class TokenUtil {
      * @param header 헤더
      * @return String
      */
-    public static String getTokenFromHeader(String header) {
+    public String getTokenFromHeader(String header) {
         return header.substring(7);
     }
 
-    public static Long getExpiration(String token, String type) {
+    public Long getExpiration(String token, String type) {
 
         if(type.equals(ACCESS_TOKEN_NAME)) {
             // accessToken 남은 유효시간
@@ -183,7 +177,7 @@ public class TokenUtil {
      *
      * @return Calendar
      */
-    private static Date createExpiredDate(long expireTime) {
+    private Date createExpiredDate(long expireTime) {
         return new Date(System.currentTimeMillis() + expireTime);
     }
 
@@ -192,7 +186,7 @@ public class TokenUtil {
      *
      * @return HashMap<String, Object>
      */
-    private static Map<String, Object> createHeader() {
+    private Map<String, Object> createHeader() {
         Map<String, Object> header = new HashMap<>();
 
         header.put("typ", "JWT");
@@ -207,7 +201,7 @@ public class TokenUtil {
      * @param user User 사용자 정보
      * @return Map<String, Object>
      */
-    private static Map<String, Object> createClaims(User user) {
+    private Map<String, Object> createClaims(User user) {
         // 공개 클레임에 사용자의 이름과 이메일을 설정하여 정보를 조회할 수 있다.
         Map<String, Object> claims = new HashMap<>();
 
@@ -224,7 +218,7 @@ public class TokenUtil {
      *
      * @return Key
      */
-    private static Key createSignature(String type) {
+    private Key createSignature(String type) {
         if(type.equals(ACCESS_TOKEN_NAME)) {
             byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY);
             return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
@@ -241,7 +235,7 @@ public class TokenUtil {
      * @param token : 토큰
      * @return Claims : Claims
      */
-    private static Claims getClaimsFormToken(String token) {
+    private Claims getClaimsFormToken(String token) {
         try {
             return Jwts.parserBuilder().setSigningKey(DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY)).build()
                     .parseClaimsJws(token).getBody();
@@ -258,7 +252,7 @@ public class TokenUtil {
      * @param token : 토큰
      * @return String : 사용자 아이디
      */
-    public static String getUserIdFromToken(String token) {
+    public String getUserIdFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
         return claims.get("userId").toString();
     }
@@ -277,7 +271,7 @@ public class TokenUtil {
 
      */
 
-    public static TokenDto reissue(TokenDto tokenDto) {
+    public TokenDto reissue(TokenDto tokenDto) {
         /*
          *  accessToken 은 JWT Filter 에서 검증되고 옴
          * */
@@ -307,8 +301,8 @@ public class TokenUtil {
             throw new RuntimeException("잘못된 유저 정보"); // 잘못된 리프레시 토큰
         }
 
-        String newAccessToken = TokenUtil.generateAccessToken(user);
-        String newRefreshToken = TokenUtil.generateRefreshToken(user);
+        String newAccessToken = generateAccessToken(user);
+        String newRefreshToken = generateRefreshToken(user);
         TokenDto newTokenDto = TokenDto.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
@@ -323,9 +317,9 @@ public class TokenUtil {
         return newTokenDto;
     }
 
-    public static void logout(TokenDto tokenDto) {
+    public void logout(TokenDto tokenDto) {
         // 1. Access Token 검증
-        if (!TokenUtil.isValidToken(tokenDto.getAccessToken())) {
+        if (!isValidToken(tokenDto.getAccessToken())) {
             throw new RuntimeException("잘못된 토큰 정보입니다.");
         }
 
@@ -336,7 +330,7 @@ public class TokenUtil {
         }
 
         // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
-        Long expiration = TokenUtil.getExpiration(tokenDto.getAccessToken(), ACCESS_TOKEN_NAME);
+        Long expiration = getExpiration(tokenDto.getAccessToken(), ACCESS_TOKEN_NAME);
         RedisUtil.setDataExpire(tokenDto.getAccessToken(), "logout", expiration);
     }
 }

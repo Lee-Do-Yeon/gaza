@@ -37,7 +37,7 @@ import { useStore } from 'vuex'
 import { useRouter } from "vue-router";
 
 export default {
-    name: "TourForm",
+    name: "TourFormCopy",
     setup(props, { emit }) {
         const router = useRouter();
         
@@ -51,7 +51,7 @@ export default {
 
         const itemSearch = function () {
             router.push({
-                name: "tour-search-copy",
+                name: "tour-search",
                 params: {  
                     searchitem : state.form.searchPlace
                 }
