@@ -26,4 +26,8 @@ const reviewss = (payload) => api.get('/review',payload);
 const requestConfirmId = userid => api.get(`/users/${userid}`)
 
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide};
+// 가이드 검색
+const guideSearch = payload => api.get('/guides/search/', {params: {searchName: payload }})
+
+
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch};
