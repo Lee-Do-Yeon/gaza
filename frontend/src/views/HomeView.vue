@@ -52,13 +52,12 @@ import PromotionalTours from '@/components/home/PromotionalTours.vue'
 import PromotionalToursRecommand from '@/components/home/PromotionalToursRecommand.vue'
 import Destinations from '@/components/home/Destinations.vue'
 import News from '@/components/home/News.vue'
-import Partners from '@/components/home/Partners.vue'
 
 
 export default {
   name: 'HomeView',
   components: {
-    Banner, Form, Imagination, TopDestinations, ExploreDeals, Offer, PromotionalTours, Destinations, News, Partners, PromotionalToursRecommand
+    Banner, Form, Imagination, TopDestinations, ExploreDeals, Offer, PromotionalTours, Destinations, News,  PromotionalToursRecommand
   }
 }
 </script>
