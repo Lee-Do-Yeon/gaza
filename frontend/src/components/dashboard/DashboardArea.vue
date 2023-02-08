@@ -18,17 +18,11 @@
                     ><i class="fas fa-list"></i>이용후기</router-link
                   >
                 </li>
-                <!-- <MyBookingOption /> -->
                 <li>
                   <router-link to="/my-profile"
                     ><i class="fas fa-user-circle"></i>내 정보 수정</router-link
                   >
                 </li>
-                <!-- <li>
-                  <router-link to="/wallet"
-                    ><i class="fas fa-wallet"></i>Wallet</router-link
-                  >
-                </li> -->
                 <li>
                   <router-link to="/notification"
                     ><i class="fas fa-bell"></i>예약내역</router-link
@@ -49,7 +43,7 @@
                     <div class="flight_Search_boxed date_flex_area">
                       <div class="Journey_date">
                         <p>From</p>
-                        <input type="date" value="2023-01-10" />
+                        <input v-model="StartDate" type="date" />
                       </div>
                     </div>
                   </div>
@@ -59,14 +53,14 @@
                     <div class="flight_Search_boxed date_flex_area">
                       <div class="Journey_date">
                         <p>To</p>
-                        <input type="date" value="2023-01-30" />
+                        <input  v-model="EndDate" type="date" />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <button class="btn btn_theme btn-lg">Filter</button>
+                  <button @click="filter_date" class="btn btn_theme btn-lg">Filter</button>
                 </div>
               </div>
             </div>
@@ -83,23 +77,21 @@
                     <th>작성일</th>
                     <th>별점</th>
                     <th>내용</th>
-                    <!-- <th>Status</th>
-                    <th>Action</th> -->
                   </tr>
                 </thead>
-                <tbody v-for="rev in review" :key="rev.id">
+                <tbody v-for="rev in review2" :key="rev.id">
                   <tr>
-                    <td>{{ rev.reservation_id }}</td>
-                    <td>{{ rev.created_date }}</td>
-                    <td >
-                      <i v-for="score in rev.score" :key="score"
+                    <td>{{ rev.userId}}</td>
+                    <td>{{ getDate(rev.createdDate) }}</td>
+                    <td>
+                      <i
+                        v-for="score in rev.score"
+                        :key="score"
                         class="fas fa-sharp fa-solid fa-star"
                         style="color: yellow"
                       ></i>
                     </td>
                     <td>{{ rev.content }}</td>
-                    <!-- <td class="complete">Completed</td>
-                    <td><i class="fas fa-eye"></i></td> -->
                   </tr>
                 </tbody>
               </table>
@@ -118,7 +110,7 @@
                   <span class="sr-only">Previous</span>
                 </a>
               </li>
-              <li  v-for="page in numberofpages" :key="page" class="page-item">
+              <li v-for="page in numberofpages" :key="page" class="page-item">
                 <a
                   style="cursor: pointer"
                   class="page-link"
@@ -127,7 +119,13 @@
                   {{ page }}</a
                 >
               </li>
-              <a v-if="currentpage !== numberofpages" style="cursor:pointer" class="page-link" @click="getValue(currentpage +1)" aria-label="Next">
+              <a
+                v-if="currentpage !== numberofpages"
+                style="cursor: pointer"
+                class="page-link"
+                @click="getValue(currentpage + 1)"
+                aria-label="Next"
+              >
                 <span aria-hidden="true">»</span>
                 <span class="sr-only">Next</span>
               </a>
@@ -142,7 +140,8 @@
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
-import axios from "axios";
+import { reviewss } from "../../../common/api/commonAPI";
+
 import { ref, computed } from "vue";
 export default {
   name: "DashboardArea",
@@ -152,26 +151,63 @@ export default {
     picturemodalVue,
   },
   setup() {
-    const review = ref([]);
+
+    const review1 = ref([]);
+    const review2 = ref([])
     const numberofreviews = ref(0);
     const currentpage = ref(1);
     const limit = 5;
-    const instance = axios.create({
-      baseURL: process.env.VUE_APP_API_URL,
-    });
+    const StartDate =ref("");
+    const EndDate =ref("");
+
+    const getDate = ( date ) => {
+      const DAT = new Date(date)
+      return DAT.getFullYear() +'-'+(DAT.getMonth()+1) +'-' +DAT.getDay()
+    }
+
+    const filter_date=() => {
+      const [syear,smonth,sday] =StartDate.value.split('-');
+      const SD = new Date(+syear,smonth-1,+sday);
+
+      const [eyear,emonth,eday] =EndDate.value.split('-');
+      const ED = new Date(+eyear,emonth-1,+eday);
+
+      let newarray = []
+      review1.value.filter( re =>{
+        const reND = new Date(re.createdDate);
+        const [nyear,nmonth,nday] =[reND.getFullYear(),(reND.getMonth()),reND.getDay()]
+        const ND = new Date(+nyear,nmonth,+nday);
+        
+        if(ND >=SD && ND <=ED){
+          newarray.push(re)
+        }
+
+      })
+
+      review2.value = newarray
+    }
+
+
     const getValue = async (page = currentpage.value) => {
       currentpage.value = page;
       try {
-        const res = await instance.get(
-          `review?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
+        const res = await reviewss(
+          `?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
         );
-        numberofreviews.value = res.headers["x-total-count"];
-        review.value = res.data;
+        numberofreviews.value = res.data['length'];
+        review1.value = res.data;
+        review2.value = res.data;
+
       } catch (err) {
         console.log(err);
       }
     };
     getValue();
+
+    const coputeReview = computed(() =>{
+      return review,StartDate,EndDate
+    })
+
 
     const numberofpages = computed(() => {
       return Math.ceil(numberofreviews.value / limit);
@@ -183,7 +219,15 @@ export default {
       numberofpages,
       currentpage,
       numberofreviews,
-      review
+      review1,
+      review2,
+      StartDate,
+      EndDate,
+      coputeReview,
+      filter_date,
+      getDate
+
+
     };
   },
 };

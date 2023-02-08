@@ -8,7 +8,7 @@
               <img src="../../assets/img/common/dashboard-user.png" alt="img" />
               <h3>최지성</h3>
               <div>
-                <picturemodalVue/>
+                <picturemodalVue />
               </div>
             </div>
             <div class="dashboard_menu_area">
@@ -18,17 +18,11 @@
                     ><i class="fas fa-list"></i>이용후기</router-link
                   >
                 </li>
-                <!-- <MyBookingOption /> -->
                 <li>
                   <router-link to="/my-profile" class="active"
                     ><i class="fas fa-user-circle"></i>내 정보 수정</router-link
                   >
                 </li>
-                <!-- <li>
-                  <router-link to="/dashboard"
-                    ><i class="fas fa-wallet"></i>Wallet</router-link
-                  >
-                </li> -->
                 <li>
                   <router-link to="/notification"
                     ><i class="fas fa-bell"></i>예약내역</router-link
@@ -87,29 +81,6 @@
                       />
                     </div>
                   </div>
-                  <!-- <div class="col-lg-6">
-                    <div class="form-group">
-                      <label for="u-name">User name</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="u-name"
-                        value="sherlyn"
-                      />
-                    </div>
-                  </div> -->
-                  <!-- <div class="col-lg-6">
-                    <div class="form-group change_password_field">
-                      <label for="password">Password</label>
-                      <input
-                        type="password"
-                        class="form-control"
-                        id="password"
-                        value="cdkdkdd"
-                      />
-                      <p>Change password</p>
-                    </div>
-                  </div> -->
                   <div class="change_password_input_boxed">
                     <h3>비밀번호 변경</h3>
                     <div class="row">
@@ -137,6 +108,10 @@
               </form>
             </div>
           </div>
+          <div class="d-flex justify-content-end mt-3">
+            <button class="btn btn_theme">저장</button>
+            <withdrawVue/>
+          </div>
         </div>
       </div>
     </div>
@@ -146,6 +121,8 @@
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
+import withdrawVue from "../modal/withdraw.vue";
+import { updateUser } from "../../../common/api/commonAPI";
 
 export default {
   name: "ProfileDashboard",
@@ -153,6 +130,8 @@ export default {
     LogoutBtn,
     MyBookingOption,
     picturemodalVue,
+    withdrawVue,
+    updateUser
   },
 };
 </script>

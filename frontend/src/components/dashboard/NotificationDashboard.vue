@@ -18,17 +18,11 @@
                     ><i class="fas fa-list"></i>이용후기</router-link
                   >
                 </li>
-                <!-- <MyBookingOption /> -->
                 <li>
                   <router-link to="/my-profile"
                     ><i class="fas fa-user-circle"></i>내 정보 수정</router-link
                   >
                 </li>
-                <!-- <li>
-                  <router-link to="/wallet"
-                    ><i class="fas fa-wallet"></i>Wallet</router-link
-                  >
-                </li> -->
                 <li>
                   <router-link to="/notification" class="active"
                     ><i class="fas fa-bell"></i>예약내역</router-link
@@ -54,17 +48,20 @@
                 >
                   <h2 class="accordion-header" :id="'heading' + index">
                     <button
-                      class="accordion-button active d-flex justify-content-between"
+                      class="accordion-button active d-flex justify-content-end"
                       type="button"
                       data-bs-toggle="collapse"
                       :data-bs-target="'#collapse' + index"
                       aria-expanded="true"
                       :aria-controls="'collapse' + index"
                     >
-                      <div>
-                        {{ res.guide_id }}
+                      <div class="me-2">
+                        {{ res.reservationId }}
                       </div>
-                      <div>Date : {{ res.travel_start_date }}</div>
+                      <div class="me-2">
+                        {{ res.guideName }}
+                      </div>
+                      <div>Date : {{ getDate(res.travelStartDate) }}</div>
                     </button>
                   </h2>
                   <div
@@ -80,13 +77,13 @@
                           alt="img"
                         />
                       </div>
-                      <div>가이드 : {{ res.guide_id }}</div>
-                      <div>인원 : {{ res.number_of_people }}</div>
-                      <div>여행날짜 : {{ res.travel_start_date }}</div>
+                      <div>가이드 : {{ res.guideName }}</div>
+                      <div>인원 : {{ res.numberOfPeople }}</div>
+                      <div>여행날짜 : {{ getDate(res.travelStartDate) }}</div>
                       <div>
-                        유아 동반 : {{ res.with_children }} 장애 여부 :
-                        {{ res.with_disabled }} 노약자 동반 :
-                        {{ res.with_elderly }}
+                        유아 동반 : {{ res.withChildren }} 장애 여부 :
+                        {{ res.withDisabled }} 노약자 동반 :
+                        {{ res.withElderly }}
                       </div>
                       <div>특이사항 : {{ res.note }}</div>
                       <div class="d-flex justify-content-end">
@@ -94,11 +91,12 @@
                           일정확인
                         </button>
 
-                        <router-link to="/review"
-                          ><button class="me-2 btn btn_theme btn-lg">
-                            후기작성
-                          </button></router-link
+                        <button
+                          @click="movereview(res.reservationId,res.guideName)"
+                          class="me-2 btn btn_theme btn-lg"
                         >
+                          후기작성
+                        </button>
 
                         <button class="btn btn_theme btn-lg">입장</button>
                       </div>
@@ -117,9 +115,9 @@
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
-import axios from "axios";
 import { ref } from "vue";
 import { reser } from "../../../common/api/commonAPI";
+import { useRouter } from "vue-router";
 
 export default {
   name: "NotificationDashboard",
@@ -129,11 +127,27 @@ export default {
     picturemodalVue,
   },
   setup() {
+    const getDate = (date) => {
+      const DAT = new Date(date);
+      return (
+        DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay()
+      );
+    };
+    const router = useRouter();
+
+    const movereview = (id,name) => {
+      router.push({
+        name: "review",
+        params: {
+          id: id,
+          name: name
+        },
+      });
+    };
     const reservation = ref([]);
     const getreservation = async () => {
       try {
         const res = await reser();
-        console.log(res);
         reservation.value = res.data;
       } catch (err) {
         console.log(err);
@@ -145,7 +159,9 @@ export default {
     return {
       reservation,
       getreservation,
-      instance
+      getDate,
+      router,
+      movereview,
     };
   },
 };
