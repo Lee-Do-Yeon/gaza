@@ -240,6 +240,7 @@ public class GuideServiceImpl implements GuideService {
                 .country(existGuide.getCountry())
                 .city(existGuide.getCity())
                 .name(existGuide.getUser().getName())
+                .gender(existGuide.getUser().getGender())
                 .language(langList)
                 .thema(themaList)
                 .onelineIntroduction(existGuide.getOnlineIntroduction())
