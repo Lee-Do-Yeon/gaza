@@ -106,7 +106,7 @@ const routes = [
     component: RoomBookingView
   },
   {
-    path: '/about',
+    path: '/about/:id',
     name: 'about',
     component: AboutView
   },
