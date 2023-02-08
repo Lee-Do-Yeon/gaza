@@ -5,8 +5,6 @@
     <!-- Hotel Search Areas -->
     <HotelSearch />
 
-    <!--Related hotel packages Area -->
-    <RelatedHotel />
 
     <!-- Cta Area -->
     <Cta />
@@ -15,13 +13,12 @@
 <script>
 
 import HotelSearch from '@/components/hotel/HotelSearch.vue'
-import RelatedHotel from '@/components/hotel/RelatedHotel.vue'
 import Cta from '@/components/home/Cta.vue'
 
 export default {
     name: "HotelDetailsView",
     components: {
-        HotelSearch, RelatedHotel, Cta
+        HotelSearch, Cta
     }
 };
 </script>
