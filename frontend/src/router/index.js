@@ -58,12 +58,18 @@ import AppChat from "../views/AppChat.vue";
 import ChatDetail from "@/components/chat/ChatDetail.vue";
 import ChatEnter from "@/components/chat/ChatEnter.vue";
 
+import Admin from "../views/AdminView.vue"
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Admin
   },
   {
     path: '/home-two',
