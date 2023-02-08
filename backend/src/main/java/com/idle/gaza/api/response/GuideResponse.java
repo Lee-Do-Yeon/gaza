@@ -1,13 +1,15 @@
 package com.idle.gaza.api.response;
 
+import com.idle.gaza.db.entity.DayOff;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ApiModel("GuideResponse")
 @Getter
@@ -21,7 +23,6 @@ public class GuideResponse {
 
     private String name;
 
-
     private String picture;
 
     private String country;
@@ -34,9 +35,27 @@ public class GuideResponse {
 
     private Integer price;
 
+    private Integer license;
+
+    private String onelineIntroduction;
+
+    private String introduction;
+
+    private List<String> language = new ArrayList<>();
+
+    private List<String> thema = new ArrayList<>();
+
+    private List<ReservationResponse> reservationList = new ArrayList<>();
+
+    private List<ReviewResponse> reviewList = new ArrayList<>();
+
+    private List<DayOffResponse> dayOffList = new ArrayList<>();
+
+    private List<LocationResponse> guideLocationList = new ArrayList<>();
+
 
     @Builder
-    public GuideResponse(int guideId, int userId, String name, String picture, String country, String city, LocalTime closeTimeStart, LocalTime closeTimeEnd, Integer price) {
+    public GuideResponse(int guideId, int userId, String name, String picture, String country, String city, LocalTime closeTimeStart, LocalTime closeTimeEnd, Integer price, Integer license, String onelineIntroduction, String introduction, List<String> language, List<String> thema, List<ReservationResponse> reservationList, List<ReviewResponse> reviewList, List<DayOffResponse> dayOffList, List<LocationResponse> guideLocationList) {
         this.guideId = guideId;
         this.userId = userId;
         this.name = name;
@@ -46,5 +65,15 @@ public class GuideResponse {
         this.closeTimeStart = closeTimeStart;
         this.closeTimeEnd = closeTimeEnd;
         this.price = price;
+        this.license = license;
+        this.onelineIntroduction = onelineIntroduction;
+        this.introduction = introduction;
+        this.language = language;
+        this.thema = thema;
+        this.reservationList = reservationList;
+        this.reviewList = reviewList;
+        this.dayOffList = dayOffList;
+        this.guideLocationList = guideLocationList;
     }
+
 }

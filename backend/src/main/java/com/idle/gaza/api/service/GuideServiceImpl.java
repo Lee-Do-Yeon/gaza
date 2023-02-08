@@ -2,14 +2,16 @@ package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.GuideRegisterPostRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
+import com.idle.gaza.api.response.DayOffResponse;
 import com.idle.gaza.api.response.GuideResponse;
+import com.idle.gaza.api.response.LocationResponse;
+import com.idle.gaza.api.response.ReservationResponse;
 import com.idle.gaza.db.entity.*;
 import com.idle.gaza.db.repository.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -46,10 +48,84 @@ public class GuideServiceImpl implements GuideService {
 
     ///////////////////////가이드 조회 기능/////////////////////////
 
+    @Override
+    public List<GuideResponse> guideSearch() {
+        List<Guide> guideList = guideRepository.findBy();
+        List<GuideResponse> searchList = new ArrayList<>();
+
+        for (Guide guide : guideList) {
+            List<String> langList = new ArrayList<>();
+
+            for (GuideLanguage guideLanguage : guide.getLanguageList()) {//가이드 언어 테마 가져옴
+                String code = guideRepository.searchNameByCode(guideLanguage.getLangCode());
+                langList.add(code);
+            }
+
+            List<String> themaList = new ArrayList<>();
+            for (GuideThema thema : guide.getGuideThemaList()) {
+                String code = guideRepository.searchNameByCode(thema.getThemaCode());
+                themaList.add(code);
+            }
+
+            GuideResponse res = GuideResponse.builder()
+                    .guideId(guide.getGuideId())
+                    .city(guide.getCity())
+                    .country(guide.getCountry())
+                    .closeTimeEnd(guide.getCloseTimeEnd())
+                    .closeTimeStart(guide.getCloseTimeStart())
+                    .introduction(guide.getIntroduction())
+                    .onelineIntroduction(guide.getOnlineIntroduction())
+                    .picture(guide.getPicture())
+                    .name(guide.getUser().getName())
+                    .price(guide.getPrice())
+                    .userId(guide.getUser().getUserId())
+                    .language(langList)
+                    .thema(themaList)
+                    .build();
+
+            searchList.add(res);
+        }
+
+        return searchList;
+    }
 
     @Override
-    public List<Guide> guideSearch() {
-        return guideRepository.findBy();
+    public List<GuideResponse> guideSearchBar(String searchName) {
+        List<Guide> guideList = guideRepository.searchByCountryOrCity(searchName);
+        List<GuideResponse> searchList = new ArrayList<>();
+
+        for (Guide guide : guideList) {
+            List<String> codeList = new ArrayList<>();
+            for (GuideLanguage guideLanguage : guide.getLanguageList()) {
+                String code = guideRepository.searchNameByCode(guideLanguage.getLangCode());
+                codeList.add(code);
+            }
+
+            List<String> themaList = new ArrayList<>();
+            for (GuideThema thema : guide.getGuideThemaList()) {
+                String code = guideRepository.searchNameByCode(thema.getThemaCode());
+                themaList.add(code);
+            }
+
+
+            GuideResponse res = GuideResponse.builder().guideId(guide.getGuideId())
+                    .city(guide.getCity())
+                    .country(guide.getCountry())
+                    .closeTimeEnd(guide.getCloseTimeEnd())
+                    .closeTimeStart(guide.getCloseTimeStart())
+                    .introduction(guide.getIntroduction())
+                    .onelineIntroduction(guide.getOnlineIntroduction())
+                    .picture(guide.getPicture())
+                    .name(guide.getUser().getName())
+                    .price(guide.getPrice())
+                    .userId(guide.getUser().getUserId())
+                    .thema(themaList)
+                    .language(codeList)
+                    .build();
+            searchList.add(res);
+        }
+
+        return searchList;
     }
 
     @Override
@@ -79,11 +155,94 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public Guide guideDetailSearch(int guideId) {
+    public GuideResponse guideDetailSearch(int guideId) {
 
         //가이드 정보 리턴
         Optional<Guide> guide = guideRepository.findGuideByGuideId(guideId);
-        return guide.orElse(null);
+        if (!guide.isPresent()) return null;
+
+        Guide existGuide = guide.get();
+
+        List<String> langList = new ArrayList<>();
+
+        for (GuideLanguage guideLanguage : existGuide.getLanguageList()) {//가이드 언어 테마 가져옴
+            String code = guideRepository.searchNameByCode(guideLanguage.getLangCode());
+            langList.add(code);
+        }
+
+        List<String> themaList = new ArrayList<>();
+        for (GuideThema thema : existGuide.getGuideThemaList()) {
+            String code = guideRepository.searchNameByCode(thema.getThemaCode());
+            themaList.add(code);
+        }
+
+        //추천장소
+        List<GuideRecommendLocation> rec = existGuide.getGuideLocationList();
+        List<LocationResponse> newLocList = new ArrayList<>();
+        for (GuideRecommendLocation location : rec) {
+            LocationResponse loc = LocationResponse.builder()
+                    .address(location.getAddress())
+                    .name(location.getName())
+                    .longitude(location.getLongitude())
+                    .categoryCode(location.getCategoryCode())
+                    .latitude(location.getLatitude())
+                    .build();
+            newLocList.add(loc);
+        }
+
+        //예약
+        List<Reservation> res = existGuide.getReservationList();
+        List<ReservationResponse> newResList = new ArrayList<>();
+        for (Reservation r : res) {
+            ReservationResponse reservation = ReservationResponse
+                    .builder()
+                    .reservationId(r.getReservationId())
+                    .consultingDate(r.getConsultingDate())
+                    .note(r.getNote())
+                    .numberOfPeople(r.getNumberOfPeople())
+                    .stateCode(r.getStateCode())
+                    .travelEndDate(r.getTravelEndDate())
+                    .travelStartDate(r.getTravelStartDate())
+                    .withChildren(r.getWithChildren())
+                    .withDisabled(r.getWithDisabled())
+                    .withElderly(r.getWithElderly())
+                    .build();
+            newResList.add(reservation);
+        }
+
+        List<DayOff> days = existGuide.getDayOffList();
+        List<DayOffResponse> dayOffResponseList = new ArrayList<>();
+        for (DayOff d : days) {
+            DayOffResponse dayOffResponse = DayOffResponse
+                    .builder()
+                    .day(d.getDayOffDate())
+                    .guideId(d.getGuide().getGuideId())
+                    .dayOffId(d.getDayOffId())
+                    .build();
+            dayOffResponseList.add(dayOffResponse);
+        }
+
+        GuideResponse response = GuideResponse.builder()
+                .reservationList(newResList)
+                .guideLocationList(newLocList)
+                .closeTimeStart(existGuide.getCloseTimeStart())
+                .closeTimeEnd(existGuide.getCloseTimeEnd())
+                .dayOffList(dayOffResponseList)
+                .picture(existGuide.getPicture())
+                .license(existGuide.getLicense())
+                .guideId(existGuide.getGuideId())
+                .price(existGuide.getPrice())
+                .introduction(existGuide.getIntroduction())
+                .country(existGuide.getCountry())
+                .city(existGuide.getCity())
+                .name(existGuide.getUser().getName())
+                .language(langList)
+                .thema(themaList)
+                .onelineIntroduction(existGuide.getOnlineIntroduction())
+                .build();
+
+
+        return response;
     }
 
 
@@ -103,6 +262,7 @@ public class GuideServiceImpl implements GuideService {
                 .longitude(locations.getLongitude())
                 .categoryCode(locations.getCategoryCode())
                 .picture(locations.getPicture())
+                .name(locations.getName())
                 .build();
         guideRecommendRepository.save(loc);
 
@@ -147,6 +307,24 @@ public class GuideServiceImpl implements GuideService {
         guideRecommendRepository.save(updateLocation);
 
         return 1;//성공 시
+    }
+
+    @Override
+    public List<LocationResponse> locationSearch(String guideId) {
+        List<GuideRecommendLocation> locations = guideRecommendRepository.findByGuide_UserId_Id(guideId);
+        List<LocationResponse> locationRes = new ArrayList<>(locations.size());
+        for (int i = 0; i < locations.size(); i++) {
+            GuideRecommendLocation location = locations.get(i);
+            LocationResponse res = new LocationResponse(
+                    location.getName(),
+                    location.getAddress(),
+                    location.getCategoryCode(),
+                    location.getLatitude(),
+                    location.getLongitude()
+            );
+            locationRes.add(res);
+        }
+        return locationRes;
     }
 
     @Override
@@ -202,7 +380,6 @@ public class GuideServiceImpl implements GuideService {
         int id = checkUser.get().getUserId();
         Optional<Guide> checkGuide = guideRepository.findGuideByUser(id);//위에서 얻은 사용자로 가이드인지 확인함
         if (!checkGuide.isPresent()) return 0;
-        System.out.println("guide id" + checkGuide.get().getGuideId());
 
         //상담 불가능한 날짜를 추가함
         DayOff dayOff = DayOff.builder().dayOffDate(dayoff).guide(checkGuide.get()).build();

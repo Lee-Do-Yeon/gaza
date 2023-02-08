@@ -14,15 +14,15 @@ public interface UserService {
 
     User searchUserById(String id);
 
-    User searchUser(Integer userId);
+    User searchUser(String id);
 
-    int changeState(Integer userId, String state);
+    int changeState(String id, String state);
 
-    int registerGuide(Integer userId, GuideDocument guideDocument);
+    int registerGuide(String id, GuideDocument guideDocument);
 
-    int updateUser(Integer userId, UserUpdateRequest userUpdateRequest);
+    int updateUser(String id, UserUpdateRequest userUpdateRequest);
 
-    int updatePassword(Integer userId, String password);
+    int updatePassword(String id, String password);
 
-    int deleteUser(Integer userId);
+    int deleteUser(String id);
 }

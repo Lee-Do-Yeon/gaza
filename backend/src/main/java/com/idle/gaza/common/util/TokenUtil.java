@@ -8,14 +8,8 @@ import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -41,9 +35,10 @@ public class TokenUtil {
     final static public String ACCESS_TOKEN_NAME = "access";
     final static public String REFRESH_TOKEN_NAME = "refresh";
 
-    @Value("${spring.jwt.secret}")
-    private static String ACCESS_TOKEN_SECRET_KEY = "gazagazagazagazagazagazagazagazagazagazagazagazagaza";
-    private static String REFRESH_TOKEN_SECRET_KEY = "zagazagazagazagazagazagazagazagazagazagazagazagazaga";
+    @Value("${spring.jwt.accessSecret}")
+    private static String ACCESS_TOKEN_SECRET_KEY;
+    @Value("${spring.jwt.refreshSecret}")
+    private static String REFRESH_TOKEN_SECRET_KEY;
 
     public static UserService userService;
 
@@ -121,21 +116,21 @@ public class TokenUtil {
      */
     public static boolean isValidToken(String token) {
         try {
-                System.out.println(token);
+            System.out.println(token);
 
-                Claims claims = getClaimsFormToken(token);
+            Claims claims = getClaimsFormToken(token);
 
-                String TokenDataFromRedis = RedisUtil.getData(token);
+            String TokenDataFromRedis = RedisUtil.getData(token);
 
-                if(TokenDataFromRedis != null && TokenDataFromRedis.equals("logout")) {
-                    log.info("로그아웃된 토큰입니다.");
-                    return false;
-                }
+            if(TokenDataFromRedis != null && TokenDataFromRedis.equals("logout")) {
+                log.info("로그아웃된 토큰입니다.");
+                return false;
+            }
 
-                System.out.println(claims.getExpiration());
-                log.info("expireTime :" + claims.getExpiration());
-                log.info("userId :" + claims.get("userId"));
-                log.info("userNm :" + claims.get("userNm"));
+            System.out.println(claims.getExpiration());
+            log.info("expireTime :" + claims.getExpiration());
+            log.info("userId :" + claims.get("userId"));
+            log.info("userNm :" + claims.get("userNm"));
 
             return true;
         } catch (ExpiredJwtException exception) {
@@ -243,7 +238,7 @@ public class TokenUtil {
     private static Claims getClaimsFormToken(String token) {
         try {
             return Jwts.parserBuilder().setSigningKey(DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY)).build()
-                        .parseClaimsJws(token).getBody();
+                    .parseClaimsJws(token).getBody();
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -305,7 +300,7 @@ public class TokenUtil {
         if(user == null) {
             throw new RuntimeException("잘못된 유저 정보"); // 잘못된 리프레시 토큰
         }
-        
+
         String newAccessToken = TokenUtil.generateAccessToken(user);
         String newRefreshToken = TokenUtil.generateRefreshToken(user);
         TokenDto newTokenDto = TokenDto.builder()

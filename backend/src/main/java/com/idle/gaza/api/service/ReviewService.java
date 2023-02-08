@@ -14,9 +14,9 @@ public interface ReviewService {
     Integer writeReview(ReviewCreatePostRequest reviewInfo) throws Exception ;
 
     // 회원이 작성한 리뷰 리스트 조회
-    List<ReviewResponse> getReviewsByUser(int userId);
+    List<ReviewResponse> getReviewsByUser(String userId);
 
     // 가이드에게 달린 리뷰 리스트 조회
-    List<ReviewResponse> getReviewsByGuide(int guideId);
+    List<ReviewResponse> getReviewsByGuide(String guideId);
     Optional<Review> getReviewById(int reviewId);
 }

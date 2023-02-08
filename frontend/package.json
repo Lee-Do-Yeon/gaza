@@ -16,12 +16,14 @@
     "json-server": "^0.17.1",
     "lodash": "^4.17.21",
     "openvidu-browser": "^2.25.0",
+    "sockjs-client": "^1.6.1",
     "swiper": "^6.5.0",
     "vue": "^3.2.45",
     "vue-router": "^4.0.3",
     "vue3-datepicker": "^0.3.4",
     "vuex": "^4.1.0",
-    "vuex-persistedstate": "^4.1.0"
+    "vuex-persistedstate": "^4.1.0",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",

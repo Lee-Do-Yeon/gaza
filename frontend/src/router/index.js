@@ -45,7 +45,18 @@ import GuideScheduleView from '../views/GuideScheduleView.vue'
 import GuideReviewView from '../views/GuideReviewView.vue'
 import GuideQNAView from '../views/GuideQNAView.vue'
 
+
 import OpenViduView from '../views/OpenViduView.vue'
+
+import MapDetail from "@/components/map/MapDetail";
+import MapTest from "@/components/map/MapTest";
+import AppMap from "../views/AppMap.vue";
+
+
+import AppChat from "../views/AppChat.vue";
+import ChatDetail from "@/components/chat/ChatDetail.vue";
+import ChatEnter from "@/components/chat/ChatEnter.vue";
+
 
 const routes = [
   {
@@ -268,6 +279,42 @@ const routes = [
     name : 'openvidu',
     component :OpenViduView
   },
+  {
+    path: "/map",
+    name: "map",
+    component: AppMap,
+    redirect: "map/test",
+    children: [
+      {
+        path: "test",
+        name: "maptest",
+        component: MapTest,
+      },
+      {
+        path: "detail/:roomId",
+        name: "mapdetail",
+        component: MapDetail,
+      },
+    ],
+  },
+
+  {
+    path: "/chat",
+    name: "chat",
+    component: AppChat,
+    children: [
+      {
+        path: "enter",
+        name: "chateEnter",
+        component: ChatEnter,
+      },
+      {
+        path: "room/:roomId",
+        name: "chatDetail",
+        component: ChatDetail,
+      },
+    ],
+  }
 ]
 
 
