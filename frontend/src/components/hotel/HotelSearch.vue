@@ -7,7 +7,7 @@
             <div class="tour_details_heading_wrapper">
               <div>
                 <h3>
-                  <img src="../../assets/img/banner/background.jpg" />
+                  <img src="../../assets/img/banner/guide_profile.jpg" />
                 </h3>
               </div>
             </div>
@@ -29,6 +29,13 @@
                 </div>
               </div>
             </form>
+            <div
+              class="d-flex mt-2 justify-content-end"
+            >
+              <button @click="MoveReser(review.id)" class="me-2 btn btn_theme btn-lg">
+                예약하기
+              </button>
+            </div>
 
             <div class="new_main_news_box">
               <br />
@@ -84,110 +91,145 @@
             </div>
           </div>
           <hr />
-          <h3 style="font-weight: bold">상담 불가 날짜/시간 설정</h3>
-          <br />
-          <div class="row d-flex justify-content-center">
-            
 
-            <div class="col-lg-4 me-5">
-              <h5 style="color: #15d4cd">Choose a Date</h5>
-            <br/>
-              <div class="form_search_date">
-                <div class="flight_Search_boxed date_flex_area">
-                  <div class="Journey_date">
-                    <input type="date" value="2023-02-01" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 ms-5">
-              <h5 style="color: #15d4cd">Pick a time</h5>
-              <div class="tour_details_boxed">
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    01
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    02
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    03
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    04
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    05
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    06
-                  </button>
-                </div>
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    07
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    08
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    09
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    10
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    11
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    12
-                  </button>
-                </div>
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    13
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    14
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    15
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    16
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    17
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    18
-                  </button>
-                </div>
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    19
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    20
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    21
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    22
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    23
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    24
-                  </button>
-                </div>
-              </div>
-            </div>
+          <h3 style="font-weight: bold">리뷰</h3>
+          <div class="table-responsive-lg table_common_area">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>작성자</th>
+                  <th>작성일</th>
+                  <th>별점</th>
+                  <th>내용</th>
+                </tr>
+              </thead>
+              <tbody v-for="rev in review" :key="rev.id">
+                <tr>
+                  <td>{{ rev.userId }}</td>
+                  <td>{{ getDate(rev.createdDate) }}</td>
+                  <td>
+                    <i
+                      v-for="score in rev.score"
+                      :key="score"
+                      class="fas fa-sharp fa-solid fa-star"
+                      style="color: yellow"
+                    ></i>
+                  </td>
+                  <td>{{ rev.content }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination_area">
+            <ul class="pagination">
+              <li v-if="currentpage !== 1" class="page-item">
+                <a
+                  style="cursor: pointer"
+                  class="page-link"
+                  @click="getValue(currentpage - 1)"
+                  aria-label="Previous"
+                >
+                  <span aria-hidden="true">«</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li v-for="page in numberofpages" :key="page" class="page-item">
+                <a
+                  style="cursor: pointer"
+                  class="page-link"
+                  @click="getValue(page)"
+                >
+                  {{ page }}</a
+                >
+              </li>
+              <a
+                v-if="currentpage !== numberofpages"
+                style="cursor: pointer"
+                class="page-link"
+                @click="getValue(currentpage + 1)"
+                aria-label="Next"
+              >
+                <span aria-hidden="true">»</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </ul>
           </div>
         </div>
       </div>
     </div>
   </section>
 </template>
+<script>
+import { reviewss } from "../../../common/api/commonAPI";
+
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
+export default {
+  setup() {
+    const review = ref([]);
+    const numberofreviews = ref(0);
+    const currentpage = ref(1);
+    const limit = 5;
+    const StartDate = ref("");
+    const EndDate = ref("");
+
+    const router = useRouter();
+
+    const getDate = (date) => {
+      const DAT = new Date(date);
+      return (
+        DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay()
+      );
+    };
+
+    const getValue = async (page = currentpage.value) => {
+      currentpage.value = page;
+      try {
+        const res = await reviewss(
+          `?_sort=id&_order=desc&_page=${page}&_limit=${limit}`
+        );
+        numberofreviews.value = res.data["length"];
+        review.value = res.data;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getValue();
+
+    const coputeReview = computed(() => {
+      return review, StartDate, EndDate;
+    });
+
+    const numberofpages = computed(() => {
+      return Math.ceil(numberofreviews.value / limit);
+    });
+
+    const MoveReser = (id) => {
+      router.push({
+        name: "about",
+        params: {
+          id: id,
+        },
+      });
+    };
+    console.log(review)
+
+    return {
+      getValue,
+      limit,
+      numberofpages,
+      currentpage,
+      numberofreviews,
+      review,
+      StartDate,
+      EndDate,
+      coputeReview,
+      getDate,
+      router,
+      MoveReser,
+    };
+  },
+};
+</script>
