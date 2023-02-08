@@ -5,24 +5,35 @@ const api = apiInstance();
 
 //유저구역
 //유저 회원가입
-const requestSignin = payload => api.post("/api/users", payload);
+const requestSignin = payload => api.post("/users", payload);
 
 //유저 로그인
-const requestLogin = (payload) => api.post("/api/login", payload);
+const requestLogin = (payload) => api.post("/users/login", payload);
+
+//유저 로그인 확인
+const requestConfirm = accessToken => api.get("/users/isLogin", {headers: {Authorization: accessToken}})
 
 // 가이드 신청 중인 유저 목록
 const requestGuideRegisterList = (payload) => api.get("/api/users/getRegisterGuideList", payload);
 
-
 // 예약내역조회 Notification
-const reser = (payload) => api.get("/reservation", payload);
+const reser = (payload) => api.get("/books/user/ssafy",payload);
+
+// 인기 가이드 조회
+const popularGuide = () => api.get("/guides/popular")
+
+// 유저 예약내역 조회
+const reviewss = (payload) => api.get('/reviews/user/ssafy',payload);
+
+//유저 정보수정
+const updateUser = () => api.put('/users/ssafy');
+
+//리뷰 등록
+const uploadReview =(payload) => api.post('/reviews',payload)
 
 
-
-const requestConfirm = token => api.get("/users/me", {headers: {Authorization: token}})
 
 const requestConfirmId = userid => api.get(`/users/${userid}`)
 
 
-
-export { requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, requestGuideRegisterList};
+export { requestLogin, requestSignin, requestConfirm, requestConfirmId, reser};
