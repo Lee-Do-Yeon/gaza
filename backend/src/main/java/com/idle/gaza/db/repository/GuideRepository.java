@@ -28,4 +28,16 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     /* 예약순 조회 */
     @Query(value = "select * from guide left join ( select guide_id, count(guide_id) from reservation group by guide_id order by count(*)) reservation on reservation.guide_id=guide.guide_id order by reservation.guide_id", nativeQuery = true)
     List<Guide> findOrderByMaxReservation();
+
+    Guide findByUserId_Id(String guiedId);
+
+    /* 도시 또는 나라로 가이드를 조회함 */
+    @Query(value = "SELECT * FROM guide as g WHERE g.city=:searchName OR g.country=:searchName", nativeQuery = true)
+    List<Guide> searchByCountryOrCity(@Param("searchName") String searchName);
+
+
+    /* 테마 코드에 해당하는 테마 이름을 가져옴 */
+    @Query(value = "SELECT c.description FROM code as c WHERE c.name=:searchCode", nativeQuery = true)
+    String searchNameByCode(@Param("searchCode") String searchCode);
+
 }

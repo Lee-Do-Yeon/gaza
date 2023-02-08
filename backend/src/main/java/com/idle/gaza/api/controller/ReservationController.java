@@ -40,13 +40,13 @@ public class ReservationController {
 
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "예약 내역 리스트 조회(회원)", notes = "회원은 본인의 상담 내역 리스트를 조회 가능하다.")
-    public ResponseEntity<?> getReservationListByUser(@PathVariable @ApiParam(value="유저 PK", required = true) int userId){
+    public ResponseEntity<?> getReservationListByUser(@PathVariable @ApiParam(value="유저 PK", required = true) String userId){
         List<ReservationResponse> reservations = reservationService.getReservationListByUser(userId);
         return new ResponseEntity<List<?>>(reservations, HttpStatus.OK);
     }
     @GetMapping("/guide/{guideId}")
     @ApiOperation(value = "예약 내역 리스트 조회(가이드)", notes = "가이드는 본인의 상담 내역 리스트를 조회 가능하다.")
-    public ResponseEntity<?> getReservationListByGuide(@PathVariable @ApiParam(value="가이드 PK", required = true) int guideId){
+    public ResponseEntity<?> getReservationListByGuide(@PathVariable @ApiParam(value="가이드 PK", required = true) String guideId){
         List<ReservationResponse> reservations = reservationService.getReservationListByGuide(guideId);
         return new ResponseEntity<List<?>>(reservations, HttpStatus.OK);
     }
@@ -63,8 +63,8 @@ public class ReservationController {
     }
 
     @GetMapping("/guide/time")
-    @ApiOperation(value = "불가능한 예약 시간 조회", notes = "회원은 불가능한 시간대를 확인 할 수 있다")
-    public ResponseEntity<?> getImpossibleTime(@RequestParam("guideId") @ApiParam(value = "가이드 PK", required = true) int guideId,
+    @ApiOperation(value = "불가능한 예약 시간 조회", notes = "회원은 불가능한 시간대를 확인 할 수 있다. 해당 날짜의 시간(오후 1시면 13. 이런 식으로) 리스트 리턴.")
+    public ResponseEntity<?> getImpossibleTime(@RequestParam("guideId") @ApiParam(value = "가이드의 유저 아이디(PK말고)", required = true) String guideId,
                                                @RequestParam("selectedDate") @ApiParam(value = "선택한 날짜", required = true, example = "2023-02-01") String selectedDate){
         Date date = Date.valueOf(selectedDate);
         List<Integer> timeList = reservationService.getImpossibleTime(guideId, date);
