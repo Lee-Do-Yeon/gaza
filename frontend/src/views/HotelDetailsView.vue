@@ -1,23 +1,14 @@
 <template>
-
-
-
-    <!-- Hotel Search Areas -->
-    <HotelSearch />
-
-
-
-
+  <!-- Hotel Search Areas -->
+  <HotelSearch />
 </template>
 <script>
-
-import HotelSearch from '@/components/hotel/HotelSearch.vue'
-
+import HotelSearch from "@/components/hotel/HotelSearch.vue";
 
 export default {
-    name: "HotelDetailsView",
-    components: {
-        HotelSearch
-    }
+  name: "HotelDetailsView",
+  components: {
+    HotelSearch,
+  },
 };
 </script>
