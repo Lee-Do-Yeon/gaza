@@ -4,6 +4,7 @@ import menuStore from "./menuStore";
 import platformInfoStore from "./platformInfoStore";
 import loadingEffect from "./loadingEffect";
 import createPersistedState from "vuex-persistedstate";
+import adminStore from "./adminStore";
 
 export default createStore({
   modules: {
@@ -11,6 +12,7 @@ export default createStore({
     menuStore,
     platformInfoStore,
     loadingEffect,
+    adminStore
   },
   plugins: [
     createPersistedState({
