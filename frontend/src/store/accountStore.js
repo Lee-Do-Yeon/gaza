@@ -1,10 +1,12 @@
-import { requestConfirm, requestLogin } from "../common/api/accountAPI";
-import { requestSignin } from "../common/api/accountAPI";
+import {  requestLogin } from "../../common/api/commonAPI";
+import router from '../router';
 
 const state = {
-  token: null,
+  accessToken: null,
+  refreshToken: null,
   isLogin: false,
   signRegister: false,
+  userId: null,
 };
 
 const getters = {
@@ -17,18 +19,25 @@ const getters = {
   getSignRegister: state => {
     return state.signRegister
   },
+  getIsLogin: state => {
+    return state.isLogin
+  }
 };
 
 const mutations = {
-  setToken: (state, token) => {
-    state.token = token;
+  setToken: (state, data) => {
+    console.log('token mutations');
+    state.accessToken = data.accessToken
+    state.refreshToken = data.refreshToken
   },
   getLogin: (state) => {
-    console.log(state.token);
+    console.log(state.accessToken);
+    console.log(state.refreshToken);
     console.log(response);
   },
   logOutData: (state) => {
-    state.token = null,
+    state.accessToken = null,
+    state.refreshToken = null,
     state.isLogin = false
     window.location.href = '/'
     // window.location.reload(true)
@@ -37,10 +46,10 @@ const mutations = {
     state.token = null,
     state.isLogin = false
   },
-  logInData: (state) => {
+  logInData: (state, data) => {
     console.log('로그인됨');
-    console.log(state);
     state.isLogin = true
+    state.userId = data
     console.log(state);
   },
   signRegister: (state) => {
@@ -54,14 +63,22 @@ const mutations = {
 
 const actions = {
   loginAction: async ({ commit }, loginData) => {
+    console.log('store');
     try {
+      console.log('trylogin');
       const response = await requestLogin(loginData);
-      alert('로그인 성공')
-      console.log(reponse.data);
-      commit("logInData")
-      commit("setToken", response.data.accessToken);
+      console.log(response.data);
+      if (response.data.resultCode == 200) {
+        alert('로그인 성공')
+        commit("logInData", loginData.id)
+        commit("setToken", response.data);
+        router.push({name: "home"})
+      } else {
+        console.log(response.data.status);
+        alert('로그인 실패')
+      }
     } catch (error) {
-      console.log(error.response.status);
+      console.log(error.response);
       alert('잘못된 정보입니다.')
     }
   },
@@ -78,19 +95,10 @@ const actions = {
   confirmAction: async ({ commit,state }) => {
     if (state.token) {
       try {
-        const response = await requestConfirm(`Bearer ${state.token}`);
-        console.log('로그인성공');
+        const response = await requestConfirm(`Bearer ${state.accessToken}`);
         commit("logInData")
       } catch (error) {
         console.log(error.response);
-        if (error.response.status === 401) {
-          alert('세션이 유효하지 않습니다.')
-          commit("logOutDataWithoutRefresh")
-        } else if (error.response.status === 403) {
-          alert('접근 권한이 없습니다.');
-        } else {
-          console.log('서버오류!')
-        }
       }
     }
   },
