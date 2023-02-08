@@ -1,120 +1,197 @@
 <template>
-    <section id="vendor_form_area" class="section_padding_bottom">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="vendor_form_heading">
-                        <h2>{{ title }}</h2>
-                        <p>{{ subTitle }}
-                        </p>
-                    </div>
+  <section id="vendor_form_area" class="section_padding_bottom">
+    <div class="container">
+      <div class="row">
+        <div class="vendor_form">
+          <div class="tour_booking_form_box">
+            <form id="tour_bookking_form_item" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-lg-2">신분증</div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input
+                      type="file"
+                      class="custom-file-input"
+                      placeholder="신분증"
+                      id="inputGroupFile04"
+                      ref="img1"
+                      @change="selectFile1"
+                    />
+                    <label class="custom-file-label" for="신분증"
+                      >Choose file</label
+                    >
+                  </div>
                 </div>
-                <div class="col-lg-8">
-                    <div class="vendor_form">
-                        <div class="tour_booking_form_box">
-                            <form action="!#" id="tour_bookking_form_item">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control bg_input" placeholder="First name*">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control bg_input" placeholder="Last name*">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control bg_input"
-                                                placeholder="Email address (Optional)">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control bg_input"
-                                                placeholder="Mobile number*">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control bg_input"
-                                                placeholder="Street address">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control bg_input"
-                                                placeholder="Apartment, Suite, House no (optional)">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <select class="form-control form-select bg_input">
-                                                <option value="1">Khulna</option>
-                                                <option value="1">New York</option>
-                                                <option value="1">Barisal</option>
-                                                <option value="1">Nator</option>
-                                                <option value="1">Joybangla</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <select class="form-control form-select bg_input">
-                                                <option value="1">State</option>
-                                                <option value="1">New York</option>
-                                                <option value="1">Barisal</option>
-                                                <option value="1">Nator</option>
-                                                <option value="1">Joybangla</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <select class="form-control form-select bg_input">
-                                                <option value="1">Country</option>
-                                                <option value="1">New York</option>
-                                                <option value="1">Barisal</option>
-                                                <option value="1">Nator</option>
-                                                <option value="1">Joybangla</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="booking_tour_form_submit pt-4">
-                            <div class="form-check write_spical_check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultf1">
-                                <label class="form-check-label" for="flexCheckDefaultf1">
-                                    I have read and accept the <router-link to="/terms-service">Terms and
-                                        conditions</router-link> and <router-link to="/privacy-policy">Privacy policy</router-link>
-                                </label>
-                            </div>
-                            <router-link to="/booking-confirmation" class="btn btn_theme btn_md">Sign up</router-link>
-                        </div>
-                    </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-2">체류증명서류</div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input
+                      type="file"
+                      class="custom-file-input"
+                      placeholder="체류증명서류"
+                      id="inputGroupFile04"
+                      ref="img2"
+                      @change="selectFile2"
+                    />
+                    <label class="custom-file-label" for="체류증명서류"
+                      >Choose file</label
+                    >
+                  </div>
                 </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-2">가이드 자격증</div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input
+                      type="file"
+                      class="custom-file-input"
+                      placeholder="가이드 자격증"
+                      id="inputGroupFile04"
+                      ref="img3"
+                      @change="selectFile3"
+                    />
+                    <label class="custom-file-label" for="가이드 자격증"
+                      >Choose file</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-2">파트너 약관</div>
+                <textarea class="col-lg-15" readonly>
+ 
+                                            제3조 (여행계약의 당사자 및 당사의 지위)
+                                            여행자와 여행계약을 체결하고 가이드서비스를 제공하는 법적 주체는 가이드이며, 당사는 플랫폼을 통하여 여행자가 원하는 날짜와 조건에 맞추어 가이드와 여행계약을 체결하고 가이드서비스를 제공받는 것을 중개하는 업무를 수행합니다.
+    
+                                            제4조 (가이드의 독립당사자 지위)
+                                            1. 당사는 여행자와 가이드 사이에 투어를 중개할 뿐이며, 가이드는 당사와 고용 관계에 있지 않음을 확인합니다. 또한, 당사는 가이드에 대하여 사용자로서의 책임을 일체 부담하지 않는다는 점을 명확히 합니다.
+                                            2. 가이드는 가이드약관의 이행에 필요한 관련 법령상의 허가, 등록, 신고 또는 보험, 공제, 예치 등의 의무사항을 모두 이행하여야 하며, 당사는 가이드가 관련 법령 위배로 인하여 여행자 또는 제3자에 대하여 손해배상 등 책임을 지더라도 당사는 이에 관하여 아무런 책임이 없습니다.
+    
+                                            제5조 (여행계약의 구성)
+                                            여행계약은 여행확인증과 여행자약관 및 가이드약관에 나타난 사항을 그 계약내용으로 합니다.
+    
+                                            제6조 (당사자 및 당사의 기본 의무)
+                                            1. 가이드는 사전에 여행자와 약정한 내용에 따라 투어를 성실하게 진행하여야 하며, 그밖에 여행자에게 안전하고 만족스러운 가이드서비스를 제공하기 위하여 여행계약상 의무를 성실하게 이행하여야 합니다.
+                                            2. 여행자는 여행계약에 따른 의무를 성실하게 이행하며, 안전하고 즐거운 여행을 위하여 여행자간 화합도모 및 가이드의 여행질서 유지에 적극 협조합니다.
+                                            3. 당사는 여행계약 체결의 중개 행위 등에 있어 맡은 바 임무를 충실히 수행합니다.
+    
+                                            제7조 (가이드가 제공하는 용역의 내용)
+                                            가이드는 가이드약관에 따라 여행자에 대하여 다음 각 호의 용역을 제공합니다.
+                                            (1) 여행자의 의사 및 제반 사정을 고려한 투어 일정의 계획 및 조정
+                                            (2) 투어를 위하여 여행자와 만나기로 약속한 장소(이하 “미팅포인트”)에서 일정에 정한 각 여행지로 여행자를 인솔
+                                            (3) 각 여행지에 대한 구체적인 안내 및 설명 제공
+                                            (4) 당일 최종 여행지로부터 여행자의 숙소 등 일정에 정한 해산 지점으로 여행자를 인솔
+                                            (5) 여행지에서 여행자의 원활한 의사소통 협조
+                                            (6) 사고 등 문제 발생시의 여행자 보호 조치
+                                            (7) 기타 투어 관련 제반 업무
+
+                                        </textarea
+                >
+              </div>
+              <div class="row">
                 <div class="col-lg-4">
-                    <div class="vendor_img">
-                        <img src="../../assets/img/common/vendor.png" alt="img">
-                    </div>
+                  개인정보 및 고유식별 정보 수집 및 이용동의
                 </div>
+                <textarea class="col-lg-16" readonly>
+                                        ❏ 개인정보의 수집·이용 목적
+
+                                        ❍ 귀하의 개인정보는 가이드 등록을 위한 목적으로 수집·이용됩니다.
+                                     
+                                      ❏ 수집·이용할 개인정보의 항목
+                                     
+                                        ❍ 수집·이용되는 귀하의 개인정보는 다음과 같습니다.
+                                     
+                                         필수정보
+                                     
+                                          - 사진 및 인적사항(성명, 생년월일, 휴대전화번호, 주소, 이메일주소, 여권 등)
+                                     
+                                         선택정보
+                                     
+                                          - 자기소개 및 우대요건과 관련된 자격증 등
+
+                                      ❏ 개인정보의 보유·이용기간
+                                     
+                                        ❍ 개인정보는 원칙적으로 개인정보의 수집 및 이용목적이 종료되면 파기합니다.
+                                    </textarea
+                >
+              </div>
+            </form>
+          </div>
+          <div class="booking_tour_form_submit pt-4">
+            <div class="form-check write_spical_check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheckDefaultf1"
+              />
+              <label class="form-check-label" for="flexCheckDefaultf1">
+                I have read and accept the
+                <router-link to="/terms-service"
+                  >Terms and conditions</router-link
+                >
+                and
+                <router-link to="/privacy-policy">Privacy policy</router-link>
+              </label>
             </div>
+            <button
+              class="btn btn_theme btn_md"
+              type="submit"
+              @click="register"
+            >
+              Sign up
+            </button>
+            <!-- <router-link to="/booking-confirmation" class="btn btn_theme btn_md"
+              >Sign up</router-link
+            > -->
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </template>
+
 <script>
+import axios from "@/api/http";
 
 export default {
-    name: "VendorForm",
-    data() {
-        return {
-            title:'Become a vendor',
-            subTitle: `Eu sint minim tempor anim aliqua officia voluptate incididunt deserunt.
-                             Velitgo quis Lorem culpa qui pariatur occaecat.`
-        }
+  name: "VendorForm",
+  data() {
+    return {
+      file1: null,
+      file2: null,
+      file3: null,
+      token: null,
+    };
+  },
+  created() {
+    this.token = this.$store.getters.getToken;
+  },
+
+  methods: {
+    register() {
+      console.log(this.token, this.file1, this.file2, this.file3);
+      axios
+        .post("/users/guide", {
+          idFile: this.file1,
+          certificateResidence: this.file2,
+          certificate: this.file3,
+        })
+        .then((res) => console.log(res));
     },
+    selectFile1() {
+      this.file1 = this.$refs["img1"].files[0];
+      console.log(this.file);
+    },
+    selectFile2() {
+      this.file2 = this.$refs["img2"].files[0];
+    },
+    selectFile3() {
+      this.file3 = this.$refs["img3"].files[0];
+    },
+  },
 };
 </script>
