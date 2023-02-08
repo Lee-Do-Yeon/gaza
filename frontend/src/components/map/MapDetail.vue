@@ -1,11 +1,16 @@
 <template>
     <div class="container" id="app" v-cloak>
         <div style="height:100px"></div>
-        <div id="map" style="width: 75%; height: 400px; position: relative; overflow: hidden; float:left">
+        <div class="button-box" style="width:8%; height: 400px; background-color: lightgray; float:left">
+            <button class="btn btn-primary" type="button" @click="sendPoint('FOCUS')" style="margin:5px; width:90px;">FOCUS</button>
+            <button class="btn btn-primary" type="button" @click="saveRoute" style="margin:5px; width:90px;">저장</button>
+            <button class="btn btn-primary" type="button" @click="insertToDB" style="margin:5px; width:90px;">DB</button>
+        </div>
+        <div id="map" style="width: 65%; height: 400px; position: relative; overflow: hidden; float:left">
         </div>
         <h3>[여행일정]</h3>
-        <div style="height:400px; overflow: auto;">
-                <list-item v-for="(route, index) in travel_route" :key="index" :route="route" />
+        <div style="width:27%; height:400px; overflow: auto;">
+                <list-item v-for="(route, index) in travel_route" :key="index" :index="index" :route="route" @deleteRoute="manageRoute" @downRoute="manageRoute" @upRoute="manageRoute" />
                 <!-- <li
                     v-for="route in travel_route"
                     v-bind:key="route.order"
@@ -14,14 +19,6 @@
                 </li> -->
          </div><div style="clear:both:"></div>
         <div id="clickLatlng"></div>
-        <div class="input-group">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button" @click="sendPoint('FOCUS')" style="margin-right:10px">FOCUS</button>
-                <button class="btn btn-primary" type="button" @click="saveRoute" style="margin-right:10px">클릭 좌표 루트로 저장</button>
-                <button class="btn btn-primary" type="button" @click="showTravelRoute" style="margin-right:10px">travel_route</button>
-                <button class="btn btn-primary" type="button" @click="insertToDB" style="margin-right:10px">DB삽입</button>
-            </div>
-        </div>
         <span>{{ recvPoint.recvLat }}-{{ recvPoint.recvLng }}-{{ recvPoint.type }}</span>
         <div></div>
     </div>
@@ -54,6 +51,8 @@ export default {
             reservationId: 3,
             recommend_location: [],
             guideId: "ssafy2",
+            markerImageSrc: require('./markers.png'),
+            yourMarker: Object,
         };
     },
     created() {
@@ -88,10 +87,70 @@ export default {
             var map = new kakao.maps.Map(mapContainer, mapOption);
             this.map = map;
 
+
+
             // 주소-좌표 변환 객체를 생성.
             var geocoder = new kakao.maps.services.Geocoder();
 
-            // ***********가이드의 추천 장소 출력을 위한 forEach 시작
+            var myPosition = new kakao.maps.LatLng(126.911186, 35.1401744);
+            
+            // ******************************************* 남의 마커 미리 세팅
+            var yourMakerOption = {
+                spriteOrigin: new kakao.maps.Point(0, 80),    
+                spriteSize: new kakao.maps.Size(29, 166)
+            }
+            var yourMarkerImage =  new kakao.maps.MarkerImage(this.markerImageSrc, new kakao.maps.Size(29, 40), yourMakerOption);
+
+            var yourMarker = new kakao.maps.Marker({
+                position: myPosition,
+                image: yourMarkerImage,
+            });
+
+            base.yourMarker = yourMarker;
+
+            base.yourMarker.setMap(map);
+
+            // ********************************************
+            
+
+            // ******************************************** 클릭했을 때 마커 시작
+            var myMakerOption = {
+                spriteOrigin: new kakao.maps.Point(0, 40),    
+                spriteSize: new kakao.maps.Size(29, 166)  
+            }
+            var myMarkerImage =  new kakao.maps.MarkerImage(base.markerImageSrc, new kakao.maps.Size(29, 40), myMakerOption);
+
+            // 지도를 클릭한 위치에 표출할 마커입니다
+            var myMarker = new kakao.maps.Marker({
+                // 지도 중심좌표에 마커를 생성합니다
+                position: map.getCenter(),
+                image: myMarkerImage,
+            });
+            // 지도에 마커를 표시합니다
+            myMarker.setMap(map);
+
+            kakao.maps.event.addListener(map, "click", function (mouseEvent) {
+                // 클릭한 위도, 경도 정보를 가져옵니다
+                var latlng = mouseEvent.latLng;
+
+                // 마커 위치를 클릭한 위치로 옮깁니다
+                myMarker.setPosition(latlng);
+
+                var message = "클릭한 위치의 위도는 " + latlng.getLat() + " 이고, ";
+                message += "경도는 " + latlng.getLng() + " 입니다";
+
+                base.clickLat = latlng.getLat();
+                base.clickLng = latlng.getLng();
+
+                var resultDiv = document.getElementById("clickLatlng");
+                resultDiv.innerHTML = message;
+
+                base.sendPoint("CLICK");
+            });
+            // ******************************************** 클릭했을 때 마커 끝
+            
+            
+            // ******************************************** 가이드의 추천 장소 출력을 위한 forEach 시작
             this.recommend_location.forEach(function (addr) {
                 geocoder.addressSearch(
                     // 주소로 좌표 검색.
@@ -102,9 +161,15 @@ export default {
                         if (status === kakao.maps.services.Status.OK) {
                             console.log(result[0].y, result[0].x);
                             var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                            var recommendMarker =  new kakao.maps.MarkerImage(base.markerImageSrc, new kakao.maps.Size(29, 40), {
+                                                                                                            spriteOrigin: new kakao.maps.Point(0, 0),    
+                                                                                                            spriteSize: new kakao.maps.Size(29, 166)  
+                                                                                                         });
+                            
                             var marker = new kakao.maps.Marker({
                                 map: map,
                                 position: coords,
+                                image: recommendMarker,
                             });
                             marker.setMap(map);
 
@@ -138,39 +203,8 @@ export default {
                     }
                 );
             });
-            // ***********forEach 끝
+            // ******************************************** forEach 끝
 
-            // *******************************************************카테고리 검색
-            // *******************************************************카테고리 검색 /끝
-
-            // 지도를 클릭한 위치에 표출할 마커입니다
-            var marker = new kakao.maps.Marker({
-                // 지도 중심좌표에 마커를 생성합니다
-                position: map.getCenter(),
-            });
-            // 지도에 마커를 표시합니다
-            marker.setMap(map);
-
-                   
-            
-            kakao.maps.event.addListener(map, "click", function (mouseEvent) {
-                // 클릭한 위도, 경도 정보를 가져옵니다
-                var latlng = mouseEvent.latLng;
-
-                // 마커 위치를 클릭한 위치로 옮깁니다
-                marker.setPosition(latlng);
-
-                var message = "클릭한 위치의 위도는 " + latlng.getLat() + " 이고, ";
-                message += "경도는 " + latlng.getLng() + " 입니다";
-
-                base.clickLat = latlng.getLat();
-                base.clickLng = latlng.getLng();
-
-                var resultDiv = document.getElementById("clickLatlng");
-                resultDiv.innerHTML = message;
-
-                base.sendPoint("CLICK");
-            });
             // init map ()
         },
         // this.clickLat, this.clickLng의 좌표로 부드럽게 중심좌표를 이동하는 함수.
@@ -207,17 +241,26 @@ export default {
             );
         },
         convertRecvPoint(recv) {
-            this.recvPoint = {
-                recvLng : recv.lng,
-                recvLat : recv.lat,
-                type : recv.type,
-            }
+            var tmpLng = recv.lng;
+            var tmpLat = recv.lat;
 
-            if(recv.type == "FOCUS"){
-                this.panTo();
+            if(tmpLng != this.clickLng && tmpLat != this.clickLng){
+                this.recvPoint = {
+                    recvLng : recv.lng,
+                    recvLat : recv.lat,
+                    type : recv.type,
+                }
+
+                var position = new kakao.maps.LatLng(this.recvPoint.recvLat, this.recvPoint.recvLng);
+                this.yourMarker.setPosition(position);
+
+                if(recv.type == "FOCUS"){
+                    this.panTo();
+                }
             }
         },
         connect() {
+            //var sock = new SockJS("http://localhost:8080/ws-stomp");
             var sock = new SockJS("https://i8c207.p.ssafy.io/ws-stomp");
             this.stompClient = Stomp.over(sock);
             console.log(`소켓 연결을 시도합니다.`);
@@ -235,7 +278,17 @@ export default {
                     });
                     this.stompClient.subscribe(`/sub/map/room3/${this.roomId}`, (route) => {
                         console.log("구독으로 받은 루트 입니다.", route.body);
-                        this.saveRecvRoute(JSON.parse(route.body))
+                        var routeItem = JSON.parse(route.body);
+                        console.log("루트의 타입은 "+routeItem.type);
+                        if(routeItem.type=="UP"){
+                            this.upRoute(routeItem);
+                        }else if(routeItem.type=="DOWN"){
+                            this.downRoute(routeItem);
+                        }else if(routeItem.type=="DELETE"){
+                            this.deleteRoute(routeItem);            
+                        }else if(routeItem.type=="SAVE"){
+                            this.saveRecvRoute(routeItem);
+                        }
                     });
                 },
                 // 소켓 연결 실패
@@ -268,11 +321,11 @@ export default {
             });
         },
         // 좌표에 대한 마커를 생성하는 함수.
-        setMarker(lat, lng){
+        setMarker(lat, lng, markerImage){
             var markerPosition  = new kakao.maps.LatLng(lat, lng); 
-            // ★★★★★ 나중에 마커 이미지를 다르게 변경하자!!
             var marker = new kakao.maps.Marker({
-                position: markerPosition
+                position: markerPosition,
+                image: markerImage,
             });
             marker.setMap(this.map);
         },
@@ -287,19 +340,27 @@ export default {
                 name: address,
                 address: address,
                 latitude: this.clickLat,
-                longitude: this.clickLng
+                longitude: this.clickLng,
+                type: "SAVE",
             })
             );
         },
         saveRecvRoute(route){
             console.log("saveRecvRoute() call.")
-            this.travel_route.unshift({
+            this.travel_route.push({
                 name: route.address,
                 address: route.address,
                 latitude: route.latitude,
                 longitude: route.longitude
             });
-            this.setMarker(route.latitude, route.longitude);
+
+            var saveMakerOption = {
+                spriteOrigin: new kakao.maps.Point(0, 120),    
+                spriteSize: new kakao.maps.Size(29, 166)
+            }
+            var saveMarkerImage =  new kakao.maps.MarkerImage(this.markerImageSrc, new kakao.maps.Size(29, 40), saveMakerOption);
+
+            this.setMarker(route.latitude, route.longitude, saveMarkerImage);
         },
         // 정말 마지막에 드디어 정말 DB에 저장할 때.
         insertToDB(){
@@ -313,8 +374,33 @@ export default {
                 console.log(msg);
             });
         },
-        showTravelRoute(){
-            console.log(JSON.stringify(this.travel_route));
+        deleteRoute(route){
+            const index = this.travel_route.findIndex(i => i.name == route.address);
+            console.log("호출이염 " + index);
+            this.travel_route.splice(index, 1);
+        },
+        manageRoute(param){
+            console.log("manageRoute");
+            console.log(param.index +" "+param.type);
+            var route = this.travel_route[param.index];
+            route.type = param.type;
+            route.roomId = this.roomId;
+            this.stompClient.send(
+                "/pub/map/route",
+                JSON.stringify(route)
+            );
+        },
+        upRoute(route){
+            const index = this.travel_route.findIndex(i => i.name == route.address);
+            if(index!=0){
+                [this.travel_route[index-1], this.travel_route[index]] = [this.travel_route[index], this.travel_route[index-1]];
+            }
+        },
+        downRoute(route){
+            const index = this.travel_route.findIndex(i => i.name == route.address);
+            if(index!=this.travel_route.length-1){
+                [this.travel_route[index+1], this.travel_route[index]] = [this.travel_route[index], this.travel_route[index+1]];
+            }
         }
     }
 };
