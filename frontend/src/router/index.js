@@ -244,7 +244,7 @@ const routes = [
     component: NotFound
   },
   {
-    path :'/review/',
+    path :'/review/:id/:name',
     name: 'review',
     component: reviewView
   },
