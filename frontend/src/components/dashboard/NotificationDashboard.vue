@@ -87,7 +87,7 @@
                       </div>
                       <div>특이사항 : {{ res.note }}</div>
                       <div class="d-flex justify-content-end">
-                        <button class="me-2 btn btn_theme btn-lg">
+                        <button class="me-2 btn btn_theme btn-lg" @click="download(res.reservationId)">
                           일정확인
                         </button>
 
@@ -118,6 +118,8 @@ import picturemodalVue from "../modal/picturemodal.vue";
 import { ref } from "vue";
 import { reser } from "../../../common/api/commonAPI";
 import { useRouter } from "vue-router";
+
+import api from "@/api/http"
 
 export default {
   name: "NotificationDashboard",
@@ -156,12 +158,33 @@ export default {
 
     getreservation();
 
+    const download = async (reservationId)=>{
+      console.log(reservationId);
+      api({
+            url: `https://i8c207.p.ssafy.io/api/routes/excel/${reservationId}`,
+            method: 'GET',
+            responseType: 'blob',
+        }).then((response) => {
+             var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+             var fileLink = document.createElement('a');
+
+             fileLink.href = fileURL;
+             fileLink.setAttribute('download', '여행일정.xlsx');
+             document.body.appendChild(fileLink);
+
+             fileLink.click();
+        });
+
+    };
+
+
     return {
       reservation,
       getreservation,
       getDate,
       router,
       movereview,
+      download
     };
   },
 };
