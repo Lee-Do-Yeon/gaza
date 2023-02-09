@@ -9,7 +9,7 @@
                             <h2>로그인</h2>
                         </div>
                         <div class="common_author_form">
-                            <form @submit.prevent="Loginplease" id="main_author_form">
+                            <form @submit.prevent="Loginplease" id="main_author_form" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="아이디를 입력해 주세요." v-model="state.form.id" required/>
                                 </div>
