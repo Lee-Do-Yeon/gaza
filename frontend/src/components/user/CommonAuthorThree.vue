@@ -12,14 +12,19 @@
                                 <div class="form-group">
                                     <input type="text" :class="{ 'formerror': idc }" class="form-control"  placeholder="아이디를 입력해주세요." minlength="4" v-model="state.form.id" required/>
                                 </div>
+                                <div class="form-group">
+                                    <label for="formFile" class="form-label">프로필 사진 업로드</label>
+                                    <input class="form-control" type="file" id="formFile" accept="image/*" @change="upload" ref="pictureData">
+                                    
+                                </div>
                                 <div class="form-group col-6">
-                                    <input type="text" class="form-control" placeholder="이메일을 입력해 주세요." v-model="state.form.emailfront" required/>
+                                    <input type="text" class="form-control" placeholder="이메일을 입력해 주세요." v-model="state.form.email" required/>
                                 </div>
                                 <div class="form-group col-1 position-relative">
                                     <h3 class="position-absolute top-50 start-50 translate-middle">@</h3>
                                 </div>
                                 <div class="form-group col-5">
-                                    <input type="text" class="form-control" v-model="state.form.emailend" :class="{ 'formerror': emailc }" @keyup="upemail" required/>
+                                    <input type="text" class="form-control" v-model="state.form.email_domain" :class="{ 'formerror': emailc }" @keyup="upemail" required/>
                                     <p v-if="emailc">이메일이 잘못되었습니다.</p>
                                 </div>
                                 <div class="form-group">
@@ -33,22 +38,22 @@
                                     <input type="text" class="form-control" placeholder="전화번호" disabled readonly/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="state.form.phonefront" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
+                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="phonf" @keyup="makeForm" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="state.form.phonemid" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
+                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="phonm" @keyup="makeForm" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="state.form.phoneend" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
+                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="phone" @keyup="makeForm" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
                                     <input type="text" class="form-control" placeholder="생년월일" disabled readonly/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input required type="text" class="form-control" v-model="state.form.birthdayyear" maxlength='4' minlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
+                                    <input required type="text" class="form-control" v-model="birthy" @keyup="makeForm" maxlength='4' minlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <select required name="month" id="month" class="form-control custom-select" v-model="state.form.birthdaymonth">
+                                    <select required name="month" id="month" class="form-control custom-select" v-model="birthm" @keyup="makeForm">
                                         <option value="01">1월</option>
                                         <option value="02">2월</option>
                                         <option value="03">3월</option>
@@ -64,7 +69,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-3">
-                                    <select required name="day" id="day" class="form-control custom-select" v-model="state.form.birthdaydate">
+                                    <select required name="day" id="day" class="form-control custom-select" v-model="birthd" @keyup="makeForm">
                                         <option value="01" selected="selected">1일</option>
                                         <option value="02">2일</option>
                                         <option value="03">3일</option>
@@ -105,7 +110,7 @@
                                     <input required type="password" class="form-control" placeholder="비밀번호" :class="{ 'formerror': passwordc }" @keyup="uppassword" v-model="state.form.password" minlength="6"/>
                                 </div>
                                 <div class="form-group">
-                                    <input required type="password" class="form-control" :class="{ 'formerror': passwordc }" @keyup="uppassword" placeholder="비밀번호 확인" v-model="state.form.passwordcheck" minlength="6"/>
+                                    <input required type="password" class="form-control" :class="{ 'formerror': passwordc }" @keyup="uppassword" placeholder="비밀번호 확인" v-model="passwordcheck" minlength="6"/>
                                     <p v-if="passwordc">비밀번호가 일치하지 않습니다.</p>
                                 </div>
                                 <div class="common_form_submit">
@@ -113,14 +118,7 @@
                                 </div>
                                 
                                 <div class="have_acount_area other_author_option">
-                                    <!-- <div class="line_or">
-                                        <span>or</span>
-                                    </div>
-                                    <ul>
-                                        <li><a href="#!"><img src="../../assets/img/icon/google.png" alt="icon"></a></li>
-                                        <li><a href="#!"><img src="../../assets/img/icon/facebook.png" alt="icon"></a></li>
-                                        <li><a href="#!"><img src="../../assets/img/icon/twitter.png" alt="icon"></a></li>
-                                    </ul> -->
+
                                     <p>계정이 있으십니까? <router-link to="/login">로그인</router-link></p>
                                 </div>
                             </form>
@@ -150,6 +148,14 @@ export default {
 
     setup(props, { emit }) {
         // const store = useStore()
+        const birthy = ref('')
+        const birthm = ref('')
+        const birthd = ref('')
+        const phonf = ref('')
+        const phonm = ref('')
+        const phone = ref('')
+        const passwordcheck = ref('')
+        const pictureData = ref(null)
         const idc = ref(false)
         const passwordc =ref(false)
         const emailc = ref(false)
@@ -157,17 +163,12 @@ export default {
             form: {
                 id: '',
                 password: '',
-                passwordcheck: '',
                 name:'',
                 gender:'',
-                birthdaymonth:'',
-                birthdayyear:'',
-                birthdaydate:'',
-                phonefront:'',
-                phonemid:'',
-                phoneend:'',
-                emailfront:'',
-                emailend:'',
+                birthday:'',
+                phone_number:'',
+                email:'',
+                email_domain:'',
             },
 
         })
@@ -179,30 +180,25 @@ export default {
             emailc.value =false
             state.form.id=''
             state.form.password=''
-            state.form.passwordcheck=''
             state.form.name=''
             state.form.gender=''
-            state.form.birthdaymonth=''
-            state.form.birthdayyear=''
-            state.form.birthdaydate=''
-            state.form.phonefront=''
-            state.form.phonemid=''
-            state.form.phoneend=''
-            state.form.emailfront=''
-            state.form.emailend=''
+            state.form.birthday=''
+            state.form.phone_number=''
         })
+
+        
 
         const Signin = async function () {
             console.log('submit sign');
-            if (!state.form.emailend.includes('.')) {
-                if (state.form.emailend) {
+            if (!state.form.email_domain.includes('.')) {
+                if (state.form.email_domain) {
                     emailc.value = true
                 }
             } else {
                 emailc.value = false
             }
 
-            if (state.form.password !== state.form.passwordcheck) {
+            if (state.form.password !== passwordcheck.value) {
                 passwordc.value = true
             } else {
                 passwordc.value = false
@@ -210,16 +206,29 @@ export default {
 
             if (!passwordc.value && !emailc.value) {
                 try {
-                    const response = await requestSignin({
-                        "birthday": `${state.form.birthdayyear}-${state.form.birthdaymonth}-${state.form.birthdaydate}T14:35:34.008Z`,
-                        "email": state.form.emailfront,
-                        "email_domain": state.form.emailend,
-                        "gender": state.form.gender,
-                        "id": state.form.id,
-                        "name": state.form.name,
-                        "password": state.form.password,
-                        "phone_number": `${state.form.phonefront}-${state.form.phonemid}-${state.form.phoneend}`,
-                    })
+                    const formData = new FormData()
+                    
+                    // formData.append("piture", pictureData.value.files[0])
+                    // formData.append("piture", null)
+                    // formData.append("user", state.form)
+
+                    let userpi = {
+                        id: state.form.id,
+                        password: state.form.password,
+                        name:state.form.name,
+                        gender:state.form.gender,
+                        birthday:state.form.birthday,
+                        phone_number:state.form.phone_number,
+                        email:state.form.email,
+                        email_domain:state.form.email_domain,
+                    }
+                    console.log(JSON.stringify(userpi))
+                    let payload = {
+                        picture: pictureData.value.files[0],
+                        user: JSON.stringify(userpi)
+                    }
+
+                    const response = await requestSignin(payload)
                     console.log(response);
                     router.push({name: "login"})
                 } catch (error) {
@@ -238,7 +247,22 @@ export default {
             passwordc.value = false
         }
 
-        return { state, Signin, idc, passwordc, emailc, upemail, uppassword }
+        const upload = async() => {
+           // debugger;
+            console.log("selected file", pictureData.value.files)
+            // state.form.picture = pictureData.value.files
+            // console.log(state.form.picture);
+            //Upload to server
+        }
+
+
+
+        const makeForm = function () {
+            state.form.birthday = `${birthy.value}-${birthm.value}-${birthd.value}T14:35:34.008Z`
+            state.form.phone_number = `${phonf.value}-${phonm.value}-${phone.value}`
+        }
+
+        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, upload, makeForm, birthy, birthm, birthd, phonf, phonm, phone, passwordcheck}
      },
     
 };
