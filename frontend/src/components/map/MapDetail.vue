@@ -114,10 +114,6 @@ export default {
         }
     },
     methods: {
-        updateMainVideoStreamManager(stream) {
-            if (this.mainStreamManager === stream) return;
-            this.mainStreamManager = stream;
-        },
         initMap() {
             let base = this;     
             var mapContainer = document.getElementById("map"), // 지도를 표시할 div
