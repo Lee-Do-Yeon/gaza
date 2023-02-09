@@ -1,6 +1,7 @@
 <template>
     <div class="container" id="app" v-cloak>
         <div style="height:100px"></div>
+        <h1>{{ $route.params.roomId }}</h1>
         <div class="button-box" style="width:8%; height: 400px; background-color: lightgray; float:left">
             <button class="btn btn-primary" type="button" @click="sendPoint('FOCUS')" style="margin:5px; width:90px;">FOCUS</button>
             <button class="btn btn-primary" type="button" @click="saveRoute" style="margin:5px; width:90px;">저장</button>
@@ -21,22 +22,49 @@
         <div id="clickLatlng"></div>
         <span>{{ recvPoint.recvLat }}-{{ recvPoint.recvLng }}-{{ recvPoint.type }}</span>
         <div></div>
+
+
+
+
+        <div id="session">
+      <div id="session-header">
+        <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession"
+          value="Leave session" />
+      </div>
+      <div id="video-container" class="col-md-6">
+        <user-video :stream-manager="OpenVidu.publisher" @click="updateMainVideoStreamManager(OpenVidu.publisher)" />
+        <user-video v-for="sub in OpenVidu.subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"
+          @click="updateMainVideoStreamManager(sub)" />
+      </div>
+    </div>
+
+
+
+
     </div>
 </template>
 
 <script>
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
-import axios from "@/api/http";
 import ListItem from "@/components/map/list/ListItem";
+import axios from "axios";
+import UserVideo from "@/openvidu/UserVideo";
+import { OpenVidu } from "openvidu-browser";
+
+axios.defaults.headers.post["Content-Type"] = "application/json";
+
+const APPLICATION_SERVER_URL = "http://localhost:8080";
 
 export default {
     components: {
         ListItem,
+        UserVideo,
     },
     data() {
         return {
             roomId: "",
+            OpenVidu: Object,
             room: {},
             sender: "",
             clickLng: 33.450701,
@@ -53,12 +81,23 @@ export default {
             guideId: "ssafy2",
             markerImageSrc: require('./markers.png'),
             yourMarker: Object,
+            OpenVidu: {
+                OV: undefined,
+                session: undefined,
+                mainStreamManager: undefined,
+                publisher: undefined,
+                subscribers: [],
+            },
+            myUserName: "참가자",
         };
     },
     created() {
+        console.log("=======================test====================");
+        console.log(this.$route.params.roomId);
         this.connect();
         this.roomId = localStorage.getItem("wschat.roomId");
-        this.sender = localStorage.getItem("wschat.sender");
+        this.myUserName = localStorage.getItem("wschat.sender");
+        this.joinSession();
         this.findRoom();
         this.getRecommend();
     },
@@ -75,6 +114,10 @@ export default {
         }
     },
     methods: {
+        updateMainVideoStreamManager(stream) {
+            if (this.mainStreamManager === stream) return;
+            this.mainStreamManager = stream;
+        },
         initMap() {
             let base = this;     
             var mapContainer = document.getElementById("map"), // 지도를 표시할 div
@@ -217,7 +260,7 @@ export default {
             this.map.panTo(moveLatLon);
         },
         findRoom() {
-            axios.get(`/map/room/${this.roomId}`).then((res) => {
+            axios.get(APPLICATION_SERVER_URL+`/map/room/${this.roomId}`).then((res) => {
                 console.log("찾은 방 : " + JSON.stringify(res.data));
                 console.log("찾은 방 이름 : " + res.data.name);
                 this.room = {
@@ -299,7 +342,7 @@ export default {
             );
         }, // connect() 끝
         getRecommend(){
-            axios.get(`/guides/location/${this.guideId}`).then((res) => {
+            axios.get(APPLICATION_SERVER_URL+`/guides/location/${this.guideId}`).then((res) => {
                 this.recommend_location = res.data;
                 console.log("추천 장소 : " + JSON.stringify(res.data));
             });
@@ -364,7 +407,7 @@ export default {
         },
         // 정말 마지막에 드디어 정말 DB에 저장할 때.
         insertToDB(){
-            axios.post(`/routes/${this.reservationId}`, JSON.stringify(this.travel_route))
+            axios.post(APPLICATION_SERVER_URL+`/routes/${this.reservationId}`, JSON.stringify(this.travel_route))
             .then(({ data }) => {
                 let msg = "등록 처리시 문제가 발생했습니다.";
                 if (data === "Success") {
@@ -401,7 +444,151 @@ export default {
             if(index!=this.travel_route.length-1){
                 [this.travel_route[index+1], this.travel_route[index]] = [this.travel_route[index], this.travel_route[index+1]];
             }
-        }
+        },
+
+
+
+
+
+
+
+
+        joinSession() {
+            // --- 1) Get an OpenVidu object ---
+            this.OpenVidu.OV = new OpenVidu();
+
+            // --- 2) Init a session ---
+            this.OpenVidu.session = this.OpenVidu.OV.initSession();
+
+            // --- 3) Specify the actions when events take place in the session ---
+
+            // On every new Stream received...
+            this.OpenVidu.session.on("streamCreated", ({ stream }) => {
+                const subscriber = this.OpenVidu.session.subscribe(stream);
+                this.OpenVidu.subscribers.push(subscriber);
+            });
+
+            // On every Stream destroyed...
+            this.OpenVidu.session.on("streamDestroyed", ({ stream }) => {
+                const index = this.OpenVidu.subscribers.indexOf(stream.streamManager, 0);
+                if (index >= 0) {
+                this.OpenVidu.subscribers.splice(index, 1);
+                }
+            });
+
+            // On every asynchronous exception...
+            this.OpenVidu.session.on("exception", ({ exception }) => {
+                console.warn(exception);
+            });
+
+            // --- 4) Connect to the session with a valid user token ---
+
+            // Get a token from the OpenVidu deployment
+            this.getToken(this.roomId).then((token) => {
+                // First param is the token. Second param can be retrieved by every user on event
+                // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
+                this.OpenVidu.session.connect(token, { clientData: this.myUserName })
+                .then(() => {
+
+                    // --- 5) Get your own camera stream with the desired properties ---
+
+                    // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
+                    // element: we will manage it on our own) and with the desired properties
+                    let publisher = this.OpenVidu.OV.initPublisher(undefined, {
+                    audioSource: undefined, // The source of audio. If undefined default microphone
+                    videoSource: undefined, // The source of video. If undefined default webcam
+                    publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+                    publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                    resolution: "640x480", // The resolution of your video
+                    frameRate: 30, // The frame rate of your video
+                    insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+                    mirror: false, // Whether to mirror your local video or not
+                    });
+
+                    // Set the main video in the page to display our webcam and store our Publisher
+                    this.OpenVidu.mainStreamManager = publisher;
+                    this.OpenVidu.publisher = publisher;
+
+                    // --- 6) Publish your stream ---
+
+                    this.OpenVidu.session.publish(this.OpenVidu.publisher);
+                })
+                .catch((error) => {
+                    console.log("There was an error connecting to the session:", error.code, error.message);
+                });
+            });
+
+            window.addEventListener("beforeunload", this.leaveSession);
+            },
+
+            leaveSession() {
+            // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
+            if (this.OpenVidu.session) this.OpenVidu.session.disconnect();
+
+            // Empty all properties...
+            this.OpenVidu.session = undefined;
+            this.OpenVidu.mainStreamManager = undefined;
+            this.OpenVidu.publisher = undefined;
+            this.OpenVidu.subscribers = [];
+            this.OpenVidu.OV = undefined;
+
+            // Remove beforeunload listener
+            window.removeEventListener("beforeunload", this.leaveSession);
+            },
+
+            updateMainVideoStreamManager(stream) {
+            if (this.OpenVidu.mainStreamManager === stream) return;
+            this.OpenVidu.mainStreamManager = stream;
+            },
+
+            /**
+             * --------------------------------------------
+             * GETTING A TOKEN FROM YOUR APPLICATION SERVER
+             * --------------------------------------------
+             * The methods below request the creation of a Session and a Token to
+             * your application server. This keeps your OpenVidu deployment secure.
+             * 
+             * In this sample code, there is no user control at all. Anybody could
+             * access your application server endpoints! In a real production
+             * environment, your application server must identify the user to allow
+             * access to the endpoints.
+             * 
+             * Visit https://docs.openvidu.io/en/stable/application-server to learn
+             * more about the integration of OpenVidu in your application server.
+             */
+            async getToken(mySessionId) {
+            const sessionId = await this.createSession(mySessionId);
+            return await this.createToken(sessionId);
+            },
+
+            async createSession(sessionId) {
+            const response = await axios.post(APPLICATION_SERVER_URL + '/api/sessions', { customSessionId: sessionId }, {
+                headers: { 'Content-Type': 'application/json', },
+            });
+            return response.data; // The sessionId
+            },
+
+            async createToken(sessionId) {
+            const response = await axios.post(APPLICATION_SERVER_URL + '/api/sessions/' + sessionId + '/connections', {}, {
+                headers: { 'Content-Type': 'application/json', },
+            });
+            return response.data; // The token
+            },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 };
 </script>
