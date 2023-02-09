@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "SELECT * FROM user as u WHERE id=:id AND state_code!='US5'", nativeQuery = true)
     Optional<User> login(@Param("id") String id);
     Optional<User> findById(String id);
-    Optional<User> findByUserId(int userId);
+    Optional<User> findByUserId(Integer userId);
 }
