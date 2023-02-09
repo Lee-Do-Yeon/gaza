@@ -15,7 +15,11 @@
               </li>
 
               <li>
-                <router-link to="/guide_review">리뷰조회</router-link>
+                <router-link :to="{
+                  name: 'guide_review',
+                  params: { guideId:'ssafy2' },
+                }"
+                >리뷰조회</router-link>      
               </li>
               <li>
                 <router-link to="/guide_QNA">질문답변</router-link>
