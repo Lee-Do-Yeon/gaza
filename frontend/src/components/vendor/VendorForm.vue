@@ -158,6 +158,7 @@
 
 <script>
 import axios from "@/api/http";
+import accountStore from "@/store/accountStore";
 
 export default {
   name: "VendorForm",
@@ -181,6 +182,7 @@ export default {
         console.log(this.token, this.file1, this.file2, this.file3);
       axios
         .post("/users/guide", {
+          token : this.token,
           idFile: this.file1,
           certificateResidence: this.file2,
           certificate: this.file3,
