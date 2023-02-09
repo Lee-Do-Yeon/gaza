@@ -21,13 +21,6 @@
         {{ item.name }}
       </li>
     </ul>
-
-
-
-
-
-
-
   </div>
 </template>
 
@@ -82,6 +75,14 @@ export default {
         })
         .catch(() => {
           alert("지도방 개설에 실패하였습니다.");
+        });
+        await axios
+        .post(APPLICATION_SERVER_URL + "/books/consulting/create/"+ this.reservationId, base.mySessionId)
+        .then((data) => {
+          console.log("예약 테이블에 세션 아이디 추가. " + data);
+        })
+        .catch(() => {
+          alert("예약 데이터 업데이트에 실패하였습니다.");
         });
     },
     enterConsulting(roomId) {
