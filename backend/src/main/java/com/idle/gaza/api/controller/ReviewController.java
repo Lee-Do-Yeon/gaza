@@ -5,7 +5,6 @@ import com.idle.gaza.api.response.ReviewResponse;
 import com.idle.gaza.api.service.ReviewServiceImpl;
 import com.idle.gaza.common.model.response.BaseResponseBody;
 import io.swagger.annotations.*;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
