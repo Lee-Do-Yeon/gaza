@@ -25,6 +25,7 @@
     </div>
 
     <div id="session" v-if="session">
+      <div style="height:100px"></div>
       <div id="session-header">
         <h1 id="session-title">{{ mySessionId }}</h1>
         <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession"
@@ -47,10 +48,10 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import UserVideo from "../openvidu/UserVideo";
 
-axios.defaults.headers.common['Authorization'] = "Basic T1BFTlZJRFVBUFA6R0FaQQ==";
+//axios.defaults.headers.common['Authorization'] = "Basic T1BFTlZJRFVBUFA6R0FaQQ==";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io:8443/openvidu/";
+const APPLICATION_SERVER_URL = "http://localhost:8080/";
 
 export default {
   name: "OpenViduView",
@@ -107,10 +108,9 @@ export default {
 
       // Get a token from the OpenVidu deployment
       this.getToken(this.mySessionId).then((token) => {
-        console.log('token',token.token);
         // First param is the token. Second param can be retrieved by every user on event
         // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-        this.session.connect(token.token, { clientData: this.myUserName })
+        this.session.connect(token, { clientData: this.myUserName })
           .then(() => {
 
             // --- 5) Get your own camera stream with the desired properties ---
@@ -179,29 +179,22 @@ export default {
      * Visit https://docs.openvidu.io/en/stable/application-server to learn
      * more about the integration of OpenVidu in your application server.
      */
-    async getToken(mySessionId) {
+     async getToken(mySessionId) {
       const sessionId = await this.createSession(mySessionId);
-      console.log('sessionID');
-      console.log(sessionId);
-      return await this.createToken(mySessionId);
+      return await this.createToken(sessionId);
     },
 
     async createSession(sessionId) {
       const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-        headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6R0FaQQ==', 'Content-Type': 'application/json', },
+        headers: { 'Content-Type': 'application/json', },
       });
-      console.log('=====================================');
-      console.log(response.data);
       return response.data; // The sessionId
     },
 
     async createToken(sessionId) {
-      const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connection', {}, {
-        headers: {  Authorization: 'Basic T1BFTlZJRFVBUFA6R0FaQQ==', 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
+        headers: { 'Content-Type': 'application/json', },
       });
-      console.log('-------------------------');
-      console.log(sessionId);
-      console.log(response.data.token);
       return response.data; // The token
     },
   },
