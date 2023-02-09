@@ -113,7 +113,7 @@ public class UserController {
      *
      * @param accessToken String
      * @return ResponseEntity
-     * 
+     *
      * header에서 토큰 가져와서 유저 정보 가져와서 보여주기
      */
     @GetMapping("")

@@ -54,7 +54,7 @@ public class TravelRouteController {
     @GetMapping("/excel/{reservationId}")
     public ResponseEntity<?> getRouteByOrder(@PathVariable String reservationId, HttpServletResponse response){
         int parseIntId = Integer.parseInt(reservationId);
-        log.info("id", parseIntId);
+        log.info("id = "+ parseIntId);
         int result = travelRouteService.excelDownload(parseIntId, response);
         if(result == 0) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(HttpStatus.OK);
