@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-
 @Api(value = "유저 API", tags = {"User"})
 @Slf4j
 @RestController
@@ -55,8 +54,8 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
 
-    public ResponseEntity<ApiResponse<Object>> join(@RequestPart(value="user") User user, @RequestPart(value = "picture") MultipartFile pictureFile) {
-        if (!pictureFile.isEmpty()) {
+    public ResponseEntity<ApiResponse<Object>> join(@RequestPart(value = "user") User user, @RequestPart(value = "file", required = false) MultipartFile pictureFile) {
+        if (pictureFile != null) {
             //make upload folder
             String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
             File uploadFilePath = new File(rootPath, uploadPath);
