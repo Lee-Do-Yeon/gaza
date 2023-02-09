@@ -2,6 +2,7 @@ package com.idle.gaza.api.controller;
 
 import com.idle.gaza.api.dto.TokenDto;
 import com.idle.gaza.api.request.UserUpdateRequest;
+import com.idle.gaza.api.response.GuideDocumentResponse;
 import com.idle.gaza.api.service.UserService;
 import com.idle.gaza.common.codes.SuccessCode;
 import com.idle.gaza.common.response.ApiResponse;
@@ -55,7 +56,7 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 500, message = "서버 오류"),
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<ApiResponse<Object>> join(@RequestPart User user, @RequestPart(name = "picture") MultipartFile pictureFile) {
+    public ResponseEntity<ApiResponse<Object>> join(@RequestBody User user, @RequestPart(name = "picture") MultipartFile pictureFile) {
         if (!pictureFile.isEmpty()) {
             //make upload folder
             String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
@@ -403,14 +404,12 @@ public class UserController {
     /**
      * [API] 가이드 신청 리스트
      *
-     * @param accessToken String
      * @return ResponseEntity
-     * <p>
      *
      */
     @GetMapping("/guide")
     public ResponseEntity<ApiResponse<Object>> getGuideRegisterList() {
-        List<GuideDocument> list = userService.searchGuideRegisterList();
+        List<GuideDocumentResponse> list = userService.searchGuideRegisterList();
 
         if (list == null) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -427,56 +426,6 @@ public class UserController {
                     .build();
             return new ResponseEntity<>(ar, HttpStatus.OK);
         }
-    }
-
-    /**
-     * [API] 가이드 신청 승인
-     *
-     * @param accessToken String
-     * @return ResponseEntity
-     * <p>
-     *
-     */
-    @PutMapping("/guide/success")
-    public ResponseEntity<ApiResponse<Object>> acceptGuide(@RequestHeader("Authorization") String accessToken) {
-
-        String token = tokenUtil.getTokenFromHeader(accessToken);
-
-        String id = tokenUtil.getUserIdFromToken(token);
-
-        userService.changeState(id, "US1");
-
-        ApiResponse<Object> ar = ApiResponse.builder()
-                .result(null)
-                .resultCode(SuccessCode.UPDATE.getStatus())
-                .resultMsg(SuccessCode.UPDATE.getMessage())
-                .build();
-        return new ResponseEntity<>(ar, HttpStatus.OK);
-    }
-
-    /**
-     * [API] 가이드 신청 거절
-     *
-     * @param accessToken String
-     * @return ResponseEntity
-     * <p>
-     *
-     */
-    @PutMapping("/guide/failure")
-    public ResponseEntity<ApiResponse<Object>> rejectGuide(@RequestHeader("Authorization") String accessToken) {
-
-        String token = tokenUtil.getTokenFromHeader(accessToken);
-
-        String id = tokenUtil.getUserIdFromToken(token);
-
-        userService.changeState(id, "US3");
-
-        ApiResponse<Object> ar = ApiResponse.builder()
-                .result(null)
-                .resultCode(SuccessCode.UPDATE.getStatus())
-                .resultMsg(SuccessCode.UPDATE.getMessage())
-                .build();
-        return new ResponseEntity<>(ar, HttpStatus.OK);
     }
 
     /**
