@@ -19,4 +19,8 @@ public interface ReservationService {
     List<ReservationResponse> getReservationListByGuide(String guideId);
     List<ReservationResponse> getReservationListByUser(String userId);
     List<Integer> getImpossibleTime(String guideId, Date selectedDate);
+
+    void createConsulting(int reservationId, String sessionId);
+
+    void endConsulting(int reservationId);
 }
