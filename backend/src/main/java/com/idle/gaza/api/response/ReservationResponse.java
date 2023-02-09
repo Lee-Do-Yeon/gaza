@@ -17,6 +17,7 @@ public class ReservationResponse {
     String picture;
     int reservationId;
     String guideName;
+    String guideId;
     int numberOfPeople;
     int withChildren;
     int withElderly;
@@ -32,10 +33,11 @@ public class ReservationResponse {
 
 
     @Builder
-    public ReservationResponse(String picture, int reservationId, String guideName, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, LocalDateTime consultingDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, String stateCode) {
+    public ReservationResponse(String picture, int reservationId, String guideName, String guideId, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, LocalDateTime consultingDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, String stateCode) {
         this.picture = picture;
         this.reservationId = reservationId;
         this.guideName = guideName;
+        this.guideId = guideId;
         this.numberOfPeople = numberOfPeople;
         this.withChildren = withChildren;
         this.withElderly = withElderly;
