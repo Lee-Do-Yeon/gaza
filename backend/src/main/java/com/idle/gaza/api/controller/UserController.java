@@ -26,9 +26,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Api(value = "유저 API", tags = {"User"})
@@ -57,7 +60,7 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
 
-    public ResponseEntity<ApiResponse<Object>> join(@RequestPart(value = "user") User user, @RequestPart(value = "picture") MultipartFile pictureFile) {
+    public ResponseEntity<ApiResponse<Object>> join(@RequestPart User user, @RequestPart(value = "picture") MultipartFile pictureFile) {
         if (!pictureFile.isEmpty()) {
             //make upload folder
             String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
@@ -434,8 +437,7 @@ public class UserController {
      *
      * @param tokenDto TokenDto
      * @return ResponseEntity
-     * 
-     * refresh는 데이터로
+     *
      */
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Object>> logout(@RequestBody TokenDto tokenDto) {
