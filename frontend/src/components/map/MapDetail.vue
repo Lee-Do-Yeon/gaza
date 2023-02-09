@@ -19,10 +19,6 @@
                     {{ route.order }} | {{ route.name }} | {{ route.address }} 
                 </li> -->
          </div><div style="clear:both:"></div>
-        <div id="clickLatlng"></div>
-        <span>{{ recvPoint.recvLat }}-{{ recvPoint.recvLng }}-{{ recvPoint.type }}</span>
-        <div></div>
-
 
 
 
@@ -94,12 +90,12 @@ export default {
     created() {
         console.log("=======================test====================");
         console.log(this.$route.params.roomId);
+        this.getRecommend();
         this.connect();
         this.roomId = localStorage.getItem("wschat.roomId");
         this.myUserName = localStorage.getItem("wschat.sender");
         this.joinSession();
         this.findRoom();
-        this.getRecommend();
     },
     mounted() {
         if (window.kakao && window.kakao.maps) {
@@ -175,14 +171,9 @@ export default {
                 // 마커 위치를 클릭한 위치로 옮깁니다
                 myMarker.setPosition(latlng);
 
-                var message = "클릭한 위치의 위도는 " + latlng.getLat() + " 이고, ";
-                message += "경도는 " + latlng.getLng() + " 입니다";
-
                 base.clickLat = latlng.getLat();
                 base.clickLng = latlng.getLng();
 
-                var resultDiv = document.getElementById("clickLatlng");
-                resultDiv.innerHTML = message;
 
                 base.sendPoint("CLICK");
             });
