@@ -1,6 +1,7 @@
 package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.UserUpdateRequest;
+import com.idle.gaza.api.response.GuideDocumentResponse;
 import com.idle.gaza.db.entity.GuideDocument;
 import com.idle.gaza.db.entity.User;
 
@@ -20,7 +21,7 @@ public interface UserService {
 
     int registerGuide(String id, GuideDocument guideDocument);
 
-    List<GuideDocument> searchGuideRegisterList();
+    List<GuideDocumentResponse> searchGuideRegisterList();
 
     int updateUser(String id, UserUpdateRequest userUpdateRequest);
 

@@ -1,6 +1,7 @@
 package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.UserUpdateRequest;
+import com.idle.gaza.api.response.GuideDocumentResponse;
 import com.idle.gaza.db.entity.GuideDocument;
 import com.idle.gaza.db.entity.User;
 import com.idle.gaza.db.repository.GuideDocumentRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,9 +76,27 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<GuideDocument> searchGuideRegisterList() {
+    public List<GuideDocumentResponse> searchGuideRegisterList() {
+        List<GuideDocumentResponse> result = new ArrayList<>();
+
         Optional<List<GuideDocument>> list = guideDocumentRepository.searchGuideRegisterList();
-        return list.orElse(null);
+
+        if(list.isPresent()){
+            List<GuideDocument> documentList = list.get();
+
+            for(int i = 0; i < documentList.size(); i++) {
+                Optional<User> user = userRepository.findByUserId(documentList.get(i).getUserId());
+
+                String id = null;
+                if (user.isPresent()) {
+                    id = user.get().getId();
+                }
+
+                result.add(new GuideDocumentResponse(id, documentList.get(i).getIdFile(), documentList.get(i).getCertificateResidence(), documentList.get(i).getCertificate()));
+            }
+        }
+
+        return result;
     }
 
     @Override
