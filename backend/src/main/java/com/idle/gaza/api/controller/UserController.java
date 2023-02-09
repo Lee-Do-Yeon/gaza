@@ -432,6 +432,17 @@ public class UserController {
         }
     }
 
+    @PostMapping("test")
+    public void test(HttpServletRequest request){
+        Enumeration params = request.getParameterNames();
+        System.out.println("----------------------------");
+        while (params.hasMoreElements()){
+            String name = (String)params.nextElement();
+            System.out.println(name + " : " +request.getParameter(name));
+        }
+        System.out.println("----------------------------");
+    }
+
     /**
      * [API] 로그아웃
      *
