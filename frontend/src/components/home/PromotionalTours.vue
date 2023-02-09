@@ -18,11 +18,18 @@
               <swiper-slide v-for="guide in state.form.swiperItems" :key="guide.name">
                 <div class="theme_common_box_two img_hover">
                   <div class="theme_two_box_img">
-                    <router-link to="/hotel-details"><img src="../../assets/img/tab-img/hotel1.png" alt="img"></router-link>
+                    <router-link :to="{
+                      name: 'hotel-details',
+                      params: { guideId: guide.guideId },
+                  }"><img src="../../assets/img/tab-img/hotel1.png" alt="img"></router-link>
                     <p><i class="fas fa-map-marker-alt"></i>{{ guide.country }}, {{ guide.city }}</p>
                   </div>
                   <div class="theme_two_box_content">
-                    <h4><router-link to="/hotel-details">{{ guide.name }}</router-link></h4>
+                    <h4><router-link :to="{
+                        name: 'hotel-details',
+                        params: { guideId: guide.guideId  },
+                      }"
+                      >{{ guide.name }}</router-link></h4>
                     <p><span class="review_rating">4.8/5 Excellent</span> <span class="review_count">(1214
                         reviewes)</span></p>
                     <h3>$99.00 <span>Price starts from</span></h3>
