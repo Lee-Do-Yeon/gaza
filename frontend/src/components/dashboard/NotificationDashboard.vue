@@ -161,7 +161,7 @@ export default {
     const download = async (reservationId)=>{
       console.log(reservationId);
       api({
-            url: `https://i8c207.p.ssafy.io/api/routes/excel/${reservationId}`,
+            url: `/routes/excel/${reservationId}`,
             method: 'GET',
             responseType: 'blob',
         }).then((response) => {
