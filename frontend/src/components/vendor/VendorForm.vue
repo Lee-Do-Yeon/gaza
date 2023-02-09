@@ -4,7 +4,11 @@
       <div class="row">
         <div class="vendor_form">
           <div class="tour_booking_form_box">
-            <form id="tour_bookking_form_item" enctype="multipart/form-data">
+            <form
+              id="tour_bookking_form_item"
+              v-on:submit.prevent="register"
+              enctype="multipart/form-data"
+            >
               <div class="row">
                 <div class="col-lg-2">신분증</div>
                 <div class="col-lg-6">
@@ -13,13 +17,11 @@
                       type="file"
                       class="custom-file-input"
                       placeholder="신분증"
-                      id="inputGroupFile04"
+                      id="file1"
                       ref="img1"
                       @change="selectFile1"
                     />
-                    <label class="custom-file-label" for="신분증"
-                      >Choose file</label
-                    >
+                    <label class="custom-file-label" for="신분증">Choose file</label>
                   </div>
                 </div>
               </div>
@@ -31,13 +33,11 @@
                       type="file"
                       class="custom-file-input"
                       placeholder="체류증명서류"
-                      id="inputGroupFile04"
+                      id="file2"
                       ref="img2"
                       @change="selectFile2"
                     />
-                    <label class="custom-file-label" for="체류증명서류"
-                      >Choose file</label
-                    >
+                    <label class="custom-file-label" for="체류증명서류">Choose file</label>
                   </div>
                 </div>
               </div>
@@ -49,13 +49,11 @@
                       type="file"
                       class="custom-file-input"
                       placeholder="가이드 자격증"
-                      id="inputGroupFile04"
+                      id="file3"
                       ref="img3"
                       @change="selectFile3"
                     />
-                    <label class="custom-file-label" for="가이드 자격증"
-                      >Choose file</label
-                    >
+                    <label class="custom-file-label" for="가이드 자격증">Choose file</label>
                   </div>
                 </div>
               </div>
@@ -92,9 +90,7 @@
                 >
               </div>
               <div class="row">
-                <div class="col-lg-4">
-                  개인정보 및 고유식별 정보 수집 및 이용동의
-                </div>
+                <div class="col-lg-4">개인정보 및 고유식별 정보 수집 및 이용동의</div>
                 <textarea class="col-lg-16" readonly>
                                         ❏ 개인정보의 수집·이용 목적
 
@@ -129,27 +125,18 @@
                   />
                   <label class="form-check-label" for="flexCheckDefaultf1">
                     I have read and accept the
-                    <router-link to="/terms-service"
-                      >Terms and conditions</router-link
-                    >
+                    <router-link to="/terms-service">Terms and conditions</router-link>
                     and
                     <router-link to="/privacy-policy">Privacy policy</router-link>
                   </label>
                 </div>
-                <button
-                  class="btn btn_theme btn_md"
-                  type="submit"
-                  @click="register"
-                >
-                  Sign up
-                </button>
+                <button class="btn btn_theme btn_md">Sign up</button>
                 <!-- <router-link to="/booking-confirmation" class="btn btn_theme btn_md"
                   >Sign up</router-link
                 > -->
               </div>
             </form>
           </div>
-
         </div>
       </div>
     </div>
@@ -158,7 +145,9 @@
 
 <script>
 import axios from "@/api/http";
-import accountStore from "@/store/accountStore";
+import { mapState } from "vuex";
+
+const accountStore = "accountStore";
 
 export default {
   name: "VendorForm",
@@ -167,32 +156,42 @@ export default {
       file1: null,
       file2: null,
       file3: null,
-      token: null,
-      check:false
+      check: false,
     };
   },
-  created() {
-    this.token = this.$store.getters.getToken;
+  created() {},
+  computed: {
+    ...mapState(accountStore, ["accessToken"]),
   },
 
   methods: {
     register() {
-      if(this.check == false) alert("약관에 동의하세요");
-      else{
-        console.log(this.token, this.file1, this.file2, this.file3);
-      axios
-        .post("/users/guide", {
-          token : this.token,
-          idFile: this.file1,
-          certificateResidence: this.file2,
-          certificate: this.file3,
-        })
-        .then((res) => console.log(res));
+      if (this.check == false) alert("약관에 동의하세요");
+      else {
+        console.log(this.accessToken, this.file1, this.file2, this.file3);
+
+        axios
+          .post(
+            "/users/guide",
+            {
+              params: {
+                idFile: this.file1,
+                certificateResidence: this.file2,
+                certificate: this.file3,
+              },
+            },
+            {
+              headers: {
+                Authorization: "Bearer " + this.accessToken,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          .then((res) => console.log(res));
       }
     },
     selectFile1() {
       this.file1 = this.$refs["img1"].files[0];
-      console.log(this.file);
     },
     selectFile2() {
       this.file2 = this.$refs["img2"].files[0];
