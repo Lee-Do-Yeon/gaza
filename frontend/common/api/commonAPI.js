@@ -1,12 +1,19 @@
+import axios from "axios";
 import { apiInstance } from "./index.js";
 
 const api = apiInstance();
 
+let axiosConfig = {
+    headers: {
+        "Content-Type": "multipart/form-data",
+    }
+}
 
 //유저구역
 //유저 회원가입
-const requestSignin = payload => api.post("/api/users", payload);
+const requestSignin = payload => api.post("/api/users",payload,{ headers: {"Content-Type": "multipart/form-data"}})
 
+// https://i8c207.p.ssafy.io/api/users
 //유저 로그인
 const requestLogin = (payload) => api.post("/api/users/login", payload);
 

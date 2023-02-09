@@ -105,6 +105,8 @@ export default {
     },
     async joinSession() {
       await this.createRoom();
+      localStorage.setItem("wschat.sender", this.myUserName);
+      localStorage.setItem("wschat.roomId", this.mySessionId);
       this.$router.push({ name: "mapdetail", params: { roomId: this.mySessionId } });
     },
   },

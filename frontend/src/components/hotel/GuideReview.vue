@@ -28,6 +28,7 @@
         <div class="col-lg-8">
           <div class="dashboard_common_table">
             <div class="dashboard_main_top">
+              <!--
               <div class="d-flex align-items-center justify-content-between">
                 <div class="col-lg-4 col-md-6 col-sm-12 col-12">
                   <div class="form_search_date">
@@ -53,7 +54,7 @@
                 <div>
                   <button class="btn btn_theme btn-lg">Filter</button>
                 </div>
-              </div>
+              </div>-->
             </div>
           </div>
           <hr />
@@ -72,10 +73,10 @@
                     <th>Action</th> -->
                   </tr>
                 </thead>
-                <tbody v-for="rev in review" :key="rev.id">
+                <tbody v-for="rev in review" :key="rev.reviewId">
                   <tr>
-                    <td>{{ rev.reservation_id }}</td>
-                    <td>{{ rev.created_date }}</td>
+                    <td>{{ rev.reviewId }}</td>
+                    <td>{{ rev.createdDate }}</td>
                     <td >
                       <i v-for="score in rev.score" :key="score"
                         class="fas fa-sharp fa-solid fa-star"
@@ -90,7 +91,7 @@
               </table>
             </div>
           </div>
-          <div class="pagination_area">
+          <!-- <div class="pagination_area">
             <ul class="pagination">
               <li v-if="currentpage !== 1" class="page-item">
                 <a
@@ -117,7 +118,7 @@
                 <span class="sr-only">Next</span>
               </a>
             </ul>
-          </div>
+          </div> -->
         </div>
         
       </div>
@@ -125,7 +126,28 @@
   </section>
 </template>
 <script>
+import axios from "@/api/http";
+
 export default {
   name: "GuideReview",
+
+  data(){
+    return{
+      review:[],
+      name:String,// 가이드 이름
+    };
+  },
+  created(){
+    this.name = this.$route.params.guideId;
+    this.reviewList(this.name);
+  },
+  methods: {
+    reviewList(guideId){
+      axios.get(`/reviews/guide/${guideId}`).then((res)=>{
+        this.review = res.data;
+      })
+    }
+  }
+
 };
 </script>
