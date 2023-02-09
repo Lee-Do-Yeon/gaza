@@ -48,10 +48,12 @@ const uploadReview =(payload) => api.post('/api/reviews',payload)
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
+// 예약
+const reserve = payload => api.post('/api/books', payload)
 
 // 가이드 검색
 const guideSearch = payload => api.get('/api/guides/search/', {params: {searchName: payload }})
 
 const guideDetail = guideId => api.get(`/guides/${guideId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve};
