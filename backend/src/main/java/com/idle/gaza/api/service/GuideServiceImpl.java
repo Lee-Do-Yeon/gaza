@@ -79,6 +79,7 @@ public class GuideServiceImpl implements GuideService {
                     .name(guide.getUser().getName())
                     .price(guide.getPrice())
                     .userId(guide.getUser().getUserId())
+                    .gender(guide.getUser().getGender())
                     .language(langList)
                     .thema(themaList)
                     .build();
@@ -121,6 +122,8 @@ public class GuideServiceImpl implements GuideService {
                     .userId(guide.getUser().getUserId())
                     .thema(themaList)
                     .language(codeList)
+                    .gender(guide.getUser().getGender())
+
                     .build();
             searchList.add(res);
         }
@@ -142,6 +145,7 @@ public class GuideServiceImpl implements GuideService {
                     .city(guide.getCity())
                     .closeTimeEnd(guide.getCloseTimeEnd())
                     .closeTimeStart(guide.getCloseTimeStart())
+                    .gender(guide.getUser().getGender())
                     .country(guide.getCountry())
                     .price(guide.getPrice())
                     .picture(guide.getPicture())
@@ -236,6 +240,7 @@ public class GuideServiceImpl implements GuideService {
                 .country(existGuide.getCountry())
                 .city(existGuide.getCity())
                 .name(existGuide.getUser().getName())
+                .gender(existGuide.getUser().getGender())
                 .language(langList)
                 .thema(themaList)
                 .onelineIntroduction(existGuide.getOnlineIntroduction())
