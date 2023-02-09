@@ -11,7 +11,7 @@ const requestSignin = payload => api.post("/api/users", payload);
 const requestLogin = (payload) => api.post("/api/users/login", payload);
 
 //유저 로그인 확인
-const requestConfirm = accessToken => api.get("/users/isLogin", {headers: {Authorization: accessToken}})
+const requestConfirm = accessToken => api.get("/api/users/isLogin", {headers: {Authorization: accessToken}})
 
 // 가이드 신청 중인 유저 목록
 const requestGuideRegisterList = (payload) => api.get("/api/users/guide", payload);
