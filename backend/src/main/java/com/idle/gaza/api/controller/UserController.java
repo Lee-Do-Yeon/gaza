@@ -309,6 +309,8 @@ public class UserController {
                                                          @RequestParam("idFile") MultipartFile idFileFile,
                                                          @RequestParam("certificateResidence") MultipartFile certificateResidenceFile,
                                                          @RequestParam("certificate") MultipartFile certificateFile) {
+        log.info("token " + accessToken);
+        log.info("file1 =" + idFileFile.getName());
 
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
