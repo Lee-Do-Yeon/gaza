@@ -2,25 +2,26 @@ package com.idle.gaza.api.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.idle.gaza.db.entity.MapRoom;
 import com.idle.gaza.db.repository.MapRoomRepository;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/map")
 public class MapRoomController {
 
 	private final MapRoomRepository mapRoomRepository;
+
+	@Autowired
+	private HttpSession httpSession;
 
 	// 모든 채팅방 목록 반환
 	@GetMapping("/rooms")
@@ -58,5 +59,18 @@ public class MapRoomController {
 		super();
 		this.mapRoomRepository = mapRoomRepository;
 	}
-	 
+
+
+	@PostMapping("/session")
+	public void setSession(@RequestBody String sessionId){
+		System.out.println(sessionId);
+		httpSession.setAttribute("test", sessionId);
+	}
+
+	@GetMapping("/session")
+	public ResponseEntity<?> getSession(){
+		return new ResponseEntity<>(httpSession.getAttribute("test"), HttpStatus.OK);
+	}
+
+
 }
