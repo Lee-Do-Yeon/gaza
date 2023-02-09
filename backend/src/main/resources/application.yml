@@ -51,3 +51,5 @@ cloud:
       auto: false
     directory: /gaza
 
+OPENVIDU_URL: https://i8c207.p.ssafy.io:8443/
+OPENVIDU_SECRET: GAZA

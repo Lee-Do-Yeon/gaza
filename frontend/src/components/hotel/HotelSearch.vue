@@ -47,13 +47,12 @@
                 >
                   <div class="news_item_boxed">
                     <div class="news_item_img">
-                      <router-link to="/news-details"
-                        ><img src="../../assets/img/news/news-1.png" alt="img"
-                      /></router-link>
+                      <img src="../../assets/img/news/news-1.png" alt="img"
+                      />
                     </div>
                     <div class="news_item_content">
                       <h3>
-                        <router-link to="/news-details">{{ loc.name }} </router-link>
+                        {{ loc.name }} 
                       </h3>
                       <p>{{ loc.address }}</p>
                     </div>

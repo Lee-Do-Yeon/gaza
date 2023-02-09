@@ -3,16 +3,20 @@
     <div class="row">
       <div style="height:100px"></div>
       <div class="col-md-12">
-          <h2>💬 채팅방</h2>
+          <h2>💬 방</h2>
       </div>
     </div>
     <div class="input-group">
       <div class="input-group-prepend">
         <label class="input-group-text">방제목</label>
       </div>
-      <input type="text" class="form-control" v-model="room_name" v-on:keyup.enter="createRoom" />
+      <input type="text" class="form-control" v-model="room_name"/>
+      <div class="input-group-prepend">
+        <label class="input-group-text">유저네임</label>
+      </div>
+      <input type="text" class="form-control" v-model="myUserName"/>
       <div class="input-group-append">
-        <button class="btn btn-primary" type="button" @click="createRoom">채팅방 개설</button>
+        <button class="btn btn-primary" type="button" @click="joinSession">개설</button>
       </div>
     </div>
     <ul class="list-group">
@@ -25,16 +29,38 @@
         {{ item.name }}
       </li>
     </ul>
+
+
+
+
+
+
+
   </div>
 </template>
 
 <script>
-import axios from "@/api/http";
+import axios from "axios";
+
+axios.defaults.headers.post["Content-Type"] = "application/json";
+
+const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
 
 export default {
   data() {
     return {
-      room_name: "",
+      room_name: "roomName testest",
+      // OpenVidu 객체들
+      OpenVidu: {
+        OV: undefined,
+        session: undefined,
+        mainStreamManager: undefined,
+        publisher: undefined,
+        subscribers: [],
+      },
+      // Join form
+      mySessionId: "SessionA",
+      myUserName: "Participant" + Math.floor(Math.random() * 100),
       maprooms: [],
     };
   },
@@ -43,29 +69,29 @@ export default {
   },
   methods: {
     findAllRoom() {
-      axios.get("/map/rooms").then((response) => {
+      axios.get(APPLICATION_SERVER_URL + "/map/rooms").then((response) => {
         this.maprooms = response.data;
         console.log("findAllRoom");
         console.log(this.maprooms);
       });
     },
-    createRoom() {
+    async createRoom() {
+      var base = this;
       console.log("createRoom");
       if ("" === this.room_name) {
-        alert("방 제목을 입력해 주십시요.");
+        alert("방 제목을 입력해 주세요.");
         return;
       } else {
-        var params = new URLSearchParams();
-        params.append("name", this.room_name);
-        axios
-          .post("/map/room", this.room_name)
+        // var params = new URLSearchParams();
+        // params.append("name", this.room_name);
+        await axios
+          .post(APPLICATION_SERVER_URL + "/map/room", this.room_name)
           .then((data) => {
-            console.log("[" + data.data.name + "] 개설");
-            this.room_name = "";
-            this.findAllRoom();
+            console.log("[" + data.data.roomId + "] 개설");
+            base.mySessionId = data.data.roomId;
           })
           .catch(() => {
-            alert("채팅방 개설에 실패하였습니다.");
+            alert("방 개설에 실패하였습니다.");
           });
       }
     },
@@ -76,6 +102,12 @@ export default {
         localStorage.setItem("wschat.roomId", roomId);
         this.$router.push({ name: "mapdetail", params: { roomId: roomId } });
       }
+    },
+    async joinSession() {
+      await this.createRoom();
+      localStorage.setItem("wschat.sender", this.myUserName);
+      localStorage.setItem("wschat.roomId", this.mySessionId);
+      this.$router.push({ name: "mapdetail", params: { roomId: this.mySessionId } });
     },
   },
 };

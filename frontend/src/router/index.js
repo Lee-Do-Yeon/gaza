@@ -84,7 +84,13 @@ const routes = [
   },
 
 
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Admin
+  },
 
+  
   {
     path: '/tour-search/:searchitem',
     name: 'tour-search',
