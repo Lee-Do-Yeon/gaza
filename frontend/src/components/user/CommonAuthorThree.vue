@@ -210,7 +210,7 @@ export default {
 
             if (!passwordc.value && !emailc.value) {
                 try {
-                    const response = await requestSignin({
+                    const response = await requestSignin({ "user" : {
                         "birthday": `${state.form.birthdayyear}-${state.form.birthdaymonth}-${state.form.birthdaydate}T14:35:34.008Z`,
                         "email": state.form.emailfront,
                         "email_domain": state.form.emailend,
@@ -219,7 +219,7 @@ export default {
                         "name": state.form.name,
                         "password": state.form.password,
                         "phone_number": `${state.form.phonefront}-${state.form.phonemid}-${state.form.phoneend}`,
-                    })
+                    }})
                     console.log(response);
                     router.push({name: "login"})
                 } catch (error) {
