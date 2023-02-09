@@ -60,7 +60,7 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
 
-    public ResponseEntity<ApiResponse<Object>> join(@RequestPart User user, @RequestPart(value = "picture") MultipartFile pictureFile) {
+    public ResponseEntity<ApiResponse<Object>> join(@RequestPart(value="user") User user, @RequestPart(value = "picture") MultipartFile pictureFile) {
         if (!pictureFile.isEmpty()) {
             //make upload folder
             String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
