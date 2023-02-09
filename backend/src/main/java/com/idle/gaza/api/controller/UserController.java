@@ -2,6 +2,7 @@ package com.idle.gaza.api.controller;
 
 import com.idle.gaza.api.dto.TokenDto;
 import com.idle.gaza.api.request.UserUpdateRequest;
+import com.idle.gaza.api.response.GuideDocumentResponse;
 import com.idle.gaza.api.service.UserService;
 import com.idle.gaza.common.codes.SuccessCode;
 import com.idle.gaza.common.response.ApiResponse;
@@ -11,11 +12,8 @@ import com.idle.gaza.db.entity.GuideDocument;
 import com.idle.gaza.db.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -25,10 +23,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 
 @Api(value = "유저 API", tags = {"User"})
 @Slf4j
@@ -55,7 +54,8 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 500, message = "서버 오류"),
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<ApiResponse<Object>> join(@RequestPart User user, @RequestPart(name = "picture") MultipartFile pictureFile) {
+
+    public ResponseEntity<ApiResponse<Object>> join(@RequestPart(value="user") User user, @RequestPart(value = "picture") MultipartFile pictureFile) {
         if (!pictureFile.isEmpty()) {
             //make upload folder
             String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
@@ -403,14 +403,12 @@ public class UserController {
     /**
      * [API] 가이드 신청 리스트
      *
-     * @param accessToken String
      * @return ResponseEntity
-     * <p>
      *
      */
     @GetMapping("/guide")
     public ResponseEntity<ApiResponse<Object>> getGuideRegisterList() {
-        List<GuideDocument> list = userService.searchGuideRegisterList();
+        List<GuideDocumentResponse> list = userService.searchGuideRegisterList();
 
         if (list == null) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -429,54 +427,15 @@ public class UserController {
         }
     }
 
-    /**
-     * [API] 가이드 신청 승인
-     *
-     * @param accessToken String
-     * @return ResponseEntity
-     * <p>
-     *
-     */
-    @PutMapping("/guide/success")
-    public ResponseEntity<ApiResponse<Object>> acceptGuide(@RequestHeader("Authorization") String accessToken) {
-
-        String token = tokenUtil.getTokenFromHeader(accessToken);
-
-        String id = tokenUtil.getUserIdFromToken(token);
-
-        userService.changeState(id, "US1");
-
-        ApiResponse<Object> ar = ApiResponse.builder()
-                .result(null)
-                .resultCode(SuccessCode.UPDATE.getStatus())
-                .resultMsg(SuccessCode.UPDATE.getMessage())
-                .build();
-        return new ResponseEntity<>(ar, HttpStatus.OK);
-    }
-
-    /**
-     * [API] 가이드 신청 거절
-     *
-     * @param accessToken String
-     * @return ResponseEntity
-     * <p>
-     *
-     */
-    @PutMapping("/guide/failure")
-    public ResponseEntity<ApiResponse<Object>> rejectGuide(@RequestHeader("Authorization") String accessToken) {
-
-        String token = tokenUtil.getTokenFromHeader(accessToken);
-
-        String id = tokenUtil.getUserIdFromToken(token);
-
-        userService.changeState(id, "US3");
-
-        ApiResponse<Object> ar = ApiResponse.builder()
-                .result(null)
-                .resultCode(SuccessCode.UPDATE.getStatus())
-                .resultMsg(SuccessCode.UPDATE.getMessage())
-                .build();
-        return new ResponseEntity<>(ar, HttpStatus.OK);
+    @PostMapping("test")
+    public void test(HttpServletRequest request){
+        Enumeration params = request.getParameterNames();
+        log.debug("----------------------------");
+        while (params.hasMoreElements()){
+            String name = (String)params.nextElement();
+            log.debug(name + " : " +request.getParameter(name));
+        }
+        log.debug("----------------------------");
     }
 
     /**
@@ -484,8 +443,7 @@ public class UserController {
      *
      * @param tokenDto TokenDto
      * @return ResponseEntity
-     * 
-     * refresh는 데이터로
+     *
      */
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Object>> logout(@RequestBody TokenDto tokenDto) {

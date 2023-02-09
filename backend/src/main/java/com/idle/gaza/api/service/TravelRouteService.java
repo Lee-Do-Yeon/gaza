@@ -8,4 +8,6 @@ import java.util.List;
 public interface TravelRouteService {
     Integer saveRoutes(List<TravelRouteRequest> routeInfo, int reservationId) throws Exception;
     List<TravelRouteResponse> getRoutes(Integer reservationId);
+
+    List<TravelRouteResponse> getRouteByOrder(int reservationId);
 }

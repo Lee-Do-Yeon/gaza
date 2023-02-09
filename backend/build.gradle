@@ -71,6 +71,13 @@ dependencies {
 
     //오픈비두
     implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.25.0'
+
+
+    //excel
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
+
+
 }
 
 tasks.named('test') {

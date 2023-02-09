@@ -27,7 +27,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     @Transactional
-    public Integer writeReview(ReviewCreatePostRequest reviewInfo) throws Exception {
+    public Integer writeReview(ReviewCreatePostRequest reviewInfo) {
         // 예약 조회
         int reservationId = reviewInfo.getReservationId();
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new NoSuchElementException("Reservation not found"));
