@@ -22,9 +22,9 @@
                 <h3>{{ guideInfo.name }}</h3>
                 <br />
                 <h5>{{ guideInfo.country }} / {{ guideInfo.city }} / {{ guideInfo.gender }}</h5>
-                <p v-for="data in themaInfo" :key="data.length">
-                  {{ data }}
-                </p>
+                <span v-for="data in themaInfo" :key="data.length">
+                  {{ data }} &nbsp;
+                </span>
                 <div>{{ guideInfo.introduction }}</div>
               </div>
             </form>
