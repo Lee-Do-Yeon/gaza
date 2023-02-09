@@ -32,7 +32,7 @@
                       >{{ guide.name }}</router-link></h4>
                     <p><span class="review_rating">4.8/5 Excellent</span> <span class="review_count">(1214
                         reviewes)</span></p>
-                    <h3>$99.00 <span>Price starts from</span></h3>
+                    <h3>{{guide.price}} <span>Price starts from</span></h3>
                   </div>
                 </div>
               </swiper-slide>
