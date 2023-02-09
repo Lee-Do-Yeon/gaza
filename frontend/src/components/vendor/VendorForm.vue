@@ -118,36 +118,38 @@
                                     </textarea
                 >
               </div>
+              <div class="booking_tour_form_submit pt-4">
+                <div class="form-check write_spical_check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    v-model="check"
+                    id="flexCheckDefaultf1"
+                  />
+                  <label class="form-check-label" for="flexCheckDefaultf1">
+                    I have read and accept the
+                    <router-link to="/terms-service"
+                      >Terms and conditions</router-link
+                    >
+                    and
+                    <router-link to="/privacy-policy">Privacy policy</router-link>
+                  </label>
+                </div>
+                <button
+                  class="btn btn_theme btn_md"
+                  type="submit"
+                  @click="register"
+                >
+                  Sign up
+                </button>
+                <!-- <router-link to="/booking-confirmation" class="btn btn_theme btn_md"
+                  >Sign up</router-link
+                > -->
+              </div>
             </form>
           </div>
-          <div class="booking_tour_form_submit pt-4">
-            <div class="form-check write_spical_check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefaultf1"
-              />
-              <label class="form-check-label" for="flexCheckDefaultf1">
-                I have read and accept the
-                <router-link to="/terms-service"
-                  >Terms and conditions</router-link
-                >
-                and
-                <router-link to="/privacy-policy">Privacy policy</router-link>
-              </label>
-            </div>
-            <button
-              class="btn btn_theme btn_md"
-              type="submit"
-              @click="register"
-            >
-              Sign up
-            </button>
-            <!-- <router-link to="/booking-confirmation" class="btn btn_theme btn_md"
-              >Sign up</router-link
-            > -->
-          </div>
+
         </div>
       </div>
     </div>
@@ -165,6 +167,7 @@ export default {
       file2: null,
       file3: null,
       token: null,
+      check:false
     };
   },
   created() {
@@ -173,7 +176,9 @@ export default {
 
   methods: {
     register() {
-      console.log(this.token, this.file1, this.file2, this.file3);
+      if(this.check == false) alert("약관에 동의하세요");
+      else{
+        console.log(this.token, this.file1, this.file2, this.file3);
       axios
         .post("/users/guide", {
           idFile: this.file1,
@@ -181,6 +186,7 @@ export default {
           certificate: this.file3,
         })
         .then((res) => console.log(res));
+      }
     },
     selectFile1() {
       this.file1 = this.$refs["img1"].files[0];
