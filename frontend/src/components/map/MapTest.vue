@@ -44,7 +44,7 @@ import axios from "axios";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = "http://localhost:8080";
+const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
 
 export default {
   data() {
