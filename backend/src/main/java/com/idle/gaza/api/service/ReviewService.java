@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface ReviewService {
 
     // 리뷰 작성
-    Integer writeReview(ReviewCreatePostRequest reviewInfo) throws Exception ;
+    Integer writeReview(ReviewCreatePostRequest reviewInfo);
 
     // 회원이 작성한 리뷰 리스트 조회
     List<ReviewResponse> getReviewsByUser(String userId);
