@@ -1,22 +1,22 @@
 <template>
     <div class="col-8">
-        <table class="table">
-            <thead class="thead-black">
+        <table class="table text-center" >
+            <thead class="table-mint">
                 <tr>
                     <th scope="col">id</th>
                     <th scope="col">신분증</th>
                     <th scope="col">체류증빙서류</th>
                     <th scope="col">자격증</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="user in registerGuideList" :key="user.userId">
-                    <td> {{user["userId"]}} </td>
-                    <td> {{user["idFile"]}} </td>
-                    <td> {{user["certificateResidence"]}} </td>
-                    <td> {{user["certificate"]}} </td>
-                    <td> <a href="https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/user/picture/a49240f1-9ca7-413b-8345-3712492ebafc_Image+Pasted+at+2023-1-17+14-03.png">과연 그럴까</a></td>
-                    <td> <button>승인</button> <button>거부</button> </td>
+                    <td><a href="#"> {{user["userId"]}} </a> </td>
+                    <td><a :href="getFileUrl(user).idFile"><img src="../../assets/img/admin/file.png" alt=""></a></td>
+                    <td><a :href="getFileUrl(user).certificateResidence"><img src="../../assets/img/admin/file.png" alt=""></a></td>
+                    <td><a :href="getFileUrl(user).certificate"><img src="../../assets/img/admin/file.png" alt=""></a></td>
+                    <td><button type="button" class="btn btn-outline-info" @click="allow()">승인</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button type="button" class="btn btn-outline-info" @click="reject()">거절</button></td>
                 </tr>
             </tbody>
         </table>
@@ -39,14 +39,45 @@ export default {
             return store.getters['adminStore/getRegisterGuideList'];
         })
 
+        const getFileUrl = function(user) {
+            const base = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide_document";
+
+            return {
+                idFile : base + "/id_file/" + user.idFile,
+                certificateResidence : base + "certificate_residence/" + user.certificateResidence,
+                certificate : base + "certificate/" + user.certificate
+            }
+        }
+
+        const allow = function () {
+            console.log("신청 승인");
+            store.dispatch('adminStore/allowGuideRequest');
+        }
+
+        const reject = function () {
+            console.log("신청 거부");
+            store.dispatch('adminStore/rejectGuideRequest');
+        }
+
         return {
             store,
             registerGuideList,
+            allow,
+            reject,
+            getFileUrl
         };
   },
 }
 </script>
 
 <style>
+img {
+    width: 21px;
+    height: 21px;
+}
 
+.table-mint {
+    background-color: #15C4CB;
+    color: whitesmoke;
+}
 </style>
