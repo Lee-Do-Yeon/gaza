@@ -79,6 +79,8 @@ export default {
                 publisher: undefined,
                 subscribers: [],
             },
+            polyline: Object,
+            route_marker_list: [],
             
         };
     },
@@ -343,6 +345,7 @@ export default {
                 position: markerPosition,
                 image: markerImage,
             });
+            this.route_marker_list.push(marker);
             marker.setMap(this.map);
         },
         // [Function] 현재 클릭한 장소에 대해 travel_route를 추가하기 위해 데이터를 전송하는 함수.
@@ -361,6 +364,26 @@ export default {
                 })
             );
         },
+        
+        // [Function] 현재의 travel_route 리스트에 대해 선을 생성하는 함수.
+        makeLineOfRoute(){
+            var linePath = [];
+
+            for (var route of this.travel_route) { // 위와 같은 동작을 하는 for / of 문
+                linePath.push(new kakao.maps.LatLng(route.latitude, route.longitude));
+            }
+
+            console.log(linePath);
+
+            // 지도에 표시할 선을 생성합니다
+            this.polyline = new kakao.maps.Polyline({
+                path: linePath, // 선을 구성하는 좌표배열 입니다
+                strokeWeight: 5, // 선의 두께 입니다
+                strokeColor: '#FFAE00', // 선의 색깔입니다
+                strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle: 'solid' // 선의 스타일입니다
+            });
+        },
         // [Function] 받은 좌표를 저장하는 함수. (맵에 마커도 출력.)
         saveRecvRoute(route){
             console.log("saveRecvRoute() call.")
@@ -378,6 +401,8 @@ export default {
             var saveMarkerImage =  new kakao.maps.MarkerImage(this.markerImageSrc, new kakao.maps.Size(29, 40), saveMakerOption);
 
             this.setMarker(route.latitude, route.longitude, saveMarkerImage);
+
+            this.makeLineOfRoute();
         },
         // [Function] 현재의 travel_route 리스트를 DB에 저장하는 함수.
         insertToDB(){
@@ -411,6 +436,8 @@ export default {
         deleteRoute(route){
             const index = this.travel_route.findIndex(i => i.name == route.address);
             console.log("호출이염 " + index);
+            this.route_marker_list[index].setMap(null);
+            this.route_marker_list.splice(index, 1);
             this.travel_route.splice(index, 1);
         },
 
