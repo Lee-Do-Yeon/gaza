@@ -34,7 +34,7 @@ import Admin from "../views/AdminView.vue"
 import ResetPasswordView from '../views/ResetPasswordView.vue'
 import ForgotPasswordView from '../views/ForgotPasswordView.vue'
 
-
+import GuideReview from "@/components/hotel/GuideReview"
 
 
 
@@ -196,9 +196,9 @@ const routes = [
     component:GuideScheduleView
   },
   {
-    path: '/guide_review',
+    path: '/guide_review/:guideId',
     name : 'guide_review',
-    component : GuideReviewView
+    component : GuideReview
   },
   {
     path : '/guide_QNA',
@@ -255,7 +255,8 @@ const routes = [
         component: ChatDetail,
       },
     ],
-  }
+  },
+
 ]
 
 
