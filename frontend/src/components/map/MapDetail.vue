@@ -5,14 +5,24 @@
                 value="Leave session" />
             </div>
         <!-- <h3>{{ $route.params.roomId }}</h3> -->
-        <div class="button-box" style="width:8%; height: 400px; background-color: lightgray; float:left">
+        <!-- <div class="button-box" style="width:8%; height: 400px; background-color: lightgray; float:left">
             <button class="btn btn-light" type="button" @click="sendPoint('FOCUS')" style="margin:5px; width:90px;">부르기</button>
             <button class="btn btn-light" type="button" @click="saveRoute(clickIndex, clickRecommend, clickPopular)" style="margin:5px; width:90px;">저장</button>
             <button class="btn btn-light" type="button" @click="insertToDB" style="margin:5px; width:90px;">DB</button>
             <button class="btn btn-light" type="button" @click="show" style="margin:5px; width:90px;">show</button>
+        </div> -->
+        <div>
+        <div id="map" style="width: 71%; height: 400px; position: relative; overflow: hidden; float:left; margin-right:10px">
         </div>
-        <div id="map" style="width: 65%; height: 400px; position: relative; overflow: hidden; float:left">
-        </div>
+        <ul id="category">
+            <li id="BK9" data-order="0" @click="sendPoint('FOCUS')"> 
+                <img src="./bell.png"/>
+            </li>       
+            <li id="MT1" data-order="1" @click="saveRoute(clickIndex, clickRecommend, clickPopular)"> 
+                <img src="./flag.png"/>
+            </li>    
+        </ul>
+    </div>
         <div style="width:27%; height:400px; overflow: auto; border:1px solid lightgray;">
             <h3 style="margin-bottom:6px;">[여행일정]</h3>
             <div class="list-group">
@@ -755,4 +765,50 @@ export default {
     text-align: center;
     text-decoration: none;
 }
+
+#category {
+    position:absolute;
+    top: 8%;
+    left: 5%;
+    border-radius: 5px; 
+    border:1px solid #909090;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+    background: #fff;
+    overflow: hidden;
+    z-index: 2;
+}
+
+#category li {
+    list-style: none;
+    width:50px; 
+    border-top:1px solid #acacac;
+    padding:6px 0;
+    text-align: center; 
+    cursor: pointer;
+}
+
+#category li.on {
+    background: #eee;
+}
+
+#category li:hover {
+    background: #ffe6e6;
+    border-bottom: 1px solid #acacac;
+    margin-bottom: -1px;
+}
+
+#category li:last-child{
+    margin-top:0;
+}
+
+#category li span {
+    display: block;
+    margin:0 auto 3px;
+    width:27px;
+    height: 28px;
+}
+#category li .category_bg {
+    background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png) no-repeat;
+}
+
 </style>
