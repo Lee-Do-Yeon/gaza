@@ -1,5 +1,5 @@
 <template>
-  <section id="vendor_form_area" class="section_padding_bottom">
+  <section id="vendor_form_area" class="section_padding_bottom" style="height:300px">
     <div class="container">
       <div class="row">
         <div class="vendor_form">
@@ -58,8 +58,8 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-lg-2">파트너 약관</div>
-                <textarea class="col-lg-15" readonly>
+                <div>파트너 약관</div>
+                <textarea class="form-control"  id="floatingTextarea2" style="height: 300px; padding:10px" readonly>
  
                                             제3조 (여행계약의 당사자 및 당사의 지위)
                                             여행자와 여행계약을 체결하고 가이드서비스를 제공하는 법적 주체는 가이드이며, 당사는 플랫폼을 통하여 여행자가 원하는 날짜와 조건에 맞추어 가이드와 여행계약을 체결하고 가이드서비스를 제공받는 것을 중개하는 업무를 수행합니다.
@@ -86,12 +86,11 @@
                                             (6) 사고 등 문제 발생시의 여행자 보호 조치
                                             (7) 기타 투어 관련 제반 업무
 
-                                        </textarea
-                >
+                </textarea>
               </div>
               <div class="row">
-                <div class="col-lg-4">개인정보 및 고유식별 정보 수집 및 이용동의</div>
-                <textarea class="col-lg-16" readonly>
+                <div>개인정보 및 고유식별 정보 수집 및 이용동의</div>
+                <textarea class="form-control"  id="floatingTextarea2" style="height: 300px; padding:10px" readonly>
                                         ❏ 개인정보의 수집·이용 목적
 
                                         ❍ 귀하의 개인정보는 가이드 등록을 위한 목적으로 수집·이용됩니다.
