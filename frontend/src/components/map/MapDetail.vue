@@ -1,9 +1,10 @@
 <template>
     <div class="container" id="app" v-cloak>
         <div id="session-header">
-                <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession"
-                value="Leave session" />
+                <input class="btn btn-outline-danger" type="button" id="buttonLeaveSession" @click="leaveSession"
+                value="나가기" style="margin: 3px; float:right;" />
             </div>
+            <div style="clear:both;"></div>
         <!-- <h3>{{ $route.params.roomId }}</h3> -->
         <!-- <div class="button-box" style="width:8%; height: 400px; background-color: lightgray; float:left">
             <button class="btn btn-light" type="button" @click="sendPoint('FOCUS')" style="margin:5px; width:90px;">부르기</button>
@@ -24,17 +25,24 @@
         </ul>
     </div>
         <div style="width:27%; height:400px; overflow: auto; border:1px solid lightgray;">
-            <h3 style="margin-bottom:6px;">[여행일정]</h3>
+            <h3 class="route-list">여행 일정</h3>
             <div class="list-group">
                 <list-item v-for="(route, index) in travel_route" :key="index" :index="index" :route="route" @manageRoute="manageRoute"/>
             </div>
          </div><div style="clear:both:"></div>
-
-        <div id="session">
-            <div id="video-container" class="col-md-6">
+        
+        <div id="session" class="" style="width: 71%; height:350px; margin: auto; float:left">
+            <div id="video-container" style="width:100%;">
                 <user-video :stream-manager="OpenVidu.publisher" @click="updateMainVideoStreamManager(OpenVidu.publisher)" />
                 <user-video v-for="sub in OpenVidu.subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"
                 @click="updateMainVideoStreamManager(sub)" />
+            </div>
+        </div>
+        <div class="chat">
+            <div style="height:85%"></div>
+            <div class="input-group-append">
+                <input type="text" v-model="msg" v-on:keypress.enter="sendMessage">
+                <button class="btn btn-primary" type="button" @click="sendMessage">전송</button>
             </div>
         </div>
 
@@ -752,6 +760,13 @@ export default {
     display: none;
 }
 
+.route-list {
+    padding-bottom: 6px;
+    background-color: #15c4cb;
+    color: white;
+    font-weight: bold;
+}
+
 .btn_map {
     display: block;
     overflow: hidden;
@@ -807,8 +822,14 @@ export default {
     width:27px;
     height: 28px;
 }
-#category li .category_bg {
-    background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png) no-repeat;
+
+.chat {
+    border:1px solid #909090;
+    width:27%; 
+    height:280px; 
+    float: left; 
+    margin-left: 10px; 
+    margin-top: 10px;
 }
 
 </style>

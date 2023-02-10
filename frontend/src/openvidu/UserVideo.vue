@@ -1,5 +1,5 @@
 <template>
-<div v-if="streamManager">
+<div v-if="streamManager" style="display:block;">
 	<ov-video :stream-manager="streamManager"/>
 	<div><p>{{ clientData }}</p></div>
 </div>
@@ -211,8 +211,11 @@ a:hover .demo-logo {
 #video-container video {
 	position: relative;
 	float: left;
-	width: 50%;
 	cursor: pointer;
+	margin-left: 80px;
+    margin-top: 10px;
+    width: 380px;
+	border-radius: 10px;
 }
 
 #video-container video + div {
