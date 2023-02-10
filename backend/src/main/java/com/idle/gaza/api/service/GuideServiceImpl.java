@@ -138,6 +138,17 @@ public class GuideServiceImpl implements GuideService {
 
         List<GuideResponse> guideResponseList = new ArrayList<>();
         for (Guide guide : orderByGuide) {
+            List<String> codeList = new ArrayList<>();
+            for (GuideLanguage guideLanguage : guide.getLanguageList()) {
+                String code = guideRepository.searchNameByCode(guideLanguage.getLangCode());
+                codeList.add(code);
+            }
+
+            List<String> themaList = new ArrayList<>();
+            for (GuideThema thema : guide.getGuideThemaList()) {
+                String code = guideRepository.searchNameByCode(thema.getThemaCode());
+                themaList.add(code);
+            }
 
             GuideResponse guideResponse = GuideResponse.builder()
                     .guideId(guide.getGuideId())
@@ -149,6 +160,8 @@ public class GuideServiceImpl implements GuideService {
                     .country(guide.getCountry())
                     .price(guide.getPrice())
                     .picture(guide.getPicture())
+                    .language(codeList)
+                    .thema(themaList)
                     .build();
             guideResponseList.add(guideResponse);
 
@@ -250,6 +263,44 @@ public class GuideServiceImpl implements GuideService {
         return response;
     }
 
+    @Override
+    public List<GuideResponse> guideSearchByTheam(String searchName) {
+        List<Guide> guideList = guideRepository.searchGuideByThema(searchName);
+
+        List<GuideResponse> guideResponseList = new ArrayList<>();
+        for (Guide guide : guideList) {
+            List<String> codeList = new ArrayList<>();
+            for (GuideLanguage guideLanguage : guide.getLanguageList()) {
+                String code = guideRepository.searchNameByCode(guideLanguage.getLangCode());
+                codeList.add(code);
+            }
+
+            List<String> themaList = new ArrayList<>();
+            for (GuideThema thema : guide.getGuideThemaList()) {
+                String code = guideRepository.searchNameByCode(thema.getThemaCode());
+                themaList.add(code);
+            }
+
+            GuideResponse guideResponse = GuideResponse.builder()
+                    .guideId(guide.getGuideId())
+                    .name(guide.getUser().getName())
+                    .city(guide.getCity())
+                    .closeTimeEnd(guide.getCloseTimeEnd())
+                    .closeTimeStart(guide.getCloseTimeStart())
+                    .gender(guide.getUser().getGender())
+                    .country(guide.getCountry())
+                    .price(guide.getPrice())
+                    .picture(guide.getPicture())
+                    .language(codeList)
+                    .thema(themaList)
+                    .build();
+            guideResponseList.add(guideResponse);
+
+
+        }
+
+        return guideResponseList;
+    }
 
     ////////////////////////추천 장소 기능//////////////////////
     @Override

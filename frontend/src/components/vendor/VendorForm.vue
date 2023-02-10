@@ -1,10 +1,14 @@
 <template>
-  <section id="vendor_form_area" class="section_padding_bottom">
+  <section id="vendor_form_area" class="section_padding_bottom" style="height:300px">
     <div class="container">
       <div class="row">
         <div class="vendor_form">
           <div class="tour_booking_form_box">
-            <form id="tour_bookking_form_item" enctype="multipart/form-data">
+            <form
+              id="tour_bookking_form_item"
+              v-on:submit.prevent="register"
+              enctype="multipart/form-data"
+            >
               <div class="row">
                 <div class="col-lg-2">신분증</div>
                 <div class="col-lg-6">
@@ -13,13 +17,11 @@
                       type="file"
                       class="custom-file-input"
                       placeholder="신분증"
-                      id="inputGroupFile04"
+                      id="file1"
                       ref="img1"
                       @change="selectFile1"
                     />
-                    <label class="custom-file-label" for="신분증"
-                      >Choose file</label
-                    >
+                    <label class="custom-file-label" for="신분증">Choose file</label>
                   </div>
                 </div>
               </div>
@@ -31,13 +33,11 @@
                       type="file"
                       class="custom-file-input"
                       placeholder="체류증명서류"
-                      id="inputGroupFile04"
+                      id="file2"
                       ref="img2"
                       @change="selectFile2"
                     />
-                    <label class="custom-file-label" for="체류증명서류"
-                      >Choose file</label
-                    >
+                    <label class="custom-file-label" for="체류증명서류">Choose file</label>
                   </div>
                 </div>
               </div>
@@ -49,19 +49,17 @@
                       type="file"
                       class="custom-file-input"
                       placeholder="가이드 자격증"
-                      id="inputGroupFile04"
+                      id="file3"
                       ref="img3"
                       @change="selectFile3"
                     />
-                    <label class="custom-file-label" for="가이드 자격증"
-                      >Choose file</label
-                    >
+                    <label class="custom-file-label" for="가이드 자격증">Choose file</label>
                   </div>
                 </div>
               </div>
               <div class="row">
-                <div class="col-lg-2">파트너 약관</div>
-                <textarea class="col-lg-15" readonly>
+                <div>파트너 약관</div>
+                <textarea class="form-control"  id="floatingTextarea2" style="height: 300px; padding:10px" readonly>
  
                                             제3조 (여행계약의 당사자 및 당사의 지위)
                                             여행자와 여행계약을 체결하고 가이드서비스를 제공하는 법적 주체는 가이드이며, 당사는 플랫폼을 통하여 여행자가 원하는 날짜와 조건에 맞추어 가이드와 여행계약을 체결하고 가이드서비스를 제공받는 것을 중개하는 업무를 수행합니다.
@@ -88,14 +86,11 @@
                                             (6) 사고 등 문제 발생시의 여행자 보호 조치
                                             (7) 기타 투어 관련 제반 업무
 
-                                        </textarea
-                >
+                </textarea>
               </div>
               <div class="row">
-                <div class="col-lg-4">
-                  개인정보 및 고유식별 정보 수집 및 이용동의
-                </div>
-                <textarea class="col-lg-16" readonly>
+                <div>개인정보 및 고유식별 정보 수집 및 이용동의</div>
+                <textarea class="form-control"  id="floatingTextarea2" style="height: 300px; padding:10px" readonly>
                                         ❏ 개인정보의 수집·이용 목적
 
                                         ❍ 귀하의 개인정보는 가이드 등록을 위한 목적으로 수집·이용됩니다.
@@ -129,27 +124,18 @@
                   />
                   <label class="form-check-label" for="flexCheckDefaultf1">
                     I have read and accept the
-                    <router-link to="/terms-service"
-                      >Terms and conditions</router-link
-                    >
+                    <router-link to="/terms-service">Terms and conditions</router-link>
                     and
                     <router-link to="/privacy-policy">Privacy policy</router-link>
                   </label>
                 </div>
-                <button
-                  class="btn btn_theme btn_md"
-                  type="submit"
-                  @click="register"
-                >
-                  Sign up
-                </button>
+                <button class="btn btn_theme btn_md">Sign up</button>
                 <!-- <router-link to="/booking-confirmation" class="btn btn_theme btn_md"
                   >Sign up</router-link
                 > -->
               </div>
             </form>
           </div>
-
         </div>
       </div>
     </div>
@@ -158,6 +144,10 @@
 
 <script>
 import axios from "@/api/http";
+import { mapState } from "vuex";
+import router from "@/router";
+
+const accountStore = "accountStore";
 
 export default {
   name: "VendorForm",
@@ -166,31 +156,49 @@ export default {
       file1: null,
       file2: null,
       file3: null,
-      token: null,
-      check:false
+      check: false,
     };
   },
-  created() {
-    this.token = this.$store.getters.getToken;
+  created() {},
+  computed: {
+    ...mapState(accountStore, ["accessToken"]),
   },
 
   methods: {
     register() {
-      if(this.check == false) alert("약관에 동의하세요");
-      else{
-        console.log(this.token, this.file1, this.file2, this.file3);
-      axios
-        .post("/users/guide", {
-          idFile: this.file1,
-          certificateResidence: this.file2,
-          certificate: this.file3,
-        })
-        .then((res) => console.log(res));
+      if (this.check == false) alert("약관에 동의하세요");
+      else {
+        //console.log(this.accessToken, this.file1, this.file2, this.file3);
+        
+        const formData = new FormData();
+        formData.append('idFile', this.file1);
+        formData.append('certificateResidence', this.file2);
+        formData.append('certificate', this.file3);
+
+        axios
+          .post(
+            "/users/guide",
+            {
+              'idFile':formData.get('idFile'),
+              'certificateResidence':formData.get('certificateResidence'),
+              'certificate':formData.get('certificate')
+            },
+            {
+              headers: {
+                "Authorization": "Bearer " + this.accessToken,
+                'Content-Type': 'multipart/form-data'
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data),
+            router.push({name:"home"})
+          } 
+          );
       }
     },
     selectFile1() {
       this.file1 = this.$refs["img1"].files[0];
-      console.log(this.file);
     },
     selectFile2() {
       this.file2 = this.$refs["img2"].files[0];

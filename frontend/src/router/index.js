@@ -16,9 +16,8 @@ import CompleteView from '../views/CompleteView.vue'
 import BecomeVendorView from '../views/BecomeVendorView.vue'
 import NotFound from '../components/NotFound.vue'
 import reviewView from '../views/reviewView.vue'
-import GuideScheduleView from '../views/GuideScheduleView.vue'
+import GuideSchedule from '@/components/hotel/GuideSchedule'
 import GuideReviewView from '../views/GuideReviewView.vue'
-import GuideQNAView from '../views/GuideQNAView.vue'
 import OpenViduView from '../views/OpenViduView.vue'
 import OpenViduViewCopy from '../views/OpenViduViewCopy.vue'
 import MapDetail from "@/components/map/MapDetail";
@@ -34,7 +33,7 @@ import Admin from "../views/AdminView.vue"
 import ResetPasswordView from '../views/ResetPasswordView.vue'
 import ForgotPasswordView from '../views/ForgotPasswordView.vue'
 
-
+import GuideReview from "@/components/hotel/GuideReview"
 
 
 
@@ -191,19 +190,14 @@ const routes = [
     component: reviewView
   },
   {
-    path:'/guide_schedule',
+    path:'/guide_schedule/:guideId',
     name : 'guide_schedule',
-    component:GuideScheduleView
+    component:GuideSchedule
   },
   {
-    path: '/guide_review',
+    path: '/guide_review/:guideId',
     name : 'guide_review',
-    component : GuideReviewView
-  },
-  {
-    path : '/guide_QNA',
-    name : 'guide_QNA',
-    component :GuideQNAView
+    component : GuideReview
   },
   {
     path : '/openvidu',
@@ -255,7 +249,8 @@ const routes = [
         component: ChatDetail,
       },
     ],
-  }
+  },
+
 ]
 
 
