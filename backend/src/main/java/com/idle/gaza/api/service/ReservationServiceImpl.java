@@ -84,6 +84,7 @@ public class ReservationServiceImpl implements ReservationService {
                     reservation.getGuideId().getPicture(),
                     reservation.getReservationId(),
                     reservation.getGuideId().getUser().getName(),
+                    reservation.getGuideId().getUser().getId(),
                     reservation.getNumberOfPeople(),
                     reservation.getWithChildren(),
                     reservation.getWithElderly(),
@@ -92,7 +93,8 @@ public class ReservationServiceImpl implements ReservationService {
                     reservation.getConsultingDate(),
                     reservation.getTravelStartDate(),
                     reservation.getTravelEndDate(),
-                    reservation.getStateCode());
+                    reservation.getStateCode(),
+                    reservation.getSessionId());
             reservationRes.add(res);
         }
         return reservationRes;
@@ -108,6 +110,7 @@ public class ReservationServiceImpl implements ReservationService {
                     reservation.getGuideId().getPicture(),
                     reservation.getReservationId(),
                     reservation.getGuideId().getUser().getName(),
+                    reservation.getGuideId().getUser().getId(),
                     reservation.getNumberOfPeople(),
                     reservation.getWithChildren(),
                     reservation.getWithElderly(),
@@ -116,7 +119,8 @@ public class ReservationServiceImpl implements ReservationService {
                     reservation.getConsultingDate(),
                     reservation.getTravelStartDate(),
                     reservation.getTravelEndDate(),
-                    reservation.getStateCode());
+                    reservation.getStateCode(),
+                    reservation.getSessionId());
             reservationRes.add(res);
         }
         return reservationRes;
@@ -132,6 +136,27 @@ public class ReservationServiceImpl implements ReservationService {
             times.add(res);
         }
         return times;
+    }
+
+    @Override
+    public void createConsulting(int reservationId, String sessionId) {
+        Optional<Reservation> oReservation = reservationRepository.findById(reservationId);
+        if(oReservation.isPresent()) {
+            Reservation reservation = oReservation.get();
+            reservation.setSessionId(sessionId);
+            reservation.setStateCode("RE03");
+            reservationRepository.save(reservation);
+        }
+    }
+
+    @Override
+    public void endConsulting(int reservationId) {
+        Optional<Reservation> oReservation = reservationRepository.findById(reservationId);
+        if(oReservation.isPresent()) {
+            Reservation reservation = oReservation.get();
+            reservation.setStateCode("RE01");
+            reservationRepository.save(reservation);
+        }
     }
 
 }

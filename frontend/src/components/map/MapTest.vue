@@ -7,16 +7,8 @@
       </div>
     </div>
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text">방제목</label>
-      </div>
-      <input type="text" class="form-control" v-model="room_name"/>
-      <div class="input-group-prepend">
-        <label class="input-group-text">유저네임</label>
-      </div>
-      <input type="text" class="form-control" v-model="myUserName"/>
       <div class="input-group-append">
-        <button class="btn btn-primary" type="button" @click="joinSession">개설</button>
+        <button class="btn btn-primary" type="button" @click="createConsulting">개설</button>
       </div>
     </div>
     <ul class="list-group">
@@ -24,18 +16,11 @@
         class="list-group-item list-group-item-action"
         v-for="item in maprooms"
         v-bind:key="item.roomId"
-        v-on:click="enterRoom(item.roomId)"
+        @click="enterConsulting(item.roomId)"
       >
         {{ item.name }}
       </li>
     </ul>
-
-
-
-
-
-
-
   </div>
 </template>
 
@@ -49,7 +34,12 @@ const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
 export default {
   data() {
     return {
-      room_name: "roomName testest",
+      // 아래는 현재 있다고 가정 (예약 내역)
+      userName: "SSAFY 8기 아이들",
+      reservationId: 3,
+      guidePK: 1,
+      guideId: "SSAFY2",
+      // ---------------------------------
       // OpenVidu 객체들
       OpenVidu: {
         OV: undefined,
@@ -60,7 +50,6 @@ export default {
       },
       // Join form
       mySessionId: "SessionA",
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
       maprooms: [],
     };
   },
@@ -75,39 +64,36 @@ export default {
         console.log(this.maprooms);
       });
     },
-    async createRoom() {
+    async createMapRoom() {
       var base = this;
-      console.log("createRoom");
-      if ("" === this.room_name) {
-        alert("방 제목을 입력해 주세요.");
-        return;
-      } else {
-        // var params = new URLSearchParams();
-        // params.append("name", this.room_name);
+      console.log("createMapRoom");
+      await axios
+        .post(APPLICATION_SERVER_URL + "/map/room", this.reservationId) // 원래는 room_name이지만 방제목은 안 쓸 거니까.
+        .then((data) => {
+          //console.log("[" + data.data.roomId + "] 개설");
+          base.mySessionId = data.data.roomId;
+        })
+        .catch(() => {
+          alert("지도방 개설에 실패하였습니다.");
+        });
         await axios
-          .post(APPLICATION_SERVER_URL + "/map/room", this.room_name)
-          .then((data) => {
-            console.log("[" + data.data.roomId + "] 개설");
-            base.mySessionId = data.data.roomId;
-          })
-          .catch(() => {
-            alert("방 개설에 실패하였습니다.");
-          });
-      }
+        .post(APPLICATION_SERVER_URL + "/books/consulting/create/"+ this.reservationId, base.mySessionId)
+        .then((data) => {
+          console.log("예약 테이블에 세션 아이디 추가. " + data);
+        })
+        .catch(() => {
+          alert("예약 데이터 업데이트에 실패하였습니다.");
+        });
     },
-    enterRoom(roomId) {
-      var sender = prompt("대화명을 입력해 주세요.");
-      if (sender != "") {
-        localStorage.setItem("wschat.sender", sender);
-        localStorage.setItem("wschat.roomId", roomId);
-        this.$router.push({ name: "mapdetail", params: { roomId: roomId } });
-      }
+    enterConsulting(roomId) {
+      localStorage.setItem("wschat.sender", this.userName);
+      localStorage.setItem("wschat.roomId", roomId);
+      this.$router.push({ name: "mapdetail", params: { roomId: roomId, reservationId: this.reservationId, guideId: this.guideId, userName: this.userName } });
     },
-    async joinSession() {
-      await this.createRoom();
-      localStorage.setItem("wschat.sender", this.myUserName);
-      localStorage.setItem("wschat.roomId", this.mySessionId);
-      this.$router.push({ name: "mapdetail", params: { roomId: this.mySessionId } });
+    async createConsulting() {
+      await this.createMapRoom();
+      const routeData = this.$router.resolve({ name: "mapdetail", params: { roomId: this.mySessionId, reservationId: this.reservationId, guideId: this.guideId, userName: this.userName } });
+      window.open(routeData.href, '_blank');
     },
   },
 };

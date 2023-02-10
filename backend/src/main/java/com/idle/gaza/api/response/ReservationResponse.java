@@ -17,6 +17,7 @@ public class ReservationResponse {
     String picture;
     int reservationId;
     String guideName;
+    String guideId;
     int numberOfPeople;
     int withChildren;
     int withElderly;
@@ -27,15 +28,18 @@ public class ReservationResponse {
     LocalDateTime travelEndDate;
     String stateCode;
 
+    String sessionId;
+
     // 예약 내역 제목 정하면 그거 정보도 넘겨주고.
     // 예약 상태에 따라 화상상담 정보랑 일정 정보도 넘겨야줘야햄.
 
 
     @Builder
-    public ReservationResponse(String picture, int reservationId, String guideName, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, LocalDateTime consultingDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, String stateCode) {
+    public ReservationResponse(String picture, int reservationId, String guideName, String guideId, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, LocalDateTime consultingDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, String stateCode, String sessionId) {
         this.picture = picture;
         this.reservationId = reservationId;
         this.guideName = guideName;
+        this.guideId = guideId;
         this.numberOfPeople = numberOfPeople;
         this.withChildren = withChildren;
         this.withElderly = withElderly;
@@ -45,5 +49,6 @@ public class ReservationResponse {
         this.travelStartDate = travelStartDate;
         this.travelEndDate = travelEndDate;
         this.stateCode = stateCode;
+        this.sessionId = sessionId;
     }
 }

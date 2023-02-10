@@ -54,7 +54,7 @@ This files table contents are outlined below>>>>>
 Default CSS
 =================================================*/
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,400;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
 :root {
     --main-color: #15c4cb;
@@ -75,7 +75,7 @@ body {
     padding: 0;
     margin: 0;
     font-size: 16px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Nanum Gothic', sans-serif;
 }
 
 img {
@@ -119,7 +119,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Nanum Gothic', sans-serif;
     margin: 0;
 }
 
@@ -160,7 +160,7 @@ p {
     line-height: 28px;
     color: var(--paragraph-color);
     font-weight: 400;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Nanum Gothic', sans-serif;
     margin-bottom: 0;
 }
 
@@ -3804,7 +3804,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
     padding: 14px 20px;
     color: var(--black-color);
     font-weight: 400;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Nanum Gothic', sans-serif;
     transition: var(--transition);
     border-radius: 12px;
     border-left: 5px solid var(--main-color);
@@ -3825,7 +3825,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
     background-color: #F3F6FD;
     padding: 10px 22px;
     color: var(--heading-color);
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Nanum Gothic', sans-serif;
     transition: var(--transition);
     border-radius: 10px;
 }

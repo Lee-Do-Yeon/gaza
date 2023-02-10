@@ -63,6 +63,9 @@ public class Reservation {
     @JoinColumn(name = "review_id")
     private Review review;
 
+    @JoinColumn(name = "session_id")
+    private String sessionId;
+
     @Builder
     public Reservation(User userId, Guide guideId, LocalDateTime consultingDate, LocalDateTime reservationDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, String stateCode) {
         this.userId = userId;
