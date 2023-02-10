@@ -23,19 +23,19 @@
                   <button type="button" class="btn btn_theme btn_sm me-1 mb-2" data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="1" @click="setTime">
                     01
                   </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="2" @click="setTime">
+                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="2" @click="setTime">
                     02
                   </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="3" @click="setTime">
+                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="3" @click="setTime">
                     03
                   </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="4" @click="setTime">
+                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="4" @click="setTime">
                     04
                   </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="5" @click="setTime">
+                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="5" @click="setTime">
                     05
                   </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="6" @click="setTime">
+                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="6" @click="setTime">
                     06
                   </button>
                 </div>
@@ -140,7 +140,7 @@
               <div style="font-weight: bold">특이사항</div>
               <div class="col-lg-12 mt-4">
                 <div class="form-group">
-                  <textarea class="form-control bg_input" name = "remark"  rows="6" v-model="state.info.note"></textarea>
+                  <textarea class="form-control bg_input" name = "note"  rows="6" v-model="state.info.note"></textarea>
                 </div>
               </div>
             </div>
@@ -148,7 +148,7 @@
         </div>
         <div class="section_heading_center mt-4">
           <router-link to="/complete">
-            <button type="button" class="btn btn_theme btn_md" @click="reserve()">예약하기</button>
+            <button type="button" class="btn btn_theme btn_md" @click="reserveConsulting()">예약하기</button>
           </router-link>
         </div>
       </div>
@@ -187,18 +187,23 @@ export default {
           state.info.consult_time = event.currentTarget.value;
         }
 
-        const reserve = function () {
+        const reserveConsulting = function () {
           console.log(state.info);
-          reserve(state.info);
+          // reserve(state.info);
         }
 
         return {
           store,
-          registerGuideList,
           state,
           setTime,
-          reserve
+          reserveConsulting
         };
   },
 }
 </script>
+<style scoped>
+.active{
+  background-color: black;
+  color: white;
+}
+</style>
