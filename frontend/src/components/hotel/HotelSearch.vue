@@ -29,7 +29,7 @@
               </div>
             </form>
             <div class="d-flex mt-2 justify-content-end">
-              <router-link to="/testimonials">
+              <router-link :to="{name : 'testimonials', params : { guideId : $route.params.guideId}}">
                 <button class="me-2 btn btn_theme btn-lg">예약하기</button>
               </router-link>
             </div>

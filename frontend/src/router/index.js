@@ -122,7 +122,7 @@ const routes = [
 
 
   {
-    path: '/testimonials',
+    path: '/testimonials/:guideId',
     name: 'testimonials',
     component: TestimonialsView
   },

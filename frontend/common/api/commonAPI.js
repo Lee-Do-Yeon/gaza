@@ -49,7 +49,10 @@ const uploadReview =(payload) => api.post('/api/reviews',payload)
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
 // 예약
-const reserve = payload => api.post('/api/books', payload)
+const reserve = payload => {
+    console.log(payload);
+    api.post('/api/books', payload)
+}
 
 // 가이드 검색
 const guideSearch = payload => api.get('/api/guides/search/', {params: {searchName: payload }})
