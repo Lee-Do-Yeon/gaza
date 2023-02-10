@@ -11,7 +11,11 @@
                 >
               </li>
               <li>
-                <router-link to="/guide_schedule">상담일정 확인</router-link>
+                <router-link :to="{
+                  name: 'guide_schedule',
+                  params: { guideId:this.userId },
+                }"
+                >상담일정 확인</router-link>   
               </li>
 
               <li>
@@ -123,91 +127,98 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-4 ms-5">
-              <h5 style="color: #15d4cd">Pick a time</h5>
-              <div class="tour_details_boxed">
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    01
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    02
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    03
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    04
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    05
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    06
-                  </button>
+
+            <!--start 시간대 설정 form -->
+              <div class="col-lg-4 ms-5">
+                <form v-on:submit.prevent="registerTime">
+                <h5 style="color: #15d4cd">Pick a time</h5>
+                <div class="tour_details_boxed">
+                  <div class="btn-group" role="group">
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="1">
+                      01
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="2">
+                      02
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="3">
+                      03
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="4">
+                      04
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="5">
+                      05
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="6">
+                      06
+                    </button>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="7">
+                      07
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="8">
+                      08
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="9">
+                      09
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="10">
+                      10
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="11">
+                      11
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="12">
+                      12
+                    </button>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="13">
+                      13
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="14">
+                      14
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="15">
+                      15
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="16">
+                      16
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="17">
+                      17
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="18">
+                      18
+                    </button>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="19">
+                      19
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="20">
+                      20
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="21">
+                      21
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="22">
+                      22
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="23">
+                      23
+                    </button>
+                    <button class="btn btn_theme btn_sm me-1 mb-2" type="submit" value="24">
+                      24
+                    </button>
+                  </div>
                 </div>
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    07
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    08
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    09
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    10
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    11
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    12
-                  </button>
-                </div>
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    13
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    14
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    15
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    16
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    17
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    18
-                  </button>
-                </div>
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    19
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    20
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    21
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    22
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    23
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" type="submit">
-                    24
-                  </button>
-                </div>
+                <button class="btn btn_theme btn_sm">submit</button>
+                </form>
               </div>
-            </div>
+            <!--end 시간대 설정 form -->
+
           </div>
         </div>
       </div>
@@ -217,6 +228,7 @@
 <script>
 import { mapState } from "vuex";
 const accountStore = "accountStore";
+import axios from "@/api/http";
 
 export default {
   name: "RoomDetails",
@@ -231,7 +243,9 @@ export default {
   },
   
   method:{
-    
+    registerTime(){
+      
+    }
   }
 
 

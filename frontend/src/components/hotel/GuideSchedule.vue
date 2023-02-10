@@ -11,13 +11,18 @@
                 >
               </li>
               <li>
-                <router-link to="/guide_schedule" class="active"
-                  >상담일정 확인</router-link
-                >
+                <router-link :to="{
+                  name: 'guide_schedule',
+                  params: { guideId:this.userId },
+                }"
+                >상담일정 확인</router-link>   
               </li>
-
               <li>
-                <router-link to="/guide_review">리뷰조회</router-link>
+                <router-link :to="{
+                  name: 'guide_review',
+                  params: { guideId:this.userId },
+                }"
+                >리뷰조회</router-link>      
               </li>
             
             </ul>
@@ -109,7 +114,6 @@ export default {
   data(){
     return{
       reservation:[],
-      guideId:Object
     }
   },
   computed:{
