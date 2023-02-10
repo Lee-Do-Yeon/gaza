@@ -21,6 +21,9 @@ const getters = {
   },
   getIsLogin: state => {
     return state.isLogin
+  },
+  getUserId: state => {
+    return state.userId
   }
 };
 
