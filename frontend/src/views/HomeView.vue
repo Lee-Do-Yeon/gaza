@@ -1,41 +1,10 @@
 <template>
 
-  <!-- Banner Area -->
   <Banner />
 
-
-  <!-- Form Area -->
   <Form />
-
-  <!-- imagination Area -->
-  <!-- <Imagination /> -->
-
- 
-
-  <!-- Top destinations -->
-  <!-- <TopDestinations /> -->
-
-
-  <!-- Explore our hot deals -->
-  <!-- <ExploreDeals /> -->
-
-  <!-- Offer Area -->
-  <!-- <Offer /> -->
-
-  <!--Promotional Tours Area -->
-  <PromotionalTours />``
+  <PromotionalTours />
   <PromotionalToursRecommand />
-
-  <!-- Destinations Area -->
-  <!-- <Destinations /> -->
-
-  <!-- News Area -->
-  <!-- <News /> -->
-
-  <!-- Our partners Area -->
-  <!-- <Partners /> -->
-
-  <!-- Cta Area -->
 
 
 </template>
