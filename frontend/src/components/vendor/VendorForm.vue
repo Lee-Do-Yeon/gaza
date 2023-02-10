@@ -146,6 +146,7 @@
 <script>
 import axios from "@/api/http";
 import { mapState } from "vuex";
+import router from "@/router";
 
 const accountStore = "accountStore";
 
@@ -168,26 +169,33 @@ export default {
     register() {
       if (this.check == false) alert("약관에 동의하세요");
       else {
-        console.log(this.accessToken, this.file1, this.file2, this.file3);
+        //console.log(this.accessToken, this.file1, this.file2, this.file3);
+        
+        const formData = new FormData();
+        formData.append('idFile', this.file1);
+        formData.append('certificateResidence', this.file2);
+        formData.append('certificate', this.file3);
 
         axios
           .post(
             "/users/guide",
             {
-              params: {
-                idFile: this.file1,
-                certificateResidence: this.file2,
-                certificate: this.file3,
-              },
+              'idFile':formData.get('idFile'),
+              'certificateResidence':formData.get('certificateResidence'),
+              'certificate':formData.get('certificate')
             },
             {
               headers: {
-                Authorization: "Bearer " + this.accessToken,
-                "Content-Type": "multipart/form-data",
+                "Authorization": "Bearer " + this.accessToken,
+                'Content-Type': 'multipart/form-data'
               },
             }
           )
-          .then((res) => console.log(res));
+          .then((res) => {
+            console.log(res.data),
+            router.push({name:"home"})
+          } 
+          );
       }
     },
     selectFile1() {
