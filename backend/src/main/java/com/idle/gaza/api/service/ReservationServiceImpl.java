@@ -43,11 +43,15 @@ public class ReservationServiceImpl implements ReservationService {
             user = userOptional.get();
         }
 
-        Guide guide = guideRepository.findByUserId_Id(reservationInfo.getGuideId());
+        Optional<Guide> guide = guideRepository.findGuideByGuideId(reservationInfo.getGuideId());
+
+        if(!guide.isPresent()) {
+            return null;
+        }
 
         Reservation reservation = Reservation.builder()
                 .userId(user)
-                .guideId(guide)
+                .guideId(guide.get())
                 .consultingDate(reservationInfo.getConsultingDate())
                 .reservationDate(LocalDateTime.now())
                 .travelStartDate(reservationInfo.getTravelStartDate())
