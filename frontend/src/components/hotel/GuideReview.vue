@@ -11,17 +11,20 @@
                 >
               </li>
               <li>
-                <router-link to="/guide_schedule">상담일정 확인</router-link>
+                <router-link :to="{
+                  name: 'guide_schedule',
+                  params: { guideId:this.userId },
+                }"
+                >상담일정 확인</router-link>   
+              </li>
+              <li>
+                <router-link :to="{
+                  name: 'guide_review',
+                  params: { guideId:this.userId },
+                }"
+                >리뷰조회</router-link>      
               </li>
 
-              <li>
-                <router-link to="/guide_review" class="active"
-                  >리뷰조회</router-link
-                >
-              </li>
-              <li>
-                <router-link to="/guide_QNA">질문답변</router-link>
-              </li>
             </ul>
           </div>
         </div>
@@ -127,6 +130,8 @@
 </template>
 <script>
 import axios from "@/api/http";
+import { mapState } from "vuex";
+const accountStore = "accountStore";
 
 export default {
   name: "GuideReview",
@@ -134,12 +139,13 @@ export default {
   data(){
     return{
       review:[],
-      name:String,// 가이드 이름
     };
   },
+  computed:{
+    ...mapState(accountStore, ["userId"]),
+  },
   created(){
-    this.name = this.$route.params.guideId;
-    this.reviewList(this.name);
+    this.reviewList(this.userId);
   },
   methods: {
     reviewList(guideId){
