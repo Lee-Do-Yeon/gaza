@@ -20,18 +20,6 @@
             console.log("manageRoute Call.");
             this.$emit("manageRoute", {index: this.index, type: type});
         },
-        deleteRoute() {
-            console.log("deleteRoute Call");
-            this.$emit("deleteRoute", {index: this.index, type: "DELETE"});
-        },
-        upRoute() {
-            console.log("upRoute Call");
-            this.$emit("upRoute", {index: this.index, type: "UP"});
-        },
-        downRoute() {
-            console.log("downRoute Call");
-            this.$emit("downRoute", {index: this.index, type: "DOWN"});
-        },
     },
   };
   </script>

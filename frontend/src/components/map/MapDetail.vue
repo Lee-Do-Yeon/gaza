@@ -6,9 +6,10 @@
             </div>
         <!-- <h3>{{ $route.params.roomId }}</h3> -->
         <div class="button-box" style="width:8%; height: 400px; background-color: lightgray; float:left">
-            <button class="btn btn-primary" type="button" @click="sendPoint('FOCUS')" style="margin:5px; width:90px;">FOCUS</button>
-            <button class="btn btn-primary" type="button" @click="saveRoute" style="margin:5px; width:90px;">저장</button>
-            <button class="btn btn-primary" type="button" @click="insertToDB" style="margin:5px; width:90px;">DB</button>
+            <button class="btn btn-light" type="button" @click="sendPoint('FOCUS')" style="margin:5px; width:90px;">부르기</button>
+            <button class="btn btn-light" type="button" @click="saveRoute(clickIndex, clickRecommend, clickPopular)" style="margin:5px; width:90px;">저장</button>
+            <button class="btn btn-light" type="button" @click="insertToDB" style="margin:5px; width:90px;">DB</button>
+            <button class="btn btn-light" type="button" @click="show" style="margin:5px; width:90px;">show</button>
         </div>
         <div id="map" style="width: 65%; height: 400px; position: relative; overflow: hidden; float:left">
         </div>
@@ -58,10 +59,15 @@ export default {
             reservationId: this.$route.params.reservationId,
             guideId: this.$route.params.guideId,
             // ----------------------------------
+            guideCountry: "대한민국",
+            guideCity: "광주",
             room: {},
             sender: "",
             clickLng: 33.450701,
             clickLat: 126.570667,
+            clickIndex: -1,
+            clickRecommend: false,
+            clickPopular: false,
             map: Object,
             recvPoint: {
                 recvLng: 0.0,
@@ -71,6 +77,7 @@ export default {
             travel_route: [],
             recommend_location_list: [],
             markerImageSrc: require('./markers.png'),
+            pointImageSrc: require('./point.png'),
             yourMarker: Object,
             OpenVidu: {
                 OV: undefined,
@@ -79,8 +86,11 @@ export default {
                 publisher: undefined,
                 subscribers: [],
             },
-            polyline: Object,
+            polyline: null,
             route_marker_list: [],
+            recommended_marker_list: [],
+            popular_marker_list: [],
+            popular_list: [],
             
         };
     },
@@ -102,6 +112,38 @@ export default {
                 "//dapi.kakao.com/v2/maps/sdk.js?appkey=05df79f7ea0889a7f001a0cb12f76df8&autoload=false&libraries=services";
             document.head.appendChild(script);
         }
+    },
+    watch: {
+        travel_route: {
+            handler() {
+
+                if(this.polyline != null){
+                    this.polyline.setMap(null);
+                }
+
+                console.log('루트 값 변화');
+
+                var linePath = [];
+
+                for (var route of this.travel_route) { // 위와 같은 동작을 하는 for / of 문
+                    linePath.push(new kakao.maps.LatLng(route.latitude, route.longitude));
+                }
+
+                console.log(linePath);
+
+                // 지도에 표시할 선을 생성합니다
+                this.polyline = new kakao.maps.Polyline({
+                    path: linePath, // 선을 구성하는 좌표배열 입니다
+                    strokeWeight: 5, // 선의 두께 입니다
+                    strokeColor: '#FFAE00', // 선의 색깔입니다
+                    strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                    strokeStyle: 'solid' // 선의 스타일입니다
+                });
+
+                this.polyline.setMap(this.map);
+            },
+            deep: true,
+        },
     },
     methods: {
         initMap() {
@@ -149,6 +191,7 @@ export default {
                 position: map.getCenter(),
                 image: myMarkerImage,
             });
+
             myMarker.setMap(map);
 
             kakao.maps.event.addListener(map, "click", function (mouseEvent) {
@@ -169,22 +212,20 @@ export default {
                 geocoder.addressSearch(
                     location.address, // 주소로 좌표 검색.
                     function (result, status) {
-                        console.log("추천장소 : " + location.address);
-                        // 정상적으로 검색이 완료됐으면
+                        console.log("추천 장소 : " + location.address);
+                        
                         if (status === kakao.maps.services.Status.OK) {
                             console.log(result[0].y, result[0].x);
                             var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                            var recommendMarker =  new kakao.maps.MarkerImage(base.markerImageSrc, new kakao.maps.Size(29, 40), {
-                                                                                                            spriteOrigin: new kakao.maps.Point(0, 0),    
-                                                                                                            spriteSize: new kakao.maps.Size(29, 166)  
-                                                                                                         });
+                            let recommendMarkerImage =  new kakao.maps.MarkerImage(base.markerImageSrc, new kakao.maps.Size(29, 40),
+                                                    { spriteOrigin: new kakao.maps.Point(0, 0), spriteSize: new kakao.maps.Size(29, 166) });
                             
-                            var marker = new kakao.maps.Marker({
+                            let recommendMarker = new kakao.maps.Marker({
                                 map: map,
                                 position: coords,
-                                image: recommendMarker,
+                                image: recommendMarkerImage,
                             });
-                            marker.setMap(map);
+                            recommendMarker.setMap(map);
 
                             // 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
                             var iwContent = '<div style="padding:5px;">'+location.name+'</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
@@ -197,13 +238,17 @@ export default {
                             });
 
                             // 마커에 클릭이벤트를 등록합니다
-                            kakao.maps.event.addListener(marker, 'click', function() {
+                            kakao.maps.event.addListener(recommendMarker, 'click', function() {
                                 // 마커 위에 인포윈도우를 표시합니다
-                                console.log(marker.position);
+                                console.log(recommendMarker.position);
                                 base.clickLat = coords.getLat();
                                 base.clickLng = coords.getLng();
                                 base.sendPoint("CLICK");
-                                infowindow.open(map, marker);  
+                                let index = base.recommend_location_list.findIndex(i => i.name== location.name);
+                                base.clickIndex = index;
+                                console.log("클릭한 추천 장소 index는 "+ base.clickIndex);
+                                base.clickRecommend = true;
+                                infowindow.open(map, recommendMarker);  
                             });
 
 
@@ -217,6 +262,93 @@ export default {
                 );
             });
             // End of 가이드의 추천 장소 출력.
+
+
+            // Start of 기존 유명 장소 가져오기.
+            let popular_list_index = 0;
+            var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+
+            // 장소 검색 객체를 생성합니다
+            var ps = new kakao.maps.services.Places(); 
+
+            // 키워드로 장소를 검색합니다
+            ps.keywordSearch(this.guideCountry+' '+this.guideCity+' 관광명소', placesSearchCB); 
+
+            // 키워드 검색 완료 시 호출되는 콜백함수 입니다
+            function placesSearchCB (data, status, pagination) {
+                if (status === kakao.maps.services.Status.OK) {
+                    console.log("검색");
+                    if(data.length < 300){
+                        for (var i=0; i<data.length; i++) {
+                            displayMarker(data[i]);
+                            console.log("여기여기 -> " + data[i].place_name);
+                        }
+                        popular_list_index += data.leghth;
+                    }else{
+                        for (var i=0; i<300; i++) {
+                            displayMarker(data[i]);
+                        }
+                        popular_list_index += 300;
+                    }
+                } 
+            }
+
+            // 지도에 마커를 표시하는 함수입니다
+            function displayMarker(place) {
+                
+
+                var imageSize = new kakao.maps.Size(12, 12), // 마커이미지의 크기입니다
+                imageOption = {offset: new kakao.maps.Point(6, 6)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                
+                // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                var markerImage = new kakao.maps.MarkerImage(base.pointImageSrc, imageSize, imageOption);
+
+
+                // 마커를 생성하고 지도에 표시합니다
+                var popularMarker = new kakao.maps.Marker({
+                    map: base.map,
+                    position: new kakao.maps.LatLng(place.y, place.x),
+                    image: markerImage,
+                });
+
+
+
+                base.popular_marker_list.push(popularMarker);
+                base.popular_list.push({
+                    name: place.place_name,
+                    address: place.address_name,
+                    latitude: place.y,
+                    longitude: place.x
+                });
+
+                
+                // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
+                // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+                (function(popularMarker, infowindow) {
+                    // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
+                    kakao.maps.event.addListener(popularMarker, 'mouseover', function() {
+                        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+                        infowindow.open(map, popularMarker);
+                    });
+
+                    // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
+                    kakao.maps.event.addListener(popularMarker, 'mouseout', function() {
+                        infowindow.close();
+                    });
+                })(popularMarker, infowindow);
+
+                // 마커에 클릭이벤트를 등록합니다
+                kakao.maps.event.addListener(popularMarker, 'click', function() {
+                    base.clickLat = place.y;
+                    base.clickLng = place.x;
+                    base.sendPoint("CLICK");
+                    let index = base.popular_list.findIndex(i => i.name == place.place_name);
+                    base.clickIndex = index;
+                    base.clickPopular = true;
+                    console.log("클릭한 유명 장소 index는 "+ base.clickIndex);
+                });
+            }
+            // End of 기존 유명 장소 가져오기.
 
         // ----------------------------------- init map ()
         },
@@ -349,24 +481,45 @@ export default {
             marker.setMap(this.map);
         },
         // [Function] 현재 클릭한 장소에 대해 travel_route를 추가하기 위해 데이터를 전송하는 함수.
-        async saveRoute(){
-            console.log("saveRoute() call.")
+        async saveRoute(index, clickRecommend, clickPopular){
+            console.log("saveRoute() call.");
             var address = await this.getAddress(this.clickLat, this.clickLng);
+            var name;
+
+            if(clickRecommend == false && clickPopular == false){
+                name = address;
+            }
+            if(clickRecommend == false && clickPopular == true){
+                name = this.popular_list[index].name;
+            }
+            if(clickRecommend == true && clickPopular == false){
+                name = this.recommend_location_list[index].name;
+            }
+
+            console.log(name);
             this.stompClient.send(
                 "/pub/map/route",
                 JSON.stringify({
                     roomId: this.roomId,
-                    name: address, // 이름을 어떻게 가져오면 좋을까?
+                    name: index != -1? name : address,
                     address: address,
                     latitude: this.clickLat,
                     longitude: this.clickLng,
                     type: "SAVE",
                 })
             );
+            this.clickIndex = -1;
+            this.clickPopular = false;
+            this.clickRecommend = false;
         },
         
         // [Function] 현재의 travel_route 리스트에 대해 선을 생성하는 함수.
         makeLineOfRoute(){
+
+            if(this.polyline != null){
+                (this.polyline).setMap(null);
+            }
+
             var linePath = [];
 
             for (var route of this.travel_route) { // 위와 같은 동작을 하는 for / of 문
@@ -383,12 +536,14 @@ export default {
                 strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
                 strokeStyle: 'solid' // 선의 스타일입니다
             });
+
+            (this.polyline).setMap(this.map);
         },
         // [Function] 받은 좌표를 저장하는 함수. (맵에 마커도 출력.)
         saveRecvRoute(route){
             console.log("saveRecvRoute() call.")
             this.travel_route.push({
-                name: route.address,
+                name: route.name,
                 address: route.address,
                 latitude: route.latitude,
                 longitude: route.longitude
@@ -401,8 +556,6 @@ export default {
             var saveMarkerImage =  new kakao.maps.MarkerImage(this.markerImageSrc, new kakao.maps.Size(29, 40), saveMakerOption);
 
             this.setMarker(route.latitude, route.longitude, saveMarkerImage);
-
-            this.makeLineOfRoute();
         },
         // [Function] 현재의 travel_route 리스트를 DB에 저장하는 함수.
         insertToDB(){
@@ -573,6 +726,13 @@ export default {
             },
 
             // ------------------------------------ OpenVidu (end) ------------------------------------
+
+            show(){
+                console.log("여기서 보여준다~~");
+                console.log(this.popular_list);
+                console.log(this.recommend_location_list);
+                console.log("------------------끝");
+            }
     }
 };
 </script>
@@ -580,5 +740,19 @@ export default {
 <style>
 [v-cloak] {
     display: none;
+}
+
+.btn_map {
+    display: block;
+    overflow: hidden;
+    width: 47px;
+    height: 16px;
+    padding: 9px 0 11px;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #000;
+    text-align: center;
+    text-decoration: none;
 }
 </style>
