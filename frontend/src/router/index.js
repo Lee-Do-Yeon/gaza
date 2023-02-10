@@ -16,7 +16,7 @@ import CompleteView from '../views/CompleteView.vue'
 import BecomeVendorView from '../views/BecomeVendorView.vue'
 import NotFound from '../components/NotFound.vue'
 import reviewView from '../views/reviewView.vue'
-import GuideScheduleView from '../views/GuideScheduleView.vue'
+import GuideSchedule from '@/components/hotel/GuideSchedule'
 import GuideReviewView from '../views/GuideReviewView.vue'
 import OpenViduView from '../views/OpenViduView.vue'
 import OpenViduViewCopy from '../views/OpenViduViewCopy.vue'
@@ -190,9 +190,9 @@ const routes = [
     component: reviewView
   },
   {
-    path:'/guide_schedule',
+    path:'/guide_schedule/:guideId',
     name : 'guide_schedule',
-    component:GuideScheduleView
+    component:GuideSchedule
   },
   {
     path: '/guide_review/:guideId',
