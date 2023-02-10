@@ -154,13 +154,13 @@ export default {
         travelStartDate: `${state.info.travel_start_date}T${travel_start_time}:00:00.000Z`,
         travelEndDate: `${state.info.travel_end_date}T${travel_end_time}:00:00.000Z`,
         numberOfPeople:state.info.numberOfPeople,
-        withDisabled: state.info.withDisabled,
-        withChildren: state.info.withChildren,
-        withElderly: state.info.withElderly,
+        withDisabled: state.info.withDisabled ? 1 : 0,
+        withChildren: state.info.withChildren ? 1 : 0,
+        withElderly: state.info.withElderly ? 1 : 0,
         note:state.info.note,
       }
       
-      reserve(JSON.stringify(reservation_info));
+      reserve(reservation_info);
     }
 
     return {
