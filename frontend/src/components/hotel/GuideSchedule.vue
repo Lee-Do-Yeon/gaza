@@ -19,9 +19,7 @@
               <li>
                 <router-link to="/guide_review">리뷰조회</router-link>
               </li>
-              <li>
-                <router-link to="/guide_QNA">질문답변</router-link>
-              </li>
+            
             </ul>
           </div>
           
@@ -101,7 +99,26 @@
   </section>
 </template>
 <script>
+import axios from "@/api/http";
+import { mapState } from "vuex";
+const accountStore = "accountStore";
+
 export default {
   name: "GuideSchedule",
+
+  data(){
+    return{
+      reservation:[],
+      guideId:Object
+    }
+  },
+  computed:{
+    ...mapState(accountStore, ["userId"]),
+  },
+
+  methods:{
+
+  }
+
 };
 </script>

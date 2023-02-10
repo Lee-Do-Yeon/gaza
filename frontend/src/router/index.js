@@ -18,7 +18,6 @@ import NotFound from '../components/NotFound.vue'
 import reviewView from '../views/reviewView.vue'
 import GuideScheduleView from '../views/GuideScheduleView.vue'
 import GuideReviewView from '../views/GuideReviewView.vue'
-import GuideQNAView from '../views/GuideQNAView.vue'
 import OpenViduView from '../views/OpenViduView.vue'
 import OpenViduViewCopy from '../views/OpenViduViewCopy.vue'
 import MapDetail from "@/components/map/MapDetail";
@@ -199,11 +198,6 @@ const routes = [
     path: '/guide_review/:guideId',
     name : 'guide_review',
     component : GuideReview
-  },
-  {
-    path : '/guide_QNA',
-    name : 'guide_QNA',
-    component :GuideQNAView
   },
   {
     path : '/openvidu',

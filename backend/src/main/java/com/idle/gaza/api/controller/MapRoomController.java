@@ -62,14 +62,17 @@ public class MapRoomController {
 
 
 	@PostMapping("/session")
-	public void setSession(@RequestBody String sessionId){
+	public void setSession(@RequestBody String sessionId, @RequestBody int reservationId){
 		System.out.println(sessionId);
-		httpSession.setAttribute("test", sessionId);
+
+		String key = String.valueOf(reservationId);
+		httpSession.setAttribute(key, sessionId);
 	}
 
-	@GetMapping("/session")
-	public ResponseEntity<?> getSession(){
-		return new ResponseEntity<>(httpSession.getAttribute("test"), HttpStatus.OK);
+	@GetMapping("/session/{reservationId}")
+	public ResponseEntity<?> getSession(@PathVariable int reservationId){
+		String key = String.valueOf(reservationId);
+		return new ResponseEntity<>(httpSession.getAttribute(key), HttpStatus.OK);
 	}
 
 
