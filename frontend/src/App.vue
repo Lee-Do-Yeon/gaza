@@ -1,10 +1,10 @@
 <template>
 
-  <Header v-if="$route.name !== 'admin'" />
+  <Header v-if="$route.name !== 'admin' && $route.name !== 'mapdetail'" />
 
   <router-view />
 
-  <Footer v-if="$route.name !== 'admin'" />
+  <Footer v-if="$route.name !== 'admin' && $route.name !== 'mapdetail'" />
 
 </template>
 

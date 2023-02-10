@@ -70,4 +70,19 @@ public class ReservationController {
         List<Integer> timeList = reservationService.getImpossibleTime(guideId, date);
         return new ResponseEntity<List<?>>(timeList, HttpStatus.OK);
     }
+
+    @PatchMapping("/consulting/create/{reservationId}")
+    @ApiOperation(value = "방 생성", notes = "가이드가 방을 생성하면 해당 세션ID를 DB에 업데이트하고 예약 상태를 업그레이드한다.(RE03)")
+    public ResponseEntity<?> createConsulting(@RequestParam("reservationId") @ApiParam(value = "예약 PK", required = true) int reservationId,
+                                               @RequestParam("sessionId") @ApiParam(value = "세션 ID", required = true) String sessionId){
+        reservationService.createConsulting(reservationId, sessionId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
+    @PatchMapping("/consulting/end/{reservationId}")
+    @ApiOperation(value = "컨설팅 끝", notes = "상태를 완료로 업그레이드한다.(RE01)")
+    public ResponseEntity<?> endConsulting(@RequestParam("reservationId") @ApiParam(value = "예약 PK", required = true) int reservationId){
+        reservationService.endConsulting(reservationId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
 }
