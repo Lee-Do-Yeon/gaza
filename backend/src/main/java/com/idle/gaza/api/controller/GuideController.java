@@ -91,6 +91,20 @@ public class GuideController {
 
 
     //////////////////////가이드 조회///////////////////////////
+    @GetMapping("/search/thema/")
+    @ApiOperation(value = "테마로 가이드 조회", notes = "테마로 가이드 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message = "사용자 없음")
+    })
+    public ResponseEntity<?> guideSearchByThema(@RequestParam String themaName){
+        List<GuideResponse> response = guideService.guideSearchByTheam(themaName);
+        if(response.size() == 0 ) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 
     //가이드 전체 조회
     @GetMapping()
