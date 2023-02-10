@@ -22,9 +22,7 @@
                 <h3>{{ guideInfo.name }}</h3>
                 <br />
                 <h5>{{ guideInfo.country }} / {{ guideInfo.city }} / {{ guideInfo.gender }}</h5>
-                <p v-for="data in themaInfo" :key="data.length">
-                  {{ data }}
-                </p>
+                <span v-for="data in themaInfo" :key="data.length"> #{{ data }} &nbsp; </span>
                 <div>{{ guideInfo.introduction }}</div>
               </div>
             </form>
@@ -47,12 +45,11 @@
                 >
                   <div class="news_item_boxed">
                     <div class="news_item_img">
-                      <img src="../../assets/img/news/news-1.png" alt="img"
-                      />
+                      <img src="../../assets/img/news/news-1.png" alt="img" />
                     </div>
                     <div class="news_item_content">
                       <h3>
-                        {{ loc.name }} 
+                        {{ loc.name }}
                       </h3>
                       <p>{{ loc.address }}</p>
                     </div>

@@ -1,12 +1,19 @@
+import axios from "axios";
 import { apiInstance } from "./index.js";
 
 const api = apiInstance();
 
+let axiosConfig = {
+    headers: {
+        "Content-Type": "multipart/form-data",
+    }
+}
 
 //유저구역
 //유저 회원가입
-const requestSignin = payload => api.post("/api/users", payload, {headers: { 'Content-Type': 'multipart/form-data'}});
+const requestSignin = payload => api.post("/api/users",payload,{ headers: {"Content-Type": "multipart/form-data"}})
 
+// https://i8c207.p.ssafy.io/api/users
 //유저 로그인
 const requestLogin = (payload) => api.post("/api/users/login", payload);
 
@@ -41,10 +48,12 @@ const uploadReview =(payload) => api.post('/api/reviews',payload)
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
+// 예약
+const reserve = payload => api.post('/api/books', payload)
 
 // 가이드 검색
 const guideSearch = payload => api.get('/api/guides/search/', {params: {searchName: payload }})
 
 const guideDetail = guideId => api.get(`/guides/${guideId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve};

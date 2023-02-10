@@ -2,6 +2,8 @@ package com.idle.gaza.db.entity;
 
 import io.jsonwebtoken.lang.Assert;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,6 +14,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 public class Reservation {
     @Id
     @Column(name="reservation_id")
