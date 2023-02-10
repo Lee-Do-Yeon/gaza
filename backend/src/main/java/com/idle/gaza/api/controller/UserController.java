@@ -113,7 +113,7 @@ public class UserController {
      *
      * @param accessToken String
      * @return ResponseEntity
-     * 
+     *
      * header에서 토큰 가져와서 유저 정보 가져와서 보여주기
      */
     @GetMapping("")
@@ -309,6 +309,8 @@ public class UserController {
                                                          @RequestParam("idFile") MultipartFile idFileFile,
                                                          @RequestParam("certificateResidence") MultipartFile certificateResidenceFile,
                                                          @RequestParam("certificate") MultipartFile certificateFile) {
+        log.info("token " + accessToken);
+        log.info("file1 =" + idFileFile.getName());
 
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
