@@ -118,6 +118,13 @@ export default {
 
   methods:{
 
+    showList(guideId){//상담 일정을 가져옴
+      axios.get(`/books/guide/${guideId}`).then((res)=>{
+        this.reservation = res.data;
+        console.log(this.reservation);
+      });
+    }
+
   }
 
 };
