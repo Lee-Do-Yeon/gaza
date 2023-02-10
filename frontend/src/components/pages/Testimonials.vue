@@ -11,7 +11,7 @@
               <div>
                 <div class="flight_Search_boxed date_flex_area">
                   <div class="Journey_date">
-                    <input type="date" name = "consult-date" v-model="state.info.consult_date"/>
+                    <input type="date" name = "consult-date" v-model="state.info.consultingDate"/>
                   </div>
                 </div>
               </div>
@@ -19,85 +19,9 @@
             <div class="col-lg-4 ms-2">
               <h3 style="color: #15d4cd">시간대 설정</h3>
               <div class="reser_boxed">
-                <div class="btn-group" role="group">
-                  <button type="button" class="btn btn_theme btn_sm me-1 mb-2" data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="1" @click="setTime">
-                    01
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="2" @click="setTime">
-                    02
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="3" @click="setTime">
-                    03
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="4" @click="setTime">
-                    04
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="5" @click="setTime">
-                    05
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2"  data-bs-toggle="button" aria-pressed="false" autocomplete="off" value="6" @click="setTime">
-                    06
-                  </button>
-                </div>
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="7" @click="setTime">
-                    07
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="8" @click="setTime">
-                    08
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="9" @click="setTime">
-                    09
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="10" @click="setTime">
-                    10
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="11" @click="setTime">
-                    11
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="12" @click="setTime">
-                    12
-                  </button>
-                </div>
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="13" @click="setTime">
-                    13
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="14" @click="setTime">
-                    14
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="15" @click="setTime">
-                    15
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="16" @click="setTime">
-                    16
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="17" @click="setTime">
-                    17
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="18" @click="setTime">
-                    18
-                  </button>
-                </div>
-                <div class="btn-group" role="group">
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="19" @click="setTime">
-                    19
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="20" @click="setTime">
-                    20
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="21" @click="setTime">
-                    21
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="22" @click="setTime">
-                    22
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="23" @click="setTime">
-                    23
-                  </button>
-                  <button class="btn btn_theme btn_sm me-1 mb-2" value="24" @click="setTime">
-                    24
-                  </button>
+                <!--  data-bs-toggle="button" aria-pressed="false" autocomplete="off" -->
+                <div class="btn-group" role="group" v-for="index in 4" :key="index">
+                  <button type="button" id class="btn btn_theme btn_sm me-1 mb-2" :value=(index-1)*6+btn_index @click="setTime" v-for="btn_index in 6" :key="btn_index"> {{ ((index-1)*6+btn_index < 10) ? '0' + ((index-1)*6+btn_index) : (index-1)*6+btn_index }}</button>
                 </div>
               </div>
             </div>
@@ -113,29 +37,41 @@
             <div class="row">
               <div class="col-lg-4">
                 <div class="form-check">
-                  <input class="form-check-input" name = "disabled" type="checkbox" v-model="state.info.withDisabled"/>
-                  <label class="form-check-label">장애 여부</label>
+                  <input class="form-check-input" name = "disabled" id="disabled" type="checkbox" v-model="state.info.withDisabled"/>
+                  <label class="form-check-label" for="disabled">장애 여부</label>
                 </div>
               </div>
               <div class="col-lg-4">
                 <div class="form-check">
-                  <input class="form-check-input" name = "with-baby" type="checkbox" v-model="state.info.withChildren"/>
-                  <label class="form-check-label">유아 동반</label>
+                  <input class="form-check-input" name = "with-baby" id = "with-baby" type="checkbox" v-model="state.info.withChildren"/>
+                  <label class="form-check-label" for="with-baby">유아 동반</label>
                 </div>
               </div>
               <div class="col-lg-4">
                 <div class="form-check">
-                  <input class="form-check-input" name = "with-weak-or-elderly" type="checkbox" v-model="state.info.withElderly"/>
-                  <label class="form-check-label">노약자 동반</label>
+                  <input class="form-check-input" name = "with-weak-or-elderly" id = "with-weak-or-elderly" type="checkbox" v-model="state.info.withElderly"/>
+                  <label class="form-check-label" for="with-weak-or-elderly">노약자 동반</label>
                 </div>
               </div>
               <div class="row mt-4 mb-4">
                 <div class="col-lg-6">
                   <div class="input-group">
-                    인원 : <input min="0" name = "head-count" type="number" v-model="state.info.numberOfPeople"/>
+                    인원 : &nbsp; <input min="0" name = "head-count" type="number" v-model="state.info.numberOfPeople"/>
                   </div>
                 </div>
-                <div class="col-lg-6">여행날짜: <input type="date" name = "travel-date" v-model="state.info.travel_date" /></div>
+                <div class="col-lg-6">여행시작날짜:
+                  <input type="date" name = "travel-start-date" v-model="state.info.travel_start_date" /> &nbsp;
+                  <select required name="travel-start-time" id="travel-start-time" v-model="state.info.travel_start_time">
+                    <option :value=index v-for="index in 24" :key="index">{{ index }}시</option>
+                  </select>
+                </div>
+                <div class="col-lg-6"></div>
+                <div class="col-lg-6">여행종료날짜: 
+                  <input type="date" name = "travel-end-date" v-model="state.info.travel_end_date" /> &nbsp;
+                  <select required name="travel-end-time" id="travel-end-time" v-model="state.info.travel_end_time">
+                    <option :value=index v-for="index in 24" :key="index">{{ index }}시</option>
+                  </select>
+                </div>
               </div>
               <div style="font-weight: bold">특이사항</div>
               <div class="col-lg-12 mt-4">
@@ -158,46 +94,82 @@
 <script>
 import { onMounted, reactive } from 'vue';
 import { useStore } from 'vuex';
+import { useRoute } from 'vue-router'
 import { reserve } from '../../../common/api/commonAPI.js'
 
 export default {
-    setup() {
-        const store = useStore();
+  setup() {
+    const store = useStore();
 
-        const state = reactive({
-          info: {
-            consultingDate: '',
-            consult_time: '',
-            withDisabled:'',
-            withChildren:'',
-            withElderly:'',
-            numberOfPeople:'',
-            travel_date:'',
-            note:'',
-          },
-        })
+    const route = useRoute()
 
-        onMounted(() => {
-          state.info.withDisabled=false
-          state.info.withChildren=false
-          state.info.withElderly=false
-        })
+    const state = reactive({
+      info: {
+        consultingDate: '',
+        consultingTime: '',
+        withDisabled:'',
+        withChildren:'',
+        withElderly:'',
+        numberOfPeople:'',
+        travel_start_date:'',
+        travel_start_time:'',
+        travel_end_date:'',
+        travel_end_time:'',
+        note:'',
+      },
+    })
 
-        const setTime = function() {
-          state.info.consult_time = event.currentTarget.value;
-        }
+    onMounted(() => {
+      state.info.withDisabled=false
+      state.info.withChildren=false
+      state.info.withElderly=false
+    })
 
-        const reserveConsulting = function () {
-          console.log(state.info);
-          // reserve(state.info);
-        }
+    const setTime = function() {
+      state.info.consultingTime = event.currentTarget.value;
+      focusBtn();
+    }
 
-        return {
-          store,
-          state,
-          setTime,
-          reserveConsulting
-        };
+    const focusBtn = function() {
+      const active_btn = document.querySelector(".btn-group > .active");
+
+      if(active_btn !== null){
+        active_btn.className = 'btn btn_theme btn_sm me-1 mb-2';
+      }
+
+      event.currentTarget.className = 'btn btn_theme btn_sm me-1 mb-2 active'
+    }
+
+    const reserveConsulting = function () {
+      console.log(state.info);
+
+      const travel_start_time = state.info.travel_start_time < 10 ? '0' + state.info.travel_start_time : state.info.travel_start_time; 
+
+      const travel_end_time = state.info.travel_end_time < 10 ? '0' + state.info.travel_end_time : state.info.travel_end_time;
+
+      const reservation_info = {
+        userId : store.getters['userStore/getUserId'],
+        guideId : route.params.guideId,
+        consultingDate: `${state.info.consultingDate}T${state.info.consultingTime}:00:00.000Z`,
+        travelStartDate: `${state.info.travel_start_date}T${travel_start_time}:00:00.000Z`,
+        travelEndDate: `${state.info.travel_end_date}T${travel_end_time}:00:00.000Z`,
+        numberOfPeople:state.info.numberOfPeople,
+        withDisabled: state.info.withDisabled,
+        withChildren: state.info.withChildren,
+        withElderly: state.info.withElderly,
+        note:state.info.note,
+      }
+      
+      reserve(JSON.stringify(reservation_info));
+    }
+
+    return {
+      store,
+      state,
+      setTime,
+      reserveConsulting,
+      focusBtn,
+    };
   },
 }
 </script>
