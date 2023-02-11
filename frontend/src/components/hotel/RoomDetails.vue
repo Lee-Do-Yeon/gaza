@@ -9,23 +9,21 @@
                 <router-link to="/room-details" class="active">내 정보 확인 및 수정</router-link>
               </li>
               <li>
-                <!-- <router-link
+                <router-link
                   :to="{
                     name: 'guide_schedule',
-                    params: { guideId: this.userId },
                   }"
                   >상담일정 확인</router-link
-                > -->
+                >
               </li>
 
               <li>
-                <!-- <router-link
+                <router-link
                   :to="{
                     name: 'guide_review',
-                    params: { guideId: this.userId },
                   }"
                   >리뷰조회</router-link
-                > -->
+                >
               </li>
             </ul>
           </div>
@@ -39,15 +37,19 @@
             <hr />
 
             <!--자기소개 form -->
-            <form class="d-flex" v-on:submit.prevent="updateMyPage">
-              <div class="dashboard_common_table" style="height: 655px">
-                <img
-                  style="width: 300px; height: 150px; border-radius: 50%"
-                  src="../../assets/img/common/dashboard-user.png"
-                  alt="img"
-                />
+            <div class="d-flex">
+              <div class="dashboard_common_table" style="height: 705px">
+                <form>
+                  <img
+                    style="width: 200px; height: 150px; border-radius: 50%"
+                    src="../../assets/img/common/dashboard-user.png"
+                    alt="img"
+                  />
+                  <button class="btn btn_theme">수정</button>
+                </form>
+
                 <div style="text-align: center; padding: 60px">
-                  <button class="btn btn_theme">사진 업로드</button>
+                  <input type="file" class="btn btn_theme" style="width: 200px" />
                 </div>
               </div>
 
@@ -125,7 +127,7 @@
                   </div>
                 </div>
               </div>
-            </form>
+            </div>
 
             <!--start 추천 장소 -->
             <div class="new_main_news_box">
@@ -234,7 +236,7 @@
 import { onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import { registerTime, myPageUpdate } from "../../../common/api/commonAPI.js";
+import { registerTime, myPageUpdate, myPageShow } from "../../../common/api/commonAPI.js";
 
 export default {
   setup() {
@@ -252,11 +254,20 @@ export default {
       country: "",
       introduction: "",
       onlineIntroduction: "",
-      price: Object,
+      price: 0,
+      guideId: null, //guide pk
     });
 
-    onMounted(() => {});
+    onMounted(() => {
+      const accessToken = store.getters["accountStore/getAccessToken"];
+      console.log(accessToken);
+      guide_info.value = myPageShow(accessToken);
+      console.log(guide_info);
+    });
 
+    //가이드의 추천 명소
+
+    //상담 불가능 시간대 설정
     const registerTime = function () {
       const set_time_info = {
         userId: store.getters["accountStore/getUserId"],
@@ -268,8 +279,6 @@ export default {
         },
       };
     };
-
-    registerTime();
 
     //마이페이지 수정
     const updateMyPage = function () {

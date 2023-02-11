@@ -24,6 +24,9 @@ const getters = {
   },
   getUserId: state => {
     return state.userId
+  },
+  getAccessToken: state => {
+    return state.accessToken;
   }
 };
 
