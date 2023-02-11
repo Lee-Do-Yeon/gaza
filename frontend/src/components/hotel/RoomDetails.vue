@@ -236,6 +236,7 @@
 import { onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+import { ref } from "vue";
 import { registerTime, myPageUpdate, myPageShow } from "../../../common/api/commonAPI.js";
 
 export default {
@@ -249,20 +250,13 @@ export default {
       second: "",
     });
 
-    const guide_info = reactive({
-      city: "",
-      country: "",
-      introduction: "",
-      onlineIntroduction: "",
-      price: 0,
-      guideId: null, //guide pk
-    });
+    const guide_info = ref([]);
 
     onMounted(() => {
       const accessToken = store.getters["accountStore/getAccessToken"];
       console.log(accessToken);
       guide_info.value = myPageShow(accessToken);
-      console.log(guide_info);
+      console.log(guide_info.value);
     });
 
     //가이드의 추천 명소

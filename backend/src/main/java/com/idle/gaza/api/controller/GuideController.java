@@ -105,8 +105,9 @@ public class GuideController {
     })
     public ResponseEntity<?> myPageShow(@RequestHeader("Authorization") String accessToken){
         String token = tokenUtil.getTokenFromHeader(accessToken);
-        String id = tokenUtil.getUserIdFromToken(token);
 
+        String id = tokenUtil.getUserIdFromToken(token);
+        log.info("id = " + id);
         GuideResponse response = guideService.getMyPage(id);
 
         if(response == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
