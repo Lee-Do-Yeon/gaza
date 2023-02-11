@@ -1,13 +1,14 @@
 package com.idle.gaza.api.controller;
 
 import com.idle.gaza.api.request.DayOffPostRequest;
-import com.idle.gaza.api.request.GuideRegisterPostRequest;
+import com.idle.gaza.api.request.GuideRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.request.TimeRegisterPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.common.util.S3Uploader;
+import com.idle.gaza.common.util.TokenUtil;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class GuideController {
     @Autowired
     private S3Uploader s3Uploader;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
 
     @GetMapping(value = "/search")
     @ApiOperation(value = "검색 창으로 가이드 조회", notes = "나라 또는 도시를 통해 가이드를 조회한다.")
@@ -65,7 +69,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> guideRegister(@RequestPart GuideRegisterPostRequest guide, @RequestPart(value = "uploadFile", required = false) MultipartFile multipartFile) {
+    public ResponseEntity<?> guideRegister(@RequestPart GuideRequest guide, @RequestPart(value = "uploadFile", required = false) MultipartFile multipartFile) {
         log.info("guide = " + guide.toString());
         if (!multipartFile.isEmpty()) {
             String uploadPath = rootPath + "/" + "guide" + "/" + "picture" + "/";
@@ -88,6 +92,47 @@ public class GuideController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    ///////////////////////마이 페이지///////////////////////////////
+
+    //마이페이지 조회
+    @GetMapping("/mypage")
+    @ApiOperation(value = "마이페이지 조회", notes = "가이드 마이페이지 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message = "사용자 없음")
+    })
+    public ResponseEntity<?> myPageShow(@RequestHeader("Authorization") String accessToken){
+        String token = tokenUtil.getTokenFromHeader(accessToken);
+        String id = tokenUtil.getUserIdFromToken(token);
+
+        GuideResponse response = guideService.getMyPage(id);
+
+        if(response == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //마이페이지 수정
+    @PutMapping("/mypage")
+    @ApiOperation(value = "마이페이지 수정", notes = "가이드 마이페이지 수정")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message = "사용자 없음")
+    })
+    public ResponseEntity<?> myPageModify(@RequestHeader("Authorization") String accessToken, @RequestBody GuideRequest guide){
+        String token = tokenUtil.getTokenFromHeader(accessToken);
+        String id = tokenUtil.getUserIdFromToken(token);
+
+        int result = guideService.setMyPage(id, guide);
+
+        if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 
     //////////////////////가이드 조회///////////////////////////

@@ -8,8 +8,8 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-@ApiModel("GuideRegisterPostRequest")
-public class GuideRegisterPostRequest {
+@ApiModel("GuideRequest")
+public class GuideRequest {
 
     private int guideId;//guide pk
 
