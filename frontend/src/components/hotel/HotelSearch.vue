@@ -27,7 +27,9 @@
               </div>
             </form>
             <div class="d-flex mt-2 justify-content-end">
-              <router-link :to="{name : 'testimonials', params : { guideId : $route.params.guideId}}">
+              <router-link
+                :to="{ name: 'testimonials', params: { guideId: $route.params.guideId } }"
+              >
                 <button class="me-2 btn btn_theme btn-lg">예약하기</button>
               </router-link>
             </div>
@@ -181,16 +183,6 @@ export default {
       });
     };
 
-    // const detail = async (guideId) => {
-    //   try {
-    //     const response = await guideDetail(parseInt(guideId));
-    //     guideInfo.value = response.data.result;
-    //     recommendInfo.value = guideInfo.guideLocationList;
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // };
-
     onMounted(() => {
       const guideId = parseInt(route.params.guideId);
       //console.log(guideId);
@@ -221,7 +213,6 @@ export default {
       MoveReser,
       guideInfo,
       recommendInfo,
-      //detail,
       themaInfo,
     };
   },

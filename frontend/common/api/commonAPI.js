@@ -9,6 +9,8 @@ let axiosConfig = {
     }
 }
 
+
+
 //유저구역
 //유저 회원가입
 const requestSignin = payload => api.post("/api/users",payload,{ headers: {"Content-Type": "multipart/form-data"}})
@@ -54,9 +56,25 @@ const reserve = payload => {
     api.post('/api/books', payload)
 }
 
+//상담 불가능 시간대 설정
+const registerTime = payload => {
+    console.log(payload);
+    
+    api.post('/api/guides/time', payload);
+}
+
+//가이드 마이페이지 수정
+const myPageUpdate = payload => {
+    console.log(payload);
+    api.put('/api/mypage', payload,{headers: {Authorization: accessToken}});
+}
+
+//가이드 마이 페이지 조회
+const myPageShow = accessToken => api.get('/api/mypage', { headers: { Authorization: accessToken } });
+
 // 가이드 검색
 const guideSearch = payload => api.get('/api/guides/search/', {params: {searchName: payload }})
 
 const guideDetail = guideId => api.get(`/guides/${guideId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow};

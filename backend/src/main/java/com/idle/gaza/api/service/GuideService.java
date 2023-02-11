@@ -1,6 +1,6 @@
 package com.idle.gaza.api.service;
 
-import com.idle.gaza.api.request.GuideRegisterPostRequest;
+import com.idle.gaza.api.request.GuideRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LocationResponse;
@@ -40,6 +40,11 @@ public interface GuideService {
     int tourThemaDelete(int guideId, int themaId);
 
     //가이드 등록
-    int guideRegister(GuideRegisterPostRequest guide);
+    int guideRegister(GuideRequest guide);
+
+
+    //가이드 마이페이지 기능
+    GuideResponse getMyPage(String loginId);
+    int setMyPage(String loginId, GuideRequest request);
 
 }
