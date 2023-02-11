@@ -11,13 +11,6 @@
             />
         </div>
         <div style="clear: both"></div>
-        <!-- <h3>{{ $route.params.roomId }}</h3> -->
-        <!-- <div class="button-box" style="width:8%; height: 400px; background-color: lightgray; float:left">
-            <button class="btn btn-light" type="button" @click="sendPoint('FOCUS')" style="margin:5px; width:90px;">부르기</button>
-            <button class="btn btn-light" type="button" @click="saveRoute(clickIndex, clickRecommend, clickPopular)" style="margin:5px; width:90px;">저장</button>
-            <button class="btn btn-light" type="button" @click="insertToDB" style="margin:5px; width:90px;">DB</button>
-            <button class="btn btn-light" type="button" @click="show" style="margin:5px; width:90px;">show</button>
-        </div> -->
         <div>
             <div
                 id="map"
@@ -72,7 +65,13 @@
             </div>
         </div>
         <div class="chat">
-            <div style="height: 85%"></div>
+            <div style="height: 85%; overflow: auto">
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="item in messages" :key="item">
+                        {{ item.writerName }} - {{ item.message }}
+                    </li>
+                </ul>
+            </div>
             <div class="input-group-append">
                 <input type="text" v-model="msg" v-on:keypress.enter="sendMessage" />
                 <button class="btn btn-primary" type="button" @click="sendMessage">전송</button>
@@ -90,8 +89,8 @@ import UserVideo from "@/openvidu/UserVideo";
 import { OpenVidu } from "openvidu-browser";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
-
-const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
+// const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
+const APPLICATION_SERVER_URL = "http://localhost:8080";
 
 export default {
     components: {
@@ -105,7 +104,10 @@ export default {
             userName: this.$route.params.userName,
             reservationId: this.$route.params.reservationId,
             guideId: this.$route.params.guideId,
-            // ----------------------------------
+            // --------채팅 데이터-----------
+            msg: "",
+            messages: [],
+            // -----------------------------
             guideCountry: "대한민국",
             guideCity: "광주",
             room: {},
@@ -143,7 +145,6 @@ export default {
     created() {
         console.log(this.roomId);
         this.connect();
-        this.findRoom();
         this.getRecommend();
         this.joinSession();
     },
@@ -174,8 +175,6 @@ export default {
                     // 위와 같은 동작을 하는 for / of 문
                     linePath.push(new kakao.maps.LatLng(route.latitude, route.longitude));
                 }
-
-                console.log(linePath);
 
                 // 지도에 표시할 선을 생성합니다
                 this.polyline = new kakao.maps.Polyline({
@@ -261,10 +260,7 @@ export default {
                 geocoder.addressSearch(
                     location.address, // 주소로 좌표 검색.
                     function (result, status) {
-                        console.log("추천 장소 : " + location.address);
-
                         if (status === kakao.maps.services.Status.OK) {
-                            console.log(result[0].y, result[0].x);
                             var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
                             var imageSrc = require("./image/recommendMarker.png"),
@@ -297,7 +293,6 @@ export default {
                             // 마커에 클릭이벤트를 등록합니다
                             kakao.maps.event.addListener(recommendMarker, "click", function () {
                                 // 마커 위에 인포윈도우를 표시합니다
-                                console.log(recommendMarker.position);
                                 base.clickLat = coords.getLat();
                                 base.clickLng = coords.getLng();
                                 base.sendPoint("CLICK");
@@ -336,11 +331,9 @@ export default {
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
             function placesSearchCB(data, status, pagination) {
                 if (status === kakao.maps.services.Status.OK) {
-                    console.log("검색");
                     if (data.length < 300) {
                         for (var i = 0; i < data.length; i++) {
                             displayMarker(data[i]);
-                            console.log("여기여기 -> " + data[i].place_name);
                         }
                         popular_list_index += data.leghth;
                     } else {
@@ -421,17 +414,6 @@ export default {
             );
             this.map.panTo(moveLatLon);
         },
-        // [Function] 현재 지도 방을 찾는 함수.
-        findRoom() {
-            axios.get(APPLICATION_SERVER_URL + `/map/room/${this.reservationId}`).then((res) => {
-                //console.log("찾은 방 : " + JSON.stringify(res.data));
-                //console.log("찾은 방 이름 : " + res.data.name);
-                this.room = {
-                    name: res.data.name,
-                    roomId: res.data.roomId,
-                };
-            });
-        },
         // [Function] 클릭한 좌표를 전송하는 함수.
         sendPoint(type) {
             this.stompClient.send(
@@ -472,8 +454,8 @@ export default {
         },
         // [Function] 웹소켓 연결 함수.
         connect() {
-            //var sock = new SockJS("http://localhost:8080/ws-stomp");
-            var sock = new SockJS("https://i8c207.p.ssafy.io/ws-stomp");
+            var sock = new SockJS("http://localhost:8080/ws-stomp");
+            // var sock = new SockJS("https://i8c207.p.ssafy.io/ws-stomp");
             this.stompClient = Stomp.over(sock);
             console.log(`소켓 연결을 시도합니다.`);
             // pub/sub event
@@ -482,6 +464,7 @@ export default {
                 (frame) => {
                     // 소켓 연결 성공
                     console.log("소켓 연결 성공", frame);
+
                     this.stompClient.subscribe(`/sub/map/room2/${this.roomId}`, (point) => {
                         // console.log("구독으로 받은 좌표 입니다.", point.body);
                         // console.log("구독으로 받은 좌표의 타입은 ", JSON.parse(point.body).type);
@@ -501,6 +484,19 @@ export default {
                             this.saveRecvRoute(routeItem);
                         }
                     });
+                    this.stompClient.subscribe(`/sub/chat/room/${this.roomId}`, (res) => {
+                        this.messages.push(JSON.parse(res.body));
+                    });
+
+                    //채팅방 입장(서버에 유저가 들어왔음을 알림)
+                    this.stompClient.send(
+                        "/pub/chat/message",
+                        JSON.stringify({
+                            messageType: "ENTER",
+                            chatRoomId: this.roomId,
+                            writerName: this.userName,
+                        })
+                    );
                 },
                 // 소켓 연결 실패
                 (error) => {
@@ -512,11 +508,9 @@ export default {
         // [Function] 현재 가이드의 추천 장소 데이터를 가져오는 함수.
         getRecommend() {
             console.log("getRecommend() call.");
-            console.log(this.guideId);
             axios.get(APPLICATION_SERVER_URL + `/guides/location/${this.guideId}`).then((res) => {
                 this.recommend_location_list = res.data;
             });
-            console.log(this.recommend_location_list);
         },
         // [Function] 좌표를 이용해서 법정동 주소를 얻는 함수.
         getAddress(lat, lng) {
@@ -524,7 +518,6 @@ export default {
             return new Promise((resolve, reject) => {
                 geocoder.coord2Address(lng, lat, function (result, status) {
                     if (status === kakao.maps.services.Status.OK) {
-                        console.log(result[0].address.address_name);
                         resolve(result[0].address.address_name);
                     } else {
                         reject(status);
@@ -603,7 +596,6 @@ export default {
         },
         // [Function] 받은 좌표를 저장하는 함수. (맵에 마커도 출력.)
         saveRecvRoute(route) {
-            console.log("saveRecvRoute() call.");
             this.travel_route.push({
                 name: route.name,
                 address: route.address,
@@ -636,12 +628,10 @@ export default {
                 });
         },
 
-        // -----------------------------------------------------------------------------------
+        // ------------------------------ 여행 일정 조작 함수 --------------------------------
 
         // [Function] 여행 일정을 관리하는 함수. (타입에 맞춰서 데이터 전송)
         manageRoute(param) {
-            console.log("manageRoute");
-            console.log(param.index + " " + param.type);
             var route = this.travel_route[param.index];
             route.type = param.type;
             route.roomId = this.roomId;
@@ -650,8 +640,7 @@ export default {
 
         // [Function] 여행 일정 삭제.
         deleteRoute(route) {
-            const index = this.travel_route.findIndex((i) => i.name == route.address);
-            console.log("호출이염 " + index);
+            const index = this.travel_route.findIndex((i) => i.address == route.address);
             this.route_marker_list[index].setMap(null);
             this.route_marker_list.splice(index, 1);
             this.travel_route.splice(index, 1);
@@ -659,7 +648,7 @@ export default {
 
         // [Function] 여행 일정 위로 올리기.
         upRoute(route) {
-            const index = this.travel_route.findIndex((i) => i.name == route.address);
+            const index = this.travel_route.findIndex((i) => i.address == route.address);
             if (index != 0) {
                 [this.travel_route[index - 1], this.travel_route[index]] = [
                     this.travel_route[index],
@@ -670,7 +659,7 @@ export default {
 
         // [Function] 여행 일정 내리기.
         downRoute(route) {
-            const index = this.travel_route.findIndex((i) => i.name == route.address);
+            const index = this.travel_route.findIndex((i) => i.address == route.address);
             if (index != this.travel_route.length - 1) {
                 [this.travel_route[index + 1], this.travel_route[index]] = [
                     this.travel_route[index],
@@ -805,11 +794,19 @@ export default {
 
         // ------------------------------------ OpenVidu (end) ------------------------------------
 
-        show() {
-            console.log("여기서 보여준다~~");
-            console.log(this.popular_list);
-            console.log(this.recommend_location_list);
-            console.log("------------------끝");
+        // ------------------------------------- Chat ---------------------------------------------
+        sendMessage() {
+            //메시지를 보냄
+            this.stompClient.send(
+                "/pub/chat/message",
+                JSON.stringify({
+                    messageType: "CHAT",
+                    chatRoomId: this.roomId,
+                    writerName: this.userName,
+                    message: this.msg,
+                })
+            );
+            this.msg = "";
         },
     },
 };
