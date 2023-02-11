@@ -124,6 +124,8 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<ApiResponse<Object>> getUser(@RequestHeader("Authorization") String accessToken) {
+        log.debug("accessToken = " + accessToken);
+        
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
         String id = tokenUtil.getUserIdFromToken(token);
