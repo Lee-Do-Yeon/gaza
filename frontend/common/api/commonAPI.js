@@ -66,12 +66,15 @@ const registerTime = payload => {
 //가이드 마이페이지 수정
 const myPageUpdate = payload => {
     console.log(payload);
-    api.post('/api/mypage', payload,{headers: {Authorization: accessToken}});
+    api.put('/api/mypage', payload,{headers: {Authorization: accessToken}});
 }
+
+//가이드 마이 페이지 조회
+const myPageShow = accessToken => api.get('/api/mypage', { headers: { Authorization: accessToken } });
 
 // 가이드 검색
 const guideSearch = payload => api.get('/api/guides/search/', {params: {searchName: payload }})
 
 const guideDetail = guideId => api.get(`/guides/${guideId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow};

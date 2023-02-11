@@ -6,25 +6,24 @@
           <div class="dashboard_menu_area">
             <ul>
               <li>
-                <router-link to="/room-details"
-                  >내 정보 확인 및 수정</router-link
+                <router-link to="/room-details">내 정보 확인 및 수정</router-link>
+              </li>
+              <li>
+                <router-link
+                  :to="{
+                    name: 'guide_schedule',
+                  }"
+                  >상담일정 확인</router-link
                 >
               </li>
               <li>
-                <router-link :to="{
-                  name: 'guide_schedule',
-                  params: { guideId:this.userId },
-                }"
-                >상담일정 확인</router-link>   
+                <router-link
+                  :to="{
+                    name: 'guide_review',
+                  }"
+                  >리뷰조회</router-link
+                >
               </li>
-              <li>
-                <router-link :to="{
-                  name: 'guide_review',
-                  params: { guideId:this.userId },
-                }"
-                >리뷰조회</router-link>      
-              </li>
-
             </ul>
           </div>
         </div>
@@ -80,8 +79,10 @@
                   <tr>
                     <td>{{ rev.reviewId }}</td>
                     <td>{{ rev.createdDate }}</td>
-                    <td >
-                      <i v-for="score in rev.score" :key="score"
+                    <td>
+                      <i
+                        v-for="score in rev.score"
+                        :key="score"
                         class="fas fa-sharp fa-solid fa-star"
                         style="color: yellow"
                       ></i>
@@ -123,7 +124,6 @@
             </ul>
           </div> -->
         </div>
-        
       </div>
     </div>
   </section>
@@ -136,24 +136,23 @@ const accountStore = "accountStore";
 export default {
   name: "GuideReview",
 
-  data(){
-    return{
-      review:[],
+  data() {
+    return {
+      review: [],
     };
   },
-  computed:{
+  computed: {
     ...mapState(accountStore, ["userId"]),
   },
-  created(){
+  created() {
     this.reviewList(this.userId);
   },
   methods: {
-    reviewList(guideId){
-      axios.get(`/reviews/guide/${guideId}`).then((res)=>{
+    reviewList(guideId) {
+      axios.get(`/reviews/guide/${guideId}`).then((res) => {
         this.review = res.data;
-      })
-    }
-  }
-
+      });
+    },
+  },
 };
 </script>
