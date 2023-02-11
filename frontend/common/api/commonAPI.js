@@ -70,7 +70,7 @@ const myPageUpdate = payload => {
 }
 
 //가이드 마이 페이지 조회
-const myPageShow = accessToken => api.get('/api/mypage', { headers: { Authorization: accessToken } });
+const myPageShow = accessToken => api.get('/api/guides/mypage', { headers: { Authorization: accessToken } });
 
 // 가이드 검색
 const guideSearch = payload => api.get('/api/guides/search/', {params: {searchName: payload }})
