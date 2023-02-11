@@ -1,6 +1,6 @@
 package com.idle.gaza.api.service;
 
-import com.idle.gaza.api.request.GuideRegisterPostRequest;
+import com.idle.gaza.api.request.GuideRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.response.DayOffResponse;
 import com.idle.gaza.api.response.GuideResponse;
@@ -394,7 +394,7 @@ public class GuideServiceImpl implements GuideService {
     //////////////////가이드 등록////////////////////////////
 
     @Override
-    public int guideRegister(GuideRegisterPostRequest guide) {
+    public int guideRegister(GuideRequest guide) {
         //해당 회원이 존재하는지 확인함
         Optional<User> checkId = userRepository.findById(guide.getId());
         if (!checkId.isPresent()) return 0;
@@ -519,6 +519,56 @@ public class GuideServiceImpl implements GuideService {
 
         return 1;
     }
+
+
+    /////////////////////////마이페이지 기능////////////////////////////
+
+    @Override
+    public GuideResponse getMyPage(String loginId) {
+        Optional<User> user = userRepository.findById(loginId);
+        if(!user.isPresent()) return null;
+
+        User getUser = user.get();
+        Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
+        if(!guide.isPresent()) return null;
+
+        Guide getGuide = guide.get();
+
+        GuideResponse response = GuideResponse.builder()
+                .guideId(getGuide.getGuideId())
+                .country(getGuide.getCountry())
+                .price(getGuide.getPrice())
+                .introduction(getGuide.getIntroduction())
+                .onelineIntroduction(getGuide.getOnlineIntroduction())
+                .city(getGuide.getCity())
+                .picture(getGuide.getPicture())
+                .build();
+
+        return response;
+    }
+
+    @Override
+    public int setMyPage(String loginId, GuideRequest request) {
+        Optional<User> user = userRepository.findById(loginId);
+        if(!user.isPresent()) return 0;
+
+        User getUser = user.get();
+        Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
+        if(!guide.isPresent()) return 0;
+
+        Guide updateGuide = guide.get();
+
+        updateGuide.setCity(request.getCity());
+        updateGuide.setCountry(request.getCountry());
+        updateGuide.setIntroduction(request.getIntroduction());
+        updateGuide.setOnlineIntroduction(request.getOnlineIntroduction());
+        updateGuide.setPrice(request.getPrice());
+
+        guideRepository.save(updateGuide);
+
+        return 1;
+    }
+
 
 
 }
