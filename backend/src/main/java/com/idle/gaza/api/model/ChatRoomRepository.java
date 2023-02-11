@@ -1,6 +1,7 @@
 package com.idle.gaza.api.model;
 
 import com.idle.gaza.api.pubsub.RedisSubscriber;
+import com.idle.gaza.db.entity.ConsultingRoom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.HashOperations;
@@ -24,7 +25,8 @@ public class ChatRoomRepository {
 
     //redis
     private final RedisTemplate<String, Object> redisTemplate;
-    private HashOperations<String, String, ChatRoom> hashChatRoom;
+
+    private HashOperations<String, String, ConsultingRoom> hashChatRoom;
     private static final String CHAT_ROOMS = "CHAT_ROOM";
 
     //구독 처리 서비스
@@ -41,22 +43,24 @@ public class ChatRoomRepository {
 
 
     /* 채팅방 전체 조회 */
-    public List<ChatRoom> findAllRoom() {
+    public List<ConsultingRoom> findAllRoom() {
         return hashChatRoom.values(CHAT_ROOMS);
     }
 
     /* 채팅방 번호로 채팅 방 조회 */
-    public ChatRoom findByRoomId(String roomId) {
+    public ConsultingRoom findByRoomId(String roomId) {
         return hashChatRoom.get(CHAT_ROOMS, roomId);
     }
 
     /* 채팅방 생성 : 서버 간 채팅방 공유를 위해 redis hash에 저장한다. */
-    public ChatRoom createRoom(String name) {
-        ChatRoom newChatRoom = ChatRoom.create(name);
+    public ConsultingRoom createRoom(String name) {
+        ConsultingRoom newChatRoom = ConsultingRoom.create(name);
+        System.out.println(newChatRoom.getRoomId());
         hashChatRoom.put(CHAT_ROOMS, newChatRoom.getRoomId(), newChatRoom);
 
         return newChatRoom;
     }
+
 
     /*
     * 채팅방 입장 : redis에 topic을 만들고, pub/sub 통신을 하기 위해 리스너를 설정함
