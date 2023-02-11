@@ -67,13 +67,23 @@
         <div class="chat">
             <div style="height: 85%; overflow: auto">
                 <ul class="list-group">
-                    <li class="list-group-item" v-for="item in messages" :key="item">
-                        {{ item.writerName }} - {{ item.message }}
+                    <li
+                        class="list-group-item"
+                        style="text-align: left"
+                        v-for="item in messages"
+                        :key="item"
+                    >
+                        {{ item.writerName }} : {{ item.message }}
                     </li>
                 </ul>
             </div>
             <div class="input-group-append">
-                <input type="text" v-model="msg" v-on:keypress.enter="sendMessage" />
+                <input
+                    type="text"
+                    v-model="msg"
+                    style="width: 80%; height: 35px"
+                    v-on:keypress.enter="sendMessage"
+                />
                 <button class="btn btn-primary" type="button" @click="sendMessage">전송</button>
             </div>
         </div>
@@ -89,8 +99,8 @@ import UserVideo from "@/openvidu/UserVideo";
 import { OpenVidu } from "openvidu-browser";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
-// const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
-const APPLICATION_SERVER_URL = "http://localhost:8080";
+const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
+// const APPLICATION_SERVER_URL = "http://localhost:8080";
 
 export default {
     components: {
@@ -261,6 +271,7 @@ export default {
                     location.address, // 주소로 좌표 검색.
                     function (result, status) {
                         if (status === kakao.maps.services.Status.OK) {
+                            console.log(location.name);
                             var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
                             var imageSrc = require("./image/recommendMarker.png"),
@@ -454,8 +465,8 @@ export default {
         },
         // [Function] 웹소켓 연결 함수.
         connect() {
-            var sock = new SockJS("http://localhost:8080/ws-stomp");
-            // var sock = new SockJS("https://i8c207.p.ssafy.io/ws-stomp");
+            // var sock = new SockJS("http://localhost:8080/ws-stomp");
+            var sock = new SockJS("https://i8c207.p.ssafy.io/ws-stomp");
             this.stompClient = Stomp.over(sock);
             console.log(`소켓 연결을 시도합니다.`);
             // pub/sub event
@@ -506,11 +517,13 @@ export default {
             );
         }, // connect() 끝
         // [Function] 현재 가이드의 추천 장소 데이터를 가져오는 함수.
-        getRecommend() {
+        async getRecommend() {
             console.log("getRecommend() call.");
-            axios.get(APPLICATION_SERVER_URL + `/guides/location/${this.guideId}`).then((res) => {
-                this.recommend_location_list = res.data;
-            });
+            await axios
+                .get(APPLICATION_SERVER_URL + `/guides/location/${this.guideId}`)
+                .then((res) => {
+                    this.recommend_location_list = res.data;
+                });
         },
         // [Function] 좌표를 이용해서 법정동 주소를 얻는 함수.
         getAddress(lat, lng) {
@@ -860,7 +873,7 @@ export default {
 }
 
 .chat {
-    border: 1px solid #909090;
+    border: 1px solid lightgray;
     width: 27%;
     height: 280px;
     float: left;
