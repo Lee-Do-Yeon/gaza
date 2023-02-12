@@ -10,6 +10,8 @@ import lombok.Setter;
 @ApiModel("MyPageRequest")
 public class MyPageRequest {
 
+    private String userId;
+
     private String onlineIntroduction;
 
     private String introduction;
