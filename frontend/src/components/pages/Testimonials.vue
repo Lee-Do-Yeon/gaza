@@ -101,7 +101,7 @@ export default {
   setup() {
     const store = useStore();
 
-    const route = useRoute()
+    const route = useRoute();
 
     const state = reactive({
       info: {
@@ -148,7 +148,7 @@ export default {
       const travel_end_time = state.info.travel_end_time < 10 ? '0' + state.info.travel_end_time : state.info.travel_end_time;
 
       const reservation_info = {
-        userId : store.getters['userStore/getUserId'],
+        userId : store.getters['accountStore/getUserId'],
         guideId : route.params.guideId,
         consultingDate: `${state.info.consultingDate}T${state.info.consultingTime}:00:00.000Z`,
         travelStartDate: `${state.info.travel_start_date}T${travel_start_time}:00:00.000Z`,

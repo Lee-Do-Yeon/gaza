@@ -38,22 +38,22 @@
                                     <input type="text" class="form-control" placeholder="전화번호" disabled readonly/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="phonf" @keyup="makeForm" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
+                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="state.form.phonefront" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="phonm" @keyup="makeForm" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
+                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="state.form.phonemiddle" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="phone" @keyup="makeForm" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
+                                    <input required type="text" class="form-control" maxlength='4' minlength="1" v-model="state.form.phoneend"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
                                     <input type="text" class="form-control" placeholder="생년월일" disabled readonly/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <input required type="text" class="form-control" v-model="birthy" @keyup="makeForm" maxlength='4' minlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
+                                    <input required type="text" class="form-control" v-model="state.form.birthdayf" maxlength='4' minlength="4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\.-/g, '$1');"/>
                                 </div>
                                 <div class="form-group col-3">
-                                    <select required name="month" id="month" class="form-control custom-select" v-model="birthm" @keyup="makeForm">
+                                    <select required name="month" id="month" class="form-control custom-select" v-model="state.form.birthdaym">
                                         <option value="01">1월</option>
                                         <option value="02">2월</option>
                                         <option value="03">3월</option>
@@ -69,7 +69,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-3">
-                                    <select required name="day" id="day" class="form-control custom-select" v-model="birthd" @keyup="makeForm">
+                                    <select required name="day" id="day" class="form-control custom-select" v-model="state.form.birthdaye">
                                         <option value="01" selected="selected">1일</option>
                                         <option value="02">2일</option>
                                         <option value="03">3일</option>
@@ -165,8 +165,12 @@ export default {
                 password: '',
                 name:'',
                 gender:'',
-                birthday:'',
-                phone_number:'',
+                birthdayf:'',
+                birthdaym:'',
+                birthdaye:'',
+                phonefront:'',
+                phonemiddle:'',
+                phoneend:'',
                 email:'',
                 email_domain:'',
             },
@@ -217,8 +221,8 @@ export default {
                         password: state.form.password,
                         name:state.form.name,
                         gender:state.form.gender,
-                        birthday:state.form.birthday,
-                        phone_number:state.form.phone_number,
+                        birthday:`${state.form.birthdayf}-${state.form.birthdaym}-${state.form.birthdaye}T14:35:34.008Z`,
+                        phone_number:`${state.form.phonefront}-${state.form.phonemiddle}-${state.form.phoneend}`,
                         email:state.form.email,
                         email_domain:state.form.email_domain,
                     }
@@ -255,14 +259,7 @@ export default {
             //Upload to server
         }
 
-
-
-        const makeForm = function () {
-            state.form.birthday = `${birthy.value}-${birthm.value}-${birthd.value}T14:35:34.008Z`
-            state.form.phone_number = `${phonf.value}-${phonm.value}-${phone.value}`
-        }
-
-        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, upload, makeForm, birthy, birthm, birthd, phonf, phonm, phone, passwordcheck}
+        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, upload, passwordcheck}
      },
     
 };

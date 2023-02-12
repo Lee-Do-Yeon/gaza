@@ -1,54 +1,92 @@
 <template>
     <div class="container" id="app" v-cloak>
         <div id="session-header">
-                <input class="btn btn-outline-danger" type="button" id="buttonLeaveSession" @click="leaveSession"
-                value="나가기" style="margin: 3px; float:right;" />
-            </div>
-            <div style="clear:both;"></div>
-        <!-- <h3>{{ $route.params.roomId }}</h3> -->
-        <!-- <div class="button-box" style="width:8%; height: 400px; background-color: lightgray; float:left">
-            <button class="btn btn-light" type="button" @click="sendPoint('FOCUS')" style="margin:5px; width:90px;">부르기</button>
-            <button class="btn btn-light" type="button" @click="saveRoute(clickIndex, clickRecommend, clickPopular)" style="margin:5px; width:90px;">저장</button>
-            <button class="btn btn-light" type="button" @click="insertToDB" style="margin:5px; width:90px;">DB</button>
-            <button class="btn btn-light" type="button" @click="show" style="margin:5px; width:90px;">show</button>
-        </div> -->
-        <div>
-        <div id="map" style="width: 71%; height: 400px; position: relative; overflow: hidden; float:left; margin-right:10px">
+            <input
+                class="btn btn-outline-danger"
+                type="button"
+                id="buttonLeaveSession"
+                @click="leaveSession"
+                value="나가기"
+                style="margin: 3px; float: right"
+            />
         </div>
-        <ul id="category">
-            <li id="BK9" data-order="0" @click="sendPoint('FOCUS')"> 
-                <img src="./bell.png"/>
-            </li>       
-            <li id="MT1" data-order="1" @click="saveRoute(clickIndex, clickRecommend, clickPopular)"> 
-                <img src="./flag.png"/>
-            </li>    
-        </ul>
-    </div>
-        <div style="width:27%; height:400px; overflow: auto; border:1px solid lightgray;">
+        <div style="clear: both"></div>
+        <div>
+            <div
+                id="map"
+                style="
+                    width: 71%;
+                    height: 400px;
+                    position: relative;
+                    overflow: hidden;
+                    float: left;
+                    margin-right: 10px;
+                "
+            ></div>
+            <ul id="category">
+                <li id="BK9" data-order="0" @click="sendPoint('FOCUS')">
+                    <img src="./bell.png" />
+                </li>
+                <li
+                    id="MT1"
+                    data-order="1"
+                    @click="saveRoute(clickIndex, clickRecommend, clickPopular)"
+                >
+                    <img src="./flag.png" />
+                </li>
+            </ul>
+        </div>
+        <div style="width: 27%; height: 400px; overflow: auto; border: 1px solid lightgray">
             <h3 class="route-list">여행 일정</h3>
             <div class="list-group">
-                <list-item v-for="(route, index) in travel_route" :key="index" :index="index" :route="route" @manageRoute="manageRoute"/>
+                <list-item
+                    v-for="(route, index) in travel_route"
+                    :key="index"
+                    :index="index"
+                    :route="route"
+                    @manageRoute="manageRoute"
+                />
             </div>
-         </div><div style="clear:both:"></div>
-        
-        <div id="session" class="" style="width: 71%; height:350px; margin: auto; float:left">
-            <div id="video-container" style="width:100%;">
-                <user-video :stream-manager="OpenVidu.publisher" @click="updateMainVideoStreamManager(OpenVidu.publisher)" />
-                <user-video v-for="sub in OpenVidu.subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"
-                @click="updateMainVideoStreamManager(sub)" />
+        </div>
+        <div style="clear:both:"></div>
+
+        <div id="session" class="" style="width: 71%; height: 350px; margin: auto; float: left">
+            <div id="video-container" style="width: 100%">
+                <user-video
+                    :stream-manager="OpenVidu.publisher"
+                    @click="updateMainVideoStreamManager(OpenVidu.publisher)"
+                />
+                <user-video
+                    v-for="sub in OpenVidu.subscribers"
+                    :key="sub.stream.connection.connectionId"
+                    :stream-manager="sub"
+                    @click="updateMainVideoStreamManager(sub)"
+                />
             </div>
         </div>
         <div class="chat">
-            <div style="height:85%"></div>
+            <div style="height: 85%; overflow: auto">
+                <ul class="list-group">
+                    <li
+                        class="list-group-item"
+                        style="text-align: left"
+                        v-for="item in messages"
+                        :key="item"
+                    >
+                        {{ item.writerName }} : {{ item.message }}
+                    </li>
+                </ul>
+            </div>
             <div class="input-group-append">
-                <input type="text" v-model="msg" v-on:keypress.enter="sendMessage">
+                <input
+                    type="text"
+                    v-model="msg"
+                    style="width: 80%; height: 35px"
+                    v-on:keypress.enter="sendMessage"
+                />
                 <button class="btn btn-primary" type="button" @click="sendMessage">전송</button>
             </div>
         </div>
-
-
-
-
     </div>
 </template>
 
@@ -61,8 +99,8 @@ import UserVideo from "@/openvidu/UserVideo";
 import { OpenVidu } from "openvidu-browser";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
-
 const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
+// const APPLICATION_SERVER_URL = "http://localhost:8080";
 
 export default {
     components: {
@@ -76,7 +114,10 @@ export default {
             userName: this.$route.params.userName,
             reservationId: this.$route.params.reservationId,
             guideId: this.$route.params.guideId,
-            // ----------------------------------
+            // --------채팅 데이터-----------
+            msg: "",
+            messages: [],
+            // -----------------------------
             guideCountry: "대한민국",
             guideCity: "광주",
             room: {},
@@ -94,8 +135,8 @@ export default {
             },
             travel_route: [],
             recommend_location_list: [],
-            markerImageSrc: require('./markers.png'),
-            pointImageSrc: require('./point.png'),
+            markerImageSrc: require("./markers.png"),
+            pointImageSrc: require("./point.png"),
             yourMarker: Object,
             OpenVidu: {
                 OV: undefined,
@@ -109,13 +150,11 @@ export default {
             recommended_marker_list: [],
             popular_marker_list: [],
             popular_list: [],
-            
         };
     },
     created() {
         console.log(this.roomId);
         this.connect();
-        this.findRoom();
         this.getRecommend();
         this.joinSession();
     },
@@ -134,28 +173,26 @@ export default {
     watch: {
         travel_route: {
             handler() {
-
-                if(this.polyline != null){
+                if (this.polyline != null) {
                     this.polyline.setMap(null);
                 }
 
-                console.log('루트 값 변화');
+                console.log("루트 값 변화");
 
                 var linePath = [];
 
-                for (var route of this.travel_route) { // 위와 같은 동작을 하는 for / of 문
+                for (var route of this.travel_route) {
+                    // 위와 같은 동작을 하는 for / of 문
                     linePath.push(new kakao.maps.LatLng(route.latitude, route.longitude));
                 }
-
-                console.log(linePath);
 
                 // 지도에 표시할 선을 생성합니다
                 this.polyline = new kakao.maps.Polyline({
                     path: linePath, // 선을 구성하는 좌표배열 입니다
                     strokeWeight: 5, // 선의 두께 입니다
-                    strokeColor: '#FFAE00', // 선의 색깔입니다
+                    strokeColor: "#FFAE00", // 선의 색깔입니다
                     strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-                    strokeStyle: 'solid' // 선의 스타일입니다
+                    strokeStyle: "solid", // 선의 스타일입니다
                 });
 
                 this.polyline.setMap(this.map);
@@ -165,7 +202,7 @@ export default {
     },
     methods: {
         initMap() {
-            let base = this;     
+            let base = this;
             var mapContainer = document.getElementById("map"), // 지도를 표시할 div
                 mapOption = {
                     center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표(서울특별시청)
@@ -179,13 +216,18 @@ export default {
 
             // 기본 포지션 좌표.
             var initPosition = new kakao.maps.LatLng(126.911186, 35.1401744);
-            
+
             // Start of 상대방의 마커 세팅.
             var yourMakerOption = {
-                spriteOrigin: new kakao.maps.Point(0, 80),    
-                spriteSize: new kakao.maps.Size(29, 166)
-            }
-            var yourMarkerImage =  new kakao.maps.MarkerImage(this.markerImageSrc, new kakao.maps.Size(29, 40), yourMakerOption);
+                spriteOrigin: new kakao.maps.Point(0, 80),
+                spriteSize: new kakao.maps.Size(29, 166),
+            };
+
+            var imageSrc = require("./image/yourMarker.png"),
+                imageSize = new kakao.maps.Size(31, 41),
+                imageOption = { offset: new kakao.maps.Point(15, 40) };
+
+            var yourMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
             var yourMarker = new kakao.maps.Marker({
                 position: initPosition,
@@ -196,14 +238,13 @@ export default {
             base.yourMarker.setMap(map);
 
             // End of 상대방의 마커 세팅.
-            
 
             // Start of 클릭했을 때 마커 세팅.
-            var myMakerOption = {
-                spriteOrigin: new kakao.maps.Point(0, 40),    
-                spriteSize: new kakao.maps.Size(29, 166)  
-            }
-            var myMarkerImage =  new kakao.maps.MarkerImage(base.markerImageSrc, new kakao.maps.Size(29, 40), myMakerOption);
+            var imageSrc = require("./image/myMarker.png"),
+                imageSize = new kakao.maps.Size(31, 41),
+                imageOption = { offset: new kakao.maps.Point(15, 40) };
+
+            var myMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
             var myMarker = new kakao.maps.Marker({
                 position: map.getCenter(),
@@ -223,21 +264,26 @@ export default {
                 base.sendPoint("CLICK");
             });
             // End of 클릭했을 때 마커 세팅.
-            
-            
+
             // Start of 가이드의 추천 장소 출력.
             this.recommend_location_list.forEach(function (location) {
                 geocoder.addressSearch(
                     location.address, // 주소로 좌표 검색.
                     function (result, status) {
-                        console.log("추천 장소 : " + location.address);
-                        
                         if (status === kakao.maps.services.Status.OK) {
-                            console.log(result[0].y, result[0].x);
+                            console.log(location.name);
                             var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                            let recommendMarkerImage =  new kakao.maps.MarkerImage(base.markerImageSrc, new kakao.maps.Size(29, 40),
-                                                    { spriteOrigin: new kakao.maps.Point(0, 0), spriteSize: new kakao.maps.Size(29, 166) });
-                            
+
+                            var imageSrc = require("./image/recommendMarker.png"),
+                                imageSize = new kakao.maps.Size(22, 35),
+                                imageOption = { offset: new kakao.maps.Point(11, 35) };
+
+                            let recommendMarkerImage = new kakao.maps.MarkerImage(
+                                imageSrc,
+                                imageSize,
+                                imageOption
+                            );
+
                             let recommendMarker = new kakao.maps.Marker({
                                 map: map,
                                 position: coords,
@@ -246,30 +292,29 @@ export default {
                             recommendMarker.setMap(map);
 
                             // 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
-                            var iwContent = '<div style="padding:5px;">'+location.name+'</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+                            var iwContent = '<div style="padding:5px;">' + location.name + "</div>", // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
                                 iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
 
                             // 인포윈도우를 생성합니다
                             var infowindow = new kakao.maps.InfoWindow({
-                                content : iwContent,
-                                removable : iwRemoveable
+                                content: iwContent,
+                                removable: iwRemoveable,
                             });
 
                             // 마커에 클릭이벤트를 등록합니다
-                            kakao.maps.event.addListener(recommendMarker, 'click', function() {
+                            kakao.maps.event.addListener(recommendMarker, "click", function () {
                                 // 마커 위에 인포윈도우를 표시합니다
-                                console.log(recommendMarker.position);
                                 base.clickLat = coords.getLat();
                                 base.clickLng = coords.getLng();
                                 base.sendPoint("CLICK");
-                                let index = base.recommend_location_list.findIndex(i => i.name== location.name);
+                                let index = base.recommend_location_list.findIndex(
+                                    (i) => i.name == location.name
+                                );
                                 base.clickIndex = index;
-                                console.log("클릭한 추천 장소 index는 "+ base.clickIndex);
+                                console.log("클릭한 추천 장소 index는 " + base.clickIndex);
                                 base.clickRecommend = true;
-                                infowindow.open(map, recommendMarker);  
+                                infowindow.open(map, recommendMarker);
                             });
-
-
                         } else {
                             console.log("추천 장소 출력이 제대로 안됨 - " + status);
                         }
@@ -281,46 +326,47 @@ export default {
             });
             // End of 가이드의 추천 장소 출력.
 
-
             // Start of 기존 유명 장소 가져오기.
             let popular_list_index = 0;
-            var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+            var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 
             // 장소 검색 객체를 생성합니다
-            var ps = new kakao.maps.services.Places(); 
+            var ps = new kakao.maps.services.Places();
 
             // 키워드로 장소를 검색합니다
-            ps.keywordSearch(this.guideCountry+' '+this.guideCity+' 관광명소', placesSearchCB); 
+            ps.keywordSearch(
+                this.guideCountry + " " + this.guideCity + " 관광명소",
+                placesSearchCB
+            );
 
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
-            function placesSearchCB (data, status, pagination) {
+            function placesSearchCB(data, status, pagination) {
                 if (status === kakao.maps.services.Status.OK) {
-                    console.log("검색");
-                    if(data.length < 300){
-                        for (var i=0; i<data.length; i++) {
+                    if (data.length < 300) {
+                        for (var i = 0; i < data.length; i++) {
                             displayMarker(data[i]);
-                            console.log("여기여기 -> " + data[i].place_name);
                         }
                         popular_list_index += data.leghth;
-                    }else{
-                        for (var i=0; i<300; i++) {
+                    } else {
+                        for (var i = 0; i < 300; i++) {
                             displayMarker(data[i]);
                         }
                         popular_list_index += 300;
                     }
-                } 
+                }
             }
 
             // 지도에 마커를 표시하는 함수입니다
             function displayMarker(place) {
-                
-
                 var imageSize = new kakao.maps.Size(12, 12), // 마커이미지의 크기입니다
-                imageOption = {offset: new kakao.maps.Point(6, 6)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-                
-                // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                var markerImage = new kakao.maps.MarkerImage(base.pointImageSrc, imageSize, imageOption);
+                    imageOption = { offset: new kakao.maps.Point(6, 6) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
+                // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                var markerImage = new kakao.maps.MarkerImage(
+                    base.pointImageSrc,
+                    imageSize,
+                    imageOption
+                );
 
                 // 마커를 생성하고 지도에 표시합니다
                 var popularMarker = new kakao.maps.Marker({
@@ -329,46 +375,47 @@ export default {
                     image: markerImage,
                 });
 
-
-
                 base.popular_marker_list.push(popularMarker);
                 base.popular_list.push({
                     name: place.place_name,
                     address: place.address_name,
                     latitude: place.y,
-                    longitude: place.x
+                    longitude: place.x,
                 });
 
-                
                 // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
                 // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-                (function(popularMarker, infowindow) {
-                    // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
-                    kakao.maps.event.addListener(popularMarker, 'mouseover', function() {
-                        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+                (function (popularMarker, infowindow) {
+                    // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다
+                    kakao.maps.event.addListener(popularMarker, "mouseover", function () {
+                        infowindow.setContent(
+                            '<div style="padding:5px;font-size:12px;">' +
+                                place.place_name +
+                                "</div>"
+                        );
                         infowindow.open(map, popularMarker);
                     });
 
                     // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
-                    kakao.maps.event.addListener(popularMarker, 'mouseout', function() {
+                    kakao.maps.event.addListener(popularMarker, "mouseout", function () {
                         infowindow.close();
                     });
                 })(popularMarker, infowindow);
 
                 // 마커에 클릭이벤트를 등록합니다
-                kakao.maps.event.addListener(popularMarker, 'click', function() {
+                kakao.maps.event.addListener(popularMarker, "click", function () {
                     base.clickLat = place.y;
                     base.clickLng = place.x;
                     base.sendPoint("CLICK");
-                    let index = base.popular_list.findIndex(i => i.name == place.place_name);
+                    let index = base.popular_list.findIndex((i) => i.name == place.place_name);
                     base.clickIndex = index;
                     base.clickPopular = true;
-                    console.log("클릭한 유명 장소 index는 "+ base.clickIndex);
+                    console.log("클릭한 유명 장소 index는 " + base.clickIndex);
                 });
             }
             // End of 기존 유명 장소 가져오기.
 
-        // ----------------------------------- init map ()
+            // ----------------------------------- init map ()
         },
         // [Function] 받은 좌표로 부드럽게 중심을 이동하는 함수.
         panTo() {
@@ -378,29 +425,16 @@ export default {
             );
             this.map.panTo(moveLatLon);
         },
-        // [Function] 현재 지도 방을 찾는 함수.
-        findRoom() {
-            axios.get(APPLICATION_SERVER_URL+`/map/room/${this.reservationId}`).then((res) => {
-                //console.log("찾은 방 : " + JSON.stringify(res.data));
-                //console.log("찾은 방 이름 : " + res.data.name);
-                this.room = {
-                    name: res.data.name,
-                    roomId: res.data.roomId,
-                };
-            });
-        },
         // [Function] 클릭한 좌표를 전송하는 함수.
         sendPoint(type) {
             this.stompClient.send(
                 "/pub/map/point",
-                JSON.stringify(
-                    {
-                        roomId: this.roomId,
-                        lng: this.clickLng,
-                        lat: this.clickLat,
-                        type: type,
-                    }
-                )
+                JSON.stringify({
+                    roomId: this.roomId,
+                    lng: this.clickLng,
+                    lat: this.clickLat,
+                    type: type,
+                })
             );
         },
         // [Function] 상대방이 클릭한 좌표를 받아 내 화면에 보여주는 함수.
@@ -409,26 +443,29 @@ export default {
             var tmpLat = recv.lat;
 
             // 내가 클릭한 좌표가 아니라면
-            if(tmpLng != this.clickLng && tmpLat != this.clickLng){
+            if (tmpLng != this.clickLng && tmpLat != this.clickLng) {
                 this.recvPoint = {
-                    recvLng : recv.lng,
-                    recvLat : recv.lat,
-                    type : recv.type,
-                }
+                    recvLng: recv.lng,
+                    recvLat: recv.lat,
+                    type: recv.type,
+                };
 
                 // 상대방 마커의 위치를 받은 좌표로 옮긴다.
-                var position = new kakao.maps.LatLng(this.recvPoint.recvLat, this.recvPoint.recvLng);
+                var position = new kakao.maps.LatLng(
+                    this.recvPoint.recvLat,
+                    this.recvPoint.recvLng
+                );
                 this.yourMarker.setPosition(position);
 
                 // 만약 타입이 포커스라면 내 화면을 그쪽으로 이동시킨다.
-                if(recv.type == "FOCUS"){
+                if (recv.type == "FOCUS") {
                     this.panTo();
                 }
             }
         },
         // [Function] 웹소켓 연결 함수.
         connect() {
-            //var sock = new SockJS("http://localhost:8080/ws-stomp");
+            // var sock = new SockJS("http://localhost:8080/ws-stomp");
             var sock = new SockJS("https://i8c207.p.ssafy.io/ws-stomp");
             this.stompClient = Stomp.over(sock);
             console.log(`소켓 연결을 시도합니다.`);
@@ -438,6 +475,7 @@ export default {
                 (frame) => {
                     // 소켓 연결 성공
                     console.log("소켓 연결 성공", frame);
+
                     this.stompClient.subscribe(`/sub/map/room2/${this.roomId}`, (point) => {
                         // console.log("구독으로 받은 좌표 입니다.", point.body);
                         // console.log("구독으로 받은 좌표의 타입은 ", JSON.parse(point.body).type);
@@ -447,16 +485,29 @@ export default {
                         // console.log("구독으로 받은 루트 입니다.", route.body);
                         var routeItem = JSON.parse(route.body);
                         // console.log("루트의 타입은 "+routeItem.type);
-                        if(routeItem.type=="UP"){
+                        if (routeItem.type == "UP") {
                             this.upRoute(routeItem);
-                        }else if(routeItem.type=="DOWN"){
+                        } else if (routeItem.type == "DOWN") {
                             this.downRoute(routeItem);
-                        }else if(routeItem.type=="DELETE"){
-                            this.deleteRoute(routeItem);            
-                        }else if(routeItem.type=="SAVE"){
+                        } else if (routeItem.type == "DELETE") {
+                            this.deleteRoute(routeItem);
+                        } else if (routeItem.type == "SAVE") {
                             this.saveRecvRoute(routeItem);
                         }
                     });
+                    this.stompClient.subscribe(`/sub/chat/room/${this.roomId}`, (res) => {
+                        this.messages.push(JSON.parse(res.body));
+                    });
+
+                    //채팅방 입장(서버에 유저가 들어왔음을 알림)
+                    this.stompClient.send(
+                        "/pub/chat/message",
+                        JSON.stringify({
+                            messageType: "ENTER",
+                            chatRoomId: this.roomId,
+                            writerName: this.userName,
+                        })
+                    );
                 },
                 // 소켓 연결 실패
                 (error) => {
@@ -466,31 +517,30 @@ export default {
             );
         }, // connect() 끝
         // [Function] 현재 가이드의 추천 장소 데이터를 가져오는 함수.
-        getRecommend(){
+        async getRecommend() {
             console.log("getRecommend() call.");
-            console.log(this.guideId);
-            axios.get(APPLICATION_SERVER_URL+`/guides/location/${this.guideId}`).then((res) => {
-                this.recommend_location_list = res.data;
-            });
-            console.log(this.recommend_location_list);
+            await axios
+                .get(APPLICATION_SERVER_URL + `/guides/location/${this.guideId}`)
+                .then((res) => {
+                    this.recommend_location_list = res.data;
+                });
         },
         // [Function] 좌표를 이용해서 법정동 주소를 얻는 함수.
-        getAddress(lat, lng){
+        getAddress(lat, lng) {
             var geocoder = new kakao.maps.services.Geocoder();
             return new Promise((resolve, reject) => {
-                geocoder.coord2Address(lng, lat, function(result, status) {
+                geocoder.coord2Address(lng, lat, function (result, status) {
                     if (status === kakao.maps.services.Status.OK) {
-                        console.log(result[0].address.address_name);
                         resolve(result[0].address.address_name);
-                    }else{
+                    } else {
                         reject(status);
                     }
                 });
             });
         },
         // [Function] 좌표에 대한 마커를 생성하는 함수.
-        setMarker(lat, lng, markerImage){
-            var markerPosition  = new kakao.maps.LatLng(lat, lng); 
+        setMarker(lat, lng, markerImage) {
+            var markerPosition = new kakao.maps.LatLng(lat, lng);
             var marker = new kakao.maps.Marker({
                 position: markerPosition,
                 image: markerImage,
@@ -499,18 +549,18 @@ export default {
             marker.setMap(this.map);
         },
         // [Function] 현재 클릭한 장소에 대해 travel_route를 추가하기 위해 데이터를 전송하는 함수.
-        async saveRoute(index, clickRecommend, clickPopular){
+        async saveRoute(index, clickRecommend, clickPopular) {
             console.log("saveRoute() call.");
             var address = await this.getAddress(this.clickLat, this.clickLng);
             var name;
 
-            if(clickRecommend == false && clickPopular == false){
+            if (clickRecommend == false && clickPopular == false) {
                 name = address;
             }
-            if(clickRecommend == false && clickPopular == true){
+            if (clickRecommend == false && clickPopular == true) {
                 name = this.popular_list[index].name;
             }
-            if(clickRecommend == true && clickPopular == false){
+            if (clickRecommend == true && clickPopular == false) {
                 name = this.recommend_location_list[index].name;
             }
 
@@ -519,7 +569,7 @@ export default {
                 "/pub/map/route",
                 JSON.stringify({
                     roomId: this.roomId,
-                    name: index != -1? name : address,
+                    name: index != -1 ? name : address,
                     address: address,
                     latitude: this.clickLat,
                     longitude: this.clickLng,
@@ -530,17 +580,17 @@ export default {
             this.clickPopular = false;
             this.clickRecommend = false;
         },
-        
-        // [Function] 현재의 travel_route 리스트에 대해 선을 생성하는 함수.
-        makeLineOfRoute(){
 
-            if(this.polyline != null){
-                (this.polyline).setMap(null);
+        // [Function] 현재의 travel_route 리스트에 대해 선을 생성하는 함수.
+        makeLineOfRoute() {
+            if (this.polyline != null) {
+                this.polyline.setMap(null);
             }
 
             var linePath = [];
 
-            for (var route of this.travel_route) { // 위와 같은 동작을 하는 for / of 문
+            for (var route of this.travel_route) {
+                // 위와 같은 동작을 하는 for / of 문
                 linePath.push(new kakao.maps.LatLng(route.latitude, route.longitude));
             }
 
@@ -550,88 +600,88 @@ export default {
             this.polyline = new kakao.maps.Polyline({
                 path: linePath, // 선을 구성하는 좌표배열 입니다
                 strokeWeight: 5, // 선의 두께 입니다
-                strokeColor: '#FFAE00', // 선의 색깔입니다
+                strokeColor: "#FFAE00", // 선의 색깔입니다
                 strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-                strokeStyle: 'solid' // 선의 스타일입니다
+                strokeStyle: "solid", // 선의 스타일입니다
             });
 
-            (this.polyline).setMap(this.map);
+            this.polyline.setMap(this.map);
         },
         // [Function] 받은 좌표를 저장하는 함수. (맵에 마커도 출력.)
-        saveRecvRoute(route){
-            console.log("saveRecvRoute() call.")
+        saveRecvRoute(route) {
             this.travel_route.push({
                 name: route.name,
                 address: route.address,
                 latitude: route.latitude,
-                longitude: route.longitude
+                longitude: route.longitude,
             });
 
-            var saveMakerOption = {
-                spriteOrigin: new kakao.maps.Point(0, 120),    
-                spriteSize: new kakao.maps.Size(29, 166)
-            }
-            var saveMarkerImage =  new kakao.maps.MarkerImage(this.markerImageSrc, new kakao.maps.Size(29, 40), saveMakerOption);
+            var imageSrc = require("./image/routeMarker.png"),
+                imageSize = new kakao.maps.Size(22, 31),
+                imageOption = { offset: new kakao.maps.Point(3, 31) };
+
+            var saveMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
             this.setMarker(route.latitude, route.longitude, saveMarkerImage);
         },
         // [Function] 현재의 travel_route 리스트를 DB에 저장하는 함수.
-        insertToDB(){
-            axios.post(APPLICATION_SERVER_URL+`/routes/${this.reservationId}`, JSON.stringify(this.travel_route))
-            .then(({ data }) => {
-                let msg = "등록 처리시 문제가 발생했습니다.";
-                if (data === "Success") {
-                    msg = "등록이 완료되었습니다.";
-                }
-                alert(msg);
-                console.log(msg);
-            });
+        insertToDB() {
+            axios
+                .post(
+                    APPLICATION_SERVER_URL + `/routes/${this.reservationId}`,
+                    JSON.stringify(this.travel_route)
+                )
+                .then(({ data }) => {
+                    let msg = "등록 처리시 문제가 발생했습니다.";
+                    if (data === "Success") {
+                        msg = "등록이 완료되었습니다.";
+                    }
+                    alert(msg);
+                    console.log(msg);
+                });
         },
 
-        // -----------------------------------------------------------------------------------
+        // ------------------------------ 여행 일정 조작 함수 --------------------------------
 
         // [Function] 여행 일정을 관리하는 함수. (타입에 맞춰서 데이터 전송)
-        manageRoute(param){
-            console.log("manageRoute");
-            console.log(param.index +" "+param.type);
+        manageRoute(param) {
             var route = this.travel_route[param.index];
             route.type = param.type;
             route.roomId = this.roomId;
-            this.stompClient.send(
-                "/pub/map/route",
-                JSON.stringify(route)
-            );
+            this.stompClient.send("/pub/map/route", JSON.stringify(route));
         },
 
         // [Function] 여행 일정 삭제.
-        deleteRoute(route){
-            const index = this.travel_route.findIndex(i => i.name == route.address);
-            console.log("호출이염 " + index);
+        deleteRoute(route) {
+            const index = this.travel_route.findIndex((i) => i.address == route.address);
             this.route_marker_list[index].setMap(null);
             this.route_marker_list.splice(index, 1);
             this.travel_route.splice(index, 1);
         },
 
         // [Function] 여행 일정 위로 올리기.
-        upRoute(route){
-            const index = this.travel_route.findIndex(i => i.name == route.address);
-            if(index!=0){
-                [this.travel_route[index-1], this.travel_route[index]] = [this.travel_route[index], this.travel_route[index-1]];
+        upRoute(route) {
+            const index = this.travel_route.findIndex((i) => i.address == route.address);
+            if (index != 0) {
+                [this.travel_route[index - 1], this.travel_route[index]] = [
+                    this.travel_route[index],
+                    this.travel_route[index - 1],
+                ];
             }
         },
 
         // [Function] 여행 일정 내리기.
-        downRoute(route){
-            const index = this.travel_route.findIndex(i => i.name == route.address);
-            if(index!=this.travel_route.length-1){
-                [this.travel_route[index+1], this.travel_route[index]] = [this.travel_route[index], this.travel_route[index+1]];
+        downRoute(route) {
+            const index = this.travel_route.findIndex((i) => i.address == route.address);
+            if (index != this.travel_route.length - 1) {
+                [this.travel_route[index + 1], this.travel_route[index]] = [
+                    this.travel_route[index],
+                    this.travel_route[index + 1],
+                ];
             }
         },
 
         // -----------------------------------------------------------------------------------
-
-
-
 
         // ------------------------------------ OpenVidu ------------------------------------
 
@@ -654,7 +704,7 @@ export default {
             this.OpenVidu.session.on("streamDestroyed", ({ stream }) => {
                 const index = this.OpenVidu.subscribers.indexOf(stream.streamManager, 0);
                 if (index >= 0) {
-                this.OpenVidu.subscribers.splice(index, 1);
+                    this.OpenVidu.subscribers.splice(index, 1);
                 }
             });
 
@@ -669,89 +719,109 @@ export default {
             this.getToken(this.roomId).then((token) => {
                 // First param is the token. Second param can be retrieved by every user on event
                 // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-                this.OpenVidu.session.connect(token, { clientData: this.userName })
-                .then(() => {
+                this.OpenVidu.session
+                    .connect(token, { clientData: this.userName })
+                    .then(() => {
+                        // --- 5) Get your own camera stream with the desired properties ---
 
-                    // --- 5) Get your own camera stream with the desired properties ---
+                        // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
+                        // element: we will manage it on our own) and with the desired properties
+                        let publisher = this.OpenVidu.OV.initPublisher(undefined, {
+                            audioSource: undefined, // The source of audio. If undefined default microphone
+                            videoSource: undefined, // The source of video. If undefined default webcam
+                            publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+                            publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                            resolution: "640x480", // The resolution of your video
+                            frameRate: 30, // The frame rate of your video
+                            insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+                            mirror: false, // Whether to mirror your local video or not
+                        });
 
-                    // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
-                    // element: we will manage it on our own) and with the desired properties
-                    let publisher = this.OpenVidu.OV.initPublisher(undefined, {
-                    audioSource: undefined, // The source of audio. If undefined default microphone
-                    videoSource: undefined, // The source of video. If undefined default webcam
-                    publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                    publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                    resolution: "640x480", // The resolution of your video
-                    frameRate: 30, // The frame rate of your video
-                    insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-                    mirror: false, // Whether to mirror your local video or not
+                        // Set the main video in the page to display our webcam and store our Publisher
+                        this.OpenVidu.mainStreamManager = publisher;
+                        this.OpenVidu.publisher = publisher;
+
+                        // --- 6) Publish your stream ---
+
+                        this.OpenVidu.session.publish(this.OpenVidu.publisher);
+                    })
+                    .catch((error) => {
+                        console.log(
+                            "There was an error connecting to the session:",
+                            error.code,
+                            error.message
+                        );
                     });
-
-                    // Set the main video in the page to display our webcam and store our Publisher
-                    this.OpenVidu.mainStreamManager = publisher;
-                    this.OpenVidu.publisher = publisher;
-
-                    // --- 6) Publish your stream ---
-
-                    this.OpenVidu.session.publish(this.OpenVidu.publisher);
-                })
-                .catch((error) => {
-                    console.log("There was an error connecting to the session:", error.code, error.message);
-                });
             });
 
             window.addEventListener("beforeunload", this.leaveSession);
-            },
+        },
 
-            leaveSession() {
-                // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-                if (this.OpenVidu.session) this.OpenVidu.session.disconnect();
+        leaveSession() {
+            // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
+            if (this.OpenVidu.session) this.OpenVidu.session.disconnect();
 
-                // Empty all properties...
-                this.OpenVidu.session = undefined;
-                this.OpenVidu.mainStreamManager = undefined;
-                this.OpenVidu.publisher = undefined;
-                this.OpenVidu.subscribers = [];
-                this.OpenVidu.OV = undefined;
+            // Empty all properties...
+            this.OpenVidu.session = undefined;
+            this.OpenVidu.mainStreamManager = undefined;
+            this.OpenVidu.publisher = undefined;
+            this.OpenVidu.subscribers = [];
+            this.OpenVidu.OV = undefined;
 
-                // Remove beforeunload listener
-                window.removeEventListener("beforeunload", this.leaveSession);
-                window.close();
-            },
+            // Remove beforeunload listener
+            window.removeEventListener("beforeunload", this.leaveSession);
+            window.close();
+        },
 
-            updateMainVideoStreamManager(stream) {
+        updateMainVideoStreamManager(stream) {
             if (this.OpenVidu.mainStreamManager === stream) return;
             this.OpenVidu.mainStreamManager = stream;
-            },
+        },
 
-            async getToken(mySessionId) {
+        async getToken(mySessionId) {
             const sessionId = await this.createSession(mySessionId);
             return await this.createToken(sessionId);
-            },
+        },
 
-            async createSession(sessionId) {
-            const response = await axios.post(APPLICATION_SERVER_URL + '/api/sessions', { customSessionId: sessionId }, {
-                headers: { 'Content-Type': 'application/json', },
-            });
+        async createSession(sessionId) {
+            const response = await axios.post(
+                APPLICATION_SERVER_URL + "/api/sessions",
+                { customSessionId: sessionId },
+                {
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
             return response.data; // The sessionId
-            },
+        },
 
-            async createToken(sessionId) {
-            const response = await axios.post(APPLICATION_SERVER_URL + '/api/sessions/' + sessionId + '/connections', {}, {
-                headers: { 'Content-Type': 'application/json', },
-            });
+        async createToken(sessionId) {
+            const response = await axios.post(
+                APPLICATION_SERVER_URL + "/api/sessions/" + sessionId + "/connections",
+                {},
+                {
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
             return response.data; // The token
-            },
+        },
 
-            // ------------------------------------ OpenVidu (end) ------------------------------------
+        // ------------------------------------ OpenVidu (end) ------------------------------------
 
-            show(){
-                console.log("여기서 보여준다~~");
-                console.log(this.popular_list);
-                console.log(this.recommend_location_list);
-                console.log("------------------끝");
-            }
-    }
+        // ------------------------------------- Chat ---------------------------------------------
+        sendMessage() {
+            //메시지를 보냄
+            this.stompClient.send(
+                "/pub/chat/message",
+                JSON.stringify({
+                    messageType: "CHAT",
+                    chatRoomId: this.roomId,
+                    writerName: this.userName,
+                    message: this.msg,
+                })
+            );
+            this.msg = "";
+        },
+    },
 };
 </script>
 
@@ -782,11 +852,11 @@ export default {
 }
 
 #category {
-    position:absolute;
+    position: absolute;
     top: 8%;
     left: 5%;
-    border-radius: 5px; 
-    border:1px solid #909090;
+    border-radius: 5px;
+    border: 1px solid #909090;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
     background: #fff;
     overflow: hidden;
@@ -795,41 +865,19 @@ export default {
 
 #category li {
     list-style: none;
-    width:50px; 
-    border-top:1px solid #acacac;
-    padding:6px 0;
-    text-align: center; 
+    width: 50px;
+    border-top: 1px solid #acacac;
+    padding: 6px 0;
+    text-align: center;
     cursor: pointer;
 }
 
-#category li.on {
-    background: #eee;
-}
-
-#category li:hover {
-    background: #ffe6e6;
-    border-bottom: 1px solid #acacac;
-    margin-bottom: -1px;
-}
-
-#category li:last-child{
-    margin-top:0;
-}
-
-#category li span {
-    display: block;
-    margin:0 auto 3px;
-    width:27px;
-    height: 28px;
-}
-
 .chat {
-    border:1px solid #909090;
-    width:27%; 
-    height:280px; 
-    float: left; 
-    margin-left: 10px; 
+    border: 1px solid lightgray;
+    width: 27%;
+    height: 280px;
+    float: left;
+    margin-left: 10px;
     margin-top: 10px;
 }
-
 </style>
