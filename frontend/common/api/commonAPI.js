@@ -77,10 +77,8 @@ const myPageUpdate = (payload) => {
 }
 
 //가이드 마이페이지 조회
-const myPageShow = loginId => {
-    console.log(loginId)
-    api.get('/api/guides/mypage', { params: { userId: loginId } }).then((res) => { console.log(res)})
-}
+const myPageShow = loginId => api.get('/api/guides/mypage', { params: { userId: loginId } });
+
 
 
 // 가이드 검색
