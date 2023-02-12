@@ -259,7 +259,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PutMapping("/pw")
-    public ResponseEntity<ApiResponse<Object>> changePassword(@RequestHeader("Authorization") String accessToken, @RequestParam("password") String password) {
+    public ResponseEntity<ApiResponse<Object>> changePassword(@RequestHeader("Authorization") String accessToken, @RequestBody("password") String password) {
         log.debug("비밀번호 수정 ------------------------------------ " + accessToken + " --------------------------------- " + password);
 
         String token = tokenUtil.getTokenFromHeader(accessToken);
