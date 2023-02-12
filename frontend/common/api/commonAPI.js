@@ -42,6 +42,9 @@ const reser = (payload) => api.get("/api/books/user/ssafy",payload);
 // 인기 가이드 조회
 const popularGuide = () => api.get("/api/guides/popular")
 
+// 테마별 가이드 조회
+const themaGuide = (payload) => api.get("api/guides/search/thema/", { params: { themaName : payload } })
+
 // 유저 예약내역 조회
 const reviewss = (payload) => api.get('/api/reviews/user/ssafy',payload);
 
@@ -97,4 +100,4 @@ const registerDate = payload => {
 const guideLangRegister = payload => api.post('/api/guides/lang', payload).then((res) => { console.log(res) });
 
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword,guideLangRegister };
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister };
