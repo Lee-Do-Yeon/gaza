@@ -120,7 +120,6 @@
               </div>
             </div>
 
-            <!--start 추천 장소 -->
             <div class="new_main_news_box">
               <br />
               <h3 style="font-weight: bold">가이드의 추천 명소 관리</h3>
@@ -142,8 +141,29 @@
                 </div>
               </div>
             </div>
-            <!-- end 추천장소-->
+
+            <!--start 가이드 언어-->
+            <div class="new_main_news_box">
+              <br />
+              <h3 style="font-weight: bold">가이드의 사용 가능한 언어</h3>
+              <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                  <div class="news_item_boxed">
+                    <form id="profile_form_area" v-on:submit.prevent="langRegister">
+                      <input
+                        type="text"
+                        id="lang"
+                        v-model="language"
+                        placeholder="사용 가능 언어 입력"
+                      />
+                      <button class="btn btn_theme btn_sm">submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+          <!-- end 가이드 언어-->
           <hr />
           <h3 style="font-weight: bold">상담 불가 날짜/시간 설정</h3>
           <br />
@@ -194,6 +214,7 @@ import {
   myPageUpdate,
   myPageShow,
   registerDate,
+  guideLangRegister,
 } from "../../../common/api/commonAPI.js";
 
 export default {
@@ -218,6 +239,8 @@ export default {
       },
     });
 
+    const language = ref();
+
     const selectFile = function () {
       guide.info.picture = pictureData.value.files[0];
       console.log(guide.info.picture);
@@ -227,7 +250,6 @@ export default {
     const getInfo = async (loginId) => {
       const response = await myPageShow(loginId); //call axios
       guide.info = response.data;
-      console.log(guide.info);
     };
 
     onMounted(() => {
@@ -253,7 +275,7 @@ export default {
     //마이페이지 수정
     const updateMyPage = function () {
       const info = guide.info;
-      console.log(guide.info);
+
       const loginId = store.getters["accountStore/getUserId"];
 
       const request = {
@@ -286,6 +308,17 @@ export default {
       registerDate(request); //call axios
     };
 
+    //가이드 사용 가능한 언어 등록
+    const langRegister = function () {
+      const request = language.value;
+      const payload = {
+        languageName: request,
+        loginId: store.getters["accountStore/getUserId"],
+      };
+
+      guideLangRegister(payload); //call axios
+    };
+
     return {
       impossibleTime,
       store,
@@ -298,6 +331,8 @@ export default {
       startTime,
       selectFile,
       pictureData,
+      langRegister,
+      language,
     };
   },
 };
