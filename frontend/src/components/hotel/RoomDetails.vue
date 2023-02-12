@@ -38,26 +38,18 @@
 
             <!--자기소개 form -->
             <div class="d-flex">
-              <div class="dashboard_common_table" style="height: 705px">
-                <form>
-                  <img
-                    style="width: 200px; height: 150px; border-radius: 50%"
-                    src="../../assets/img/common/dashboard-user.png"
-                    alt="img"
-                  />
-                  <button class="btn btn_theme">수정</button>
-                </form>
-
-                <div style="text-align: center; padding: 60px">
-                  <input type="file" class="btn btn_theme" style="width: 200px" />
-                </div>
-              </div>
-
               <div class="ms-3">
                 <div class="dashboard_common_table">
-                  <h3>내 정보 수정</h3>
+                  <h3>프로필 업로드</h3>
                   <div class="profile_update_form">
                     <form id="profile_form_area" v-on:submit.prevent="updateMyPage">
+                      <input
+                        type="file"
+                        @change="selectFile"
+                        id="pictureData"
+                        ref="pictureData"
+                        accept="image/*"
+                      />
                       <div class="row">
                         <div class="col-lg-20">
                           <div class="form-group">
@@ -66,7 +58,7 @@
                               type="text"
                               class="form-control"
                               id="f-one-liner"
-                              v-model="guide_info.onelineIntroduction"
+                              v-model="guide.info.onelineIntroduction"
                             />
                           </div>
                         </div>
@@ -77,7 +69,7 @@
                               type="text"
                               class="form-control"
                               id="l-price"
-                              v-model="guide_info.price"
+                              v-model="guide.info.price"
                             />
                           </div>
                         </div>
@@ -88,7 +80,7 @@
                               type="text"
                               class="form-control"
                               id="country"
-                              v-model="guide_info.country"
+                              v-model="guide.info.country"
                             />
                           </div>
                         </div>
@@ -99,7 +91,7 @@
                               type="text"
                               class="form-control"
                               id="city"
-                              v-model="guide_info.city"
+                              v-model="guide.info.city"
                             />
                           </div>
                         </div>
@@ -112,7 +104,7 @@
                                   type="text"
                                   class="form-control"
                                   placeholder="Introduction"
-                                  v-model="guide_info.introduction"
+                                  v-model="guide.info.introduction"
                                 ></textarea>
                               </div>
                             </div>
@@ -212,23 +204,6 @@
                   <input type="time" v-model="startTime" />
                   <h5>종료 시간</h5>
                   <input type="time" v-model="endTime" />
-                  <!-- <div class="btn-group" role="group" v-for="index in 4" :key="index">
-                    <button
-                      type="button"
-                      id
-                      class="btn btn_theme btn_sm me-1 mb-2"
-                      :value="(index - 1) * 6 + btn_index"
-                      @click="setTime"
-                      v-for="btn_index in 6"
-                      :key="btn_index"
-                    >
-                      {{
-                        (index - 1) * 6 + btn_index < 10
-                          ? "0" + ((index - 1) * 6 + btn_index)
-                          : (index - 1) * 6 + btn_index
-                      }}
-                    </button>
-                  </div> -->
                 </div>
                 <button class="btn btn_theme btn_sm">submit</button>
               </form>
@@ -257,48 +232,39 @@ export default {
     const store = useStore();
 
     const date_info = ref({});
+    const pictureData = ref(null);
 
     const startTime = ref();
     const endTime = ref();
 
-    const guide_info = reactive({
-      city: "",
-      country: "",
-      introduction: "",
-      onlineIntroduction: "",
-      picture: "",
-      price: 0,
+    const guide = reactive({
+      info: {
+        city: "",
+        country: "",
+        introduction: "",
+        onlineIntroduction: "",
+        price: 0,
+      },
     });
 
+    const selectFile = function () {
+      guide.info.picture = pictureData.value.files[0];
+      console.log(guide.info.picture);
+    };
+
     //마이페이지 가이드 정보 조회
-    const getInfo = async (accessToken) => {
-      const res = await myPageShow(accessToken);
-      console.log(res.data);
-      guide_info.value = res.data;
-      console.log(guide_info);
+    const getInfo = function (loginId) {
+      const res = myPageShow(loginId); //call axios
+      console.log(res);
+      guide.info = res.data;
+      console.log(guide.info);
     };
 
     onMounted(() => {
-      const accessToken = store.getters["accountStore/getAccessToken"];
-      console.log(accessToken);
+      const loginId = store.getters["accountStore/getUserId"];
 
-      getInfo(accessToken);
+      getInfo(loginId); //수정을 위해 미리 가이드 정보 띄워놓기
     });
-
-    const setTime = function () {
-      date_info.value = event.currentTarget.value;
-      focusBtn();
-    };
-
-    const focusBtn = function () {
-      const active_btn = document.querySelector(".btn-group > .active");
-
-      if (active_btn !== null) {
-        active_btn.className = "btn btn_theme btn_sm me-1 mb-2";
-      }
-
-      event.currentTarget.className = "btn btn_theme btn_sm me-1 mb-2 active";
-    };
 
     //가이드의 추천 명소 수정
 
@@ -315,14 +281,14 @@ export default {
         timeEnd: `${end_time}:00`,
       };
 
-      registerTime(set_time_info);
+      registerTime(set_time_info); //call axios
     };
 
     //마이페이지 수정
     const updateMyPage = function () {
-      const info = guide_info.data;
-      console.log(guide_info);
-      const accessToken = store.getters["accountStore/getAccessToken"];
+      const info = guide.info;
+      console.log(guide.info);
+      const loginId = store.getters["accountStore/getUserId"];
 
       const request = {
         city: info.city,
@@ -330,9 +296,15 @@ export default {
         introduction: info.introduction,
         onlineIntroduction: info.onlineIntroduction,
         price: info.price,
+        userId: loginId,
       };
 
-      myPageUpdate(request, accessToken); //call axios
+      const payload = {
+        guide: JSON.stringify(request),
+        picture: info.picture,
+      };
+
+      myPageUpdate(payload); //call axios
     };
 
     //가이드 상담 불가능 날짜 등록
@@ -353,21 +325,16 @@ export default {
       impossibleTime,
       store,
       updateMyPage,
-      guide_info,
+      guide,
       getInfo,
       register_date,
       date_info,
-      setTime,
-      focusBtn,
       endTime,
       startTime,
+      selectFile,
+      pictureData,
     };
   },
 };
 </script>
-<style scoped>
-.active {
-  background-color: black;
-  color: white;
-}
-</style>
+<style scoped></style>
