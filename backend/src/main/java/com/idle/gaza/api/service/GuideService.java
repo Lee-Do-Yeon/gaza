@@ -26,6 +26,7 @@ public interface GuideService {
     List<LocationResponse> locationSearch(String guideId);
 
     String findExistFile(int recommendId);
+    String findGuideProfilePicture(String loginId);
 
     //상담 날짜 관리 기능
     int consultDateRegister(String userId, LocalDate dayoff);
@@ -46,6 +47,6 @@ public interface GuideService {
 
     //가이드 마이페이지 기능
     GuideResponse getMyPage(String loginId);
-    int setMyPage(String loginId, MyPageRequest request);
+    int setMyPage(MyPageRequest request);
 
 }
