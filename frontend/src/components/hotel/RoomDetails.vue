@@ -186,7 +186,7 @@
                 <div class="flight_Search_boxed date_flex_area">
                   <div class="Journey_date">
                     <form v-on:submit.prevent="register_date">
-                      <input type="date" v-model="date_info.date" />
+                      <input type="date" v-model="date_info" />
                       <button class="btn btn_theme btn_sm me-1 mb-2">submit</button>
                     </form>
                   </div>
@@ -231,12 +231,13 @@ export default {
   setup() {
     const store = useStore();
 
-    const date_info = ref({});
+    const date_info = ref(null);
     const pictureData = ref(null);
 
     const startTime = ref();
     const endTime = ref();
 
+    //가이드 마이페이지 정보
     const guide = reactive({
       info: {
         city: "",
@@ -253,10 +254,10 @@ export default {
     };
 
     //마이페이지 가이드 정보 조회
-    const getInfo = function (loginId) {
-      const res = myPageShow(loginId); //call axios
-      console.log(res);
-      guide.info = res.data;
+    const getInfo = async (loginId) => {
+      const response = await myPageShow(loginId); //call axios
+      console.log(response.data);
+      guide.info = response.data;
       console.log(guide.info);
     };
 
@@ -265,10 +266,6 @@ export default {
 
       getInfo(loginId); //수정을 위해 미리 가이드 정보 띄워놓기
     });
-
-    //가이드의 추천 명소 수정
-
-    //가이드의 추천 명소 삭제
 
     //상담 불가능 시간대 설정
     const impossibleTime = function () {
@@ -311,13 +308,12 @@ export default {
     const register_date = function () {
       const loginId = store.getters["accountStore/getUserId"];
 
-      const date = date_info.date;
+      const date = date_info.value;
 
       const request = {
         day: date,
         userId: loginId,
       };
-
       registerDate(request);
     };
 
