@@ -1,9 +1,11 @@
 package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.GuideRequest;
+import com.idle.gaza.api.request.LanguageRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.request.MyPageRequest;
 import com.idle.gaza.api.response.GuideResponse;
+import com.idle.gaza.api.response.LanguageResponse;
 import com.idle.gaza.api.response.LocationResponse;
 
 import java.time.LocalDate;
@@ -36,6 +38,9 @@ public interface GuideService {
     int consultTimeRegister(LocalTime startTime, LocalTime endTime, String userId);
 
     //가이드 사용 언어 관리 기능
+    int languageRegister(LanguageRequest request);
+    int languageDelete(String loginId, int langId);
+    List<LanguageResponse> getLanguage(String loginId);
 
     //여행 테마 관리 기능
     int tourThemaRegister(int guideId, String themaCode);
