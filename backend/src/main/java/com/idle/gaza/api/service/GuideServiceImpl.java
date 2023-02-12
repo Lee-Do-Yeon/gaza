@@ -471,14 +471,12 @@ public class GuideServiceImpl implements GuideService {
         if (!existGuide.isPresent()) return 0;
 
         Guide guideInfo = existGuide.get();
+        System.out.println("start = " + startTime);
+        System.out.println("end = " + endTime);
+        guideInfo.setCloseTimeStart(startTime);
+        guideInfo.setCloseTimeEnd(endTime);
 
-        Guide guide = Guide.builder()
-                .guideId(guideInfo.getGuideId())
-                .closeTimeEnd(endTime)
-                .closeTimeStart(startTime)
-                .build();
-
-        guideRepository.save(guide);
+        guideRepository.save(guideInfo);
 
         return 1;
     }
@@ -539,8 +537,8 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public int setMyPage(String loginId, MyPageRequest request) {
-        Optional<User> user = userRepository.findById(loginId);
+    public int setMyPage(MyPageRequest request) {
+        Optional<User> user = userRepository.findById(request.getUserId());
         if(!user.isPresent()) return 0;
 
         User getUser = user.get();
@@ -560,6 +558,19 @@ public class GuideServiceImpl implements GuideService {
         return 1;
     }
 
+    @Override
+    public String findGuideProfilePicture(String loginId) {
+        Optional<User> user = userRepository.findById(loginId);
+        if(!user.isPresent()) return null;
 
+        User getUser = user.get();
+        Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
+        if(!guide.isPresent()) return null;
+
+        Guide getGuide = guide.get();
+
+        String file = getGuide.getPicture();
+        return file;
+    }
 
 }

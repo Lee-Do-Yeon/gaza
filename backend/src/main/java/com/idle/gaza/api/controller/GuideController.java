@@ -7,6 +7,7 @@ import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.common.util.S3Uploader;
 import com.idle.gaza.common.util.TokenUtil;
 import com.idle.gaza.db.entity.Guide;
+import com.idle.gaza.db.entity.User;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,12 +103,8 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> myPageShow(@RequestHeader("Authorization") String accessToken){
-        String token = tokenUtil.getTokenFromHeader(accessToken);
-
-        String id = tokenUtil.getUserIdFromToken(token);
-        log.info("id = " + id);
-        GuideResponse response = guideService.getMyPage(id);
+    public ResponseEntity<?> myPageShow(@RequestParam String userId){
+        GuideResponse response = guideService.getMyPage(userId);
 
         if(response == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         log.info(response.toString());
@@ -116,19 +113,47 @@ public class GuideController {
     }
 
     //마이페이지 수정
-    @PutMapping("/mypage")
+    @PutMapping(name="/mypage",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "마이페이지 수정", notes = "가이드 마이페이지 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> myPageModify(@RequestHeader("Authorization") String accessToken, @RequestBody MyPageRequest guide){
-        log.info("this is test");
-        String token = tokenUtil.getTokenFromHeader(accessToken);
-        String id = tokenUtil.getUserIdFromToken(token);
+    public ResponseEntity<?> myPageModify(@RequestPart MyPageRequest guide, @RequestPart(value = "picture", required = false) MultipartFile multipartFile){
 
-        int result = guideService.setMyPage(id, guide);
+        //파일이 존재한다면 기존 경로에서 파일 삭제
+        String originPictureName = guideService.findGuideProfilePicture(guide.getUserId());
+
+        if (originPictureName != null) {
+            String originPicture = new String(rootPath + "/" + "guide" + "/" + "mypage" + "/" + originPictureName);
+            log.info("exist file path = " + originPicture);
+
+            try {
+                s3Uploader.deleteS3(originPictureName);
+                log.info("delete file");
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        //파일 업로드
+        String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
+        File uploadFilePath = new File(rootPath, uploadPath);
+
+        String fileName = multipartFile.getOriginalFilename();
+
+        UUID uuid = UUID.randomUUID();
+        String uploadFileName = uuid.toString() + "_" + fileName;
+
+        try {
+            s3Uploader.upload(multipartFile, uploadFilePath + uploadFileName);
+            guide.setPicture(uploadFileName);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        int result = guideService.setMyPage(guide);
 
         if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
@@ -252,11 +277,12 @@ public class GuideController {
         //파일이 존재한다면 기존 경로에서 파일 삭제
         String existFile = guideService.findExistFile(recommendId);
         if (existFile != null) {
-            String existPath = new String(rootPath + "/" + "location" + "/" + existFile);
+            String existPath = new String(rootPath + "/" + "guide" + "/" +  "location" + "/" + existFile);
             File file = new File(existPath);
             log.info("exist file path = " + file);
 
             if (file.exists()) {
+                s3Uploader.deleteS3(existPath);
                 log.info("delete file");
                 file.delete();
             }
@@ -419,7 +445,7 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> timeRegister(@RequestBody TimeRegisterPostRequest time) {
-        log.info(LocalTime.parse(time.getTimeStart()));
+
         int result = guideService.consultTimeRegister(LocalTime.parse(time.getTimeStart()), LocalTime.parse(time.getTimeEnd()), time.getUserId());
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 

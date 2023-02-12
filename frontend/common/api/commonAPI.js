@@ -67,13 +67,20 @@ const registerTime = payload => {
 }
 
 //가이드 마이페이지 수정
-const myPageUpdate = (payload, accessToken) => {
+const myPageUpdate = (payload) => {
     console.log(payload);
-    api.put('/api/mypage', payload,{headers: {Authorization: accessToken}});
+    api.put('/api/guides/mypage', payload, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+      });
 }
 
 //가이드 마이페이지 조회
-const myPageShow = accessToken => api.get('/api/guides/mypage', { headers: { Authorization: accessToken } });
+const myPageShow = loginId => {
+    console.log(loginId)
+    api.get('/api/guides/mypage', { params: { userId: loginId } }).then((res) => { console.log(res)})
+}
 
 
 // 가이드 검색
