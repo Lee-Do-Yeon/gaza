@@ -2,6 +2,7 @@ package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.GuideRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
+import com.idle.gaza.api.request.MyPageRequest;
 import com.idle.gaza.api.response.DayOffResponse;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LocationResponse;
@@ -416,8 +417,8 @@ public class GuideServiceImpl implements GuideService {
                 .introduction(guide.getIntroduction())
                 .country(guide.getCountry())
                 .city(guide.getCity())
-                .closeTimeStart(guide.getCloseTimeStart())
-                .closeTimeEnd(guide.getCloseTimeEnd())
+                .closeTimeStart(LocalTime.parse(guide.getTimeStart()))
+                .closeTimeEnd(LocalTime.parse(guide.getTimeEnd()))
                 .build();
 
         guideRepository.save(newGuide);
@@ -473,18 +474,8 @@ public class GuideServiceImpl implements GuideService {
 
         Guide guide = Guide.builder()
                 .guideId(guideInfo.getGuideId())
-                .guideLocationList(guideInfo.getGuideLocationList())
-                .city(guideInfo.getCity())
                 .closeTimeEnd(endTime)
                 .closeTimeStart(startTime)
-                .dayOffList(guideInfo.getDayOffList())
-                .introduction(guideInfo.getIntroduction())
-                .license(guideInfo.getLicense())
-                .onlineIntroduction(guideInfo.getOnlineIntroduction())
-                .price(guideInfo.getPrice())
-                .picture(guideInfo.getPicture())
-                .country(guideInfo.getCountry())
-                .user(guideInfo.getUser())
                 .build();
 
         guideRepository.save(guide);
@@ -548,7 +539,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public int setMyPage(String loginId, GuideRequest request) {
+    public int setMyPage(String loginId, MyPageRequest request) {
         Optional<User> user = userRepository.findById(loginId);
         if(!user.isPresent()) return 0;
 

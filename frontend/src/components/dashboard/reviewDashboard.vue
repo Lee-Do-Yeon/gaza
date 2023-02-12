@@ -6,7 +6,7 @@
           <div class="dashboard_sidebar">
             <div class="dashboard_sidebar_user">
               <img src="../../assets/img/common/dashboard-user.png" alt="img" />
-              <h3>최지성</h3>
+              <h3>{{loginID}}</h3>
             </div>
             <div class="dashboard_menu_area">
               <ul>
@@ -89,6 +89,7 @@ import picturemodalVue from "../modal/picturemodal.vue";
 import {useRoute,useRouter } from 'vue-router';
 import { uploadReview } from "../../../common/api/commonAPI";
 import {reactive } from 'vue';
+import {useStore} from 'vuex';
 
 export default {
   name: "reviewDashboard",
@@ -113,6 +114,9 @@ export default {
       }
 
     })
+
+    const store = useStore();
+    const loginID = store.getters["accountStore/getUserId"];
 
     const upreview = async () => {
       try{
@@ -144,7 +148,8 @@ export default {
       route,
       upreview,
       state,
-      moveBefore 
+      moveBefore ,
+      loginID
 
     }
 
