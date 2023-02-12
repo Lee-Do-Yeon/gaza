@@ -229,27 +229,6 @@ export default {
       changePicture
     };
   },
-  setup(){
-
-      const store = useStore();
-
-      const loginID = store.getters["accountStore/getUserId"];
-      const userInfo = ref([])
-
-
-      const accessToken = store.getters["accountStore/getAccessToken"];
-
-
-      console.log(loginID);
-
-    return{
-
-      userInfo,
-      loginID,
-
-    }
-
-  }
 };
 
 </script>
