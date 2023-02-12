@@ -201,6 +201,8 @@ public class UserController {
 
         int result = userService.updateUser(id, userUpdateRequest);
 
+        log.debug("========================= result = " + result);
+
         if (result == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
                     .result(null)
