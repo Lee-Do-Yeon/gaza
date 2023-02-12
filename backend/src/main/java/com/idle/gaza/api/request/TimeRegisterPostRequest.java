@@ -1,5 +1,7 @@
 package com.idle.gaza.api.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +18,15 @@ public class TimeRegisterPostRequest {
 
     private String userId;
 
-    private LocalTime startTime;
-    private LocalTime endTime;
+//    @JsonSerialize(as = LocalTime.class)
+//    @JsonFormat(pattern = "kk:mm:ss")
+//    private LocalTime startTime;
+//
+//    @JsonSerialize(as = LocalTime.class)
+//    @JsonFormat(pattern = "kk:mm:ss")
+//    private LocalTime endTime;
+
+    private String timeStart;
+    private String timeEnd;
 
 }

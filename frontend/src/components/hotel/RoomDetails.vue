@@ -57,7 +57,7 @@
                 <div class="dashboard_common_table">
                   <h3>내 정보 수정</h3>
                   <div class="profile_update_form">
-                    <form action="!#" id="profile_form_area" v-on:submit="updateMyPage">
+                    <form id="profile_form_area" v-on:submit.prevent="updateMyPage">
                       <div class="row">
                         <div class="col-lg-20">
                           <div class="form-group">
@@ -66,7 +66,7 @@
                               type="text"
                               class="form-control"
                               id="f-one-liner"
-                              v-model="guide_info.onlineIntroduction"
+                              v-model="guide_info.onelineIntroduction"
                             />
                           </div>
                         </div>
@@ -119,11 +119,10 @@
                           </div>
                         </div>
                       </div>
+                      <div class="d-flex justify-content-end mt-3">
+                        <button class="btn btn_theme">수정</button>
+                      </div>
                     </form>
-                  </div>
-                  <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn_theme">수정</button>
-                    <withdrawVue />
                   </div>
                 </div>
               </div>
@@ -186,6 +185,7 @@
           <hr />
           <h3 style="font-weight: bold">상담 불가 날짜/시간 설정</h3>
           <br />
+          <!--start 상담 불가능 날짜 form -->
           <div class="row d-flex justify-content-center">
             <div class="col-lg-4 me-5">
               <h5 style="color: #15d4cd">Choose a Date</h5>
@@ -193,18 +193,26 @@
               <div class="form_search_date">
                 <div class="flight_Search_boxed date_flex_area">
                   <div class="Journey_date">
-                    <input type="date" value="2023-02-01" />
+                    <form v-on:submit.prevent="register_date">
+                      <input type="date" v-model="date_info.date" />
+                      <button class="btn btn_theme btn_sm me-1 mb-2">submit</button>
+                    </form>
                   </div>
                 </div>
               </div>
             </div>
+            <!--end 상담 불가능 날짜 form -->
 
             <!--start 시간대 설정 form -->
             <div class="col-lg-4 ms-5">
-              <form v-on:submit.prevent="registerTime">
+              <form v-on:submit.prevent="impossibleTime">
                 <h5 style="color: #15d4cd">Pick a time</h5>
                 <div class="tour_details_boxed">
-                  <div class="btn-group" role="group" v-for="index in 4" :key="index">
+                  <h5>시작시간</h5>
+                  <input type="time" v-model="startTime" />
+                  <h5>종료 시간</h5>
+                  <input type="time" v-model="endTime" />
+                  <!-- <div class="btn-group" role="group" v-for="index in 4" :key="index">
                     <button
                       type="button"
                       id
@@ -220,7 +228,7 @@
                           : (index - 1) * 6 + btn_index
                       }}
                     </button>
-                  </div>
+                  </div> -->
                 </div>
                 <button class="btn btn_theme btn_sm">submit</button>
               </form>
@@ -235,69 +243,131 @@
 <script>
 import { onMounted, reactive } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
 import { ref } from "vue";
-import { registerTime, myPageUpdate, myPageShow } from "../../../common/api/commonAPI.js";
+import {
+  registerTime,
+  myPageUpdate,
+  myPageShow,
+  registerDate,
+} from "../../../common/api/commonAPI.js";
 
 export default {
+  name: "RoomDetails",
   setup() {
     const store = useStore();
 
-    const time_info = reactive({
-      hour: "",
-      minute: "",
-      nano: 0,
-      second: "",
+    const date_info = ref({});
+
+    const startTime = ref();
+    const endTime = ref();
+
+    const guide_info = reactive({
+      city: "",
+      country: "",
+      introduction: "",
+      onlineIntroduction: "",
+      picture: "",
+      price: 0,
     });
 
-    const guide_info = ref([]);
+    //마이페이지 가이드 정보 조회
+    const getInfo = async (accessToken) => {
+      const res = await myPageShow(accessToken);
+      console.log(res.data);
+      guide_info.value = res.data;
+      console.log(guide_info);
+    };
 
     onMounted(() => {
       const accessToken = store.getters["accountStore/getAccessToken"];
       console.log(accessToken);
-      guide_info.value = myPageShow(accessToken);
-      console.log(guide_info.value);
+
+      getInfo(accessToken);
     });
 
-    //가이드의 추천 명소
+    const setTime = function () {
+      date_info.value = event.currentTarget.value;
+      focusBtn();
+    };
+
+    const focusBtn = function () {
+      const active_btn = document.querySelector(".btn-group > .active");
+
+      if (active_btn !== null) {
+        active_btn.className = "btn btn_theme btn_sm me-1 mb-2";
+      }
+
+      event.currentTarget.className = "btn btn_theme btn_sm me-1 mb-2 active";
+    };
+
+    //가이드의 추천 명소 수정
+
+    //가이드의 추천 명소 삭제
 
     //상담 불가능 시간대 설정
-    const registerTime = function () {
+    const impossibleTime = function () {
+      const start_time = startTime.value;
+      const end_time = endTime.value;
+
       const set_time_info = {
         userId: store.getters["accountStore/getUserId"],
-        startTime: {
-          time_info,
-        },
-        endTime: {
-          time_info,
-        },
+        timeStart: `${start_time}:00`,
+        timeEnd: `${end_time}:00`,
       };
+
+      registerTime(set_time_info);
     };
 
     //마이페이지 수정
     const updateMyPage = function () {
+      const info = guide_info.data;
       console.log(guide_info);
+      const accessToken = store.getters["accountStore/getAccessToken"];
 
-      const info = {
-        city: guide_info.city,
-        country: guide_info.country,
-        introduction: guide_info.introduction,
-        onlineIntroduction: guide_info.onlineIntroduction,
-        price: guide_info.price,
+      const request = {
+        city: info.city,
+        country: info.country,
+        introduction: info.introduction,
+        onlineIntroduction: info.onlineIntroduction,
+        price: info.price,
       };
 
-      myPageUpdate(info); //call axios
+      myPageUpdate(request, accessToken); //call axios
+    };
+
+    //가이드 상담 불가능 날짜 등록
+    const register_date = function () {
+      const loginId = store.getters["accountStore/getUserId"];
+
+      const date = date_info.date;
+
+      const request = {
+        day: date,
+        userId: loginId,
+      };
+
+      registerDate(request);
     };
 
     return {
-      registerTime,
+      impossibleTime,
       store,
-      time_info,
       updateMyPage,
       guide_info,
+      getInfo,
+      register_date,
+      date_info,
+      setTime,
+      focusBtn,
+      endTime,
+      startTime,
     };
   },
 };
 </script>
-
-<style scoped></style>
+<style scoped>
+.active {
+  background-color: black;
+  color: white;
+}
+</style>
