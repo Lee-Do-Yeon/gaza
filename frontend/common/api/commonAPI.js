@@ -10,7 +10,6 @@ let axiosConfig = {
 }
 
 
-
 //유저구역
 //유저 회원가입
 const requestSignin = payload => api.post("/api/users",payload,{ headers: {"Content-Type": "multipart/form-data"}})
@@ -18,6 +17,9 @@ const requestSignin = payload => api.post("/api/users",payload,{ headers: {"Cont
 // https://i8c207.p.ssafy.io/api/users
 //유저 로그인
 const requestLogin = (payload) => api.post("/api/users/login", payload);
+
+// 유저 정보 가져오기
+const getUserInfo = accessToken => api.get("/api/users", {headers: {Authorization: accessToken}});
 
 //유저 로그인 확인
 const requestConfirm = accessToken => api.get("/api/users/isLogin", {headers: {Authorization: accessToken}})
@@ -41,12 +43,10 @@ const popularGuide = () => api.get("/api/guides/popular")
 const reviewss = (payload) => api.get('/api/reviews/user/ssafy',payload);
 
 //유저 정보수정
-const updateUser = () => api.put('/api/users/ssafy');
+const updateUser = (payload, accessToken) => api.put('/api/users/', payload, {headers: {Authorization: accessToken, "Content-Type": "multipart/form-data"}});
 
 //리뷰 등록
 const uploadReview =(payload) => api.post('/api/reviews',payload)
-
-
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
@@ -77,4 +77,4 @@ const guideSearch = payload => api.get('/api/guides/search/', {params: {searchNa
 
 const guideDetail = guideId => api.get(`/guides/${guideId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, getUserInfo};
