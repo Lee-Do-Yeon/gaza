@@ -1,5 +1,5 @@
 <template>
-  <section id="vendor_form_area" class="section_padding_bottom" style="height:300px">
+  <section id="vendor_form_area" class="section_padding_bottom" style="height: 300px">
     <div class="container">
       <div class="row">
         <div class="vendor_form">
@@ -59,7 +59,12 @@
               </div>
               <div class="row">
                 <div>파트너 약관</div>
-                <textarea class="form-control"  id="floatingTextarea2" style="height: 300px; padding:10px" readonly>
+                <textarea
+                  class="form-control"
+                  id="floatingTextarea2"
+                  style="height: 300px; padding: 10px"
+                  readonly
+                >
  
                                             제3조 (여행계약의 당사자 및 당사의 지위)
                                             여행자와 여행계약을 체결하고 가이드서비스를 제공하는 법적 주체는 가이드이며, 당사는 플랫폼을 통하여 여행자가 원하는 날짜와 조건에 맞추어 가이드와 여행계약을 체결하고 가이드서비스를 제공받는 것을 중개하는 업무를 수행합니다.
@@ -90,7 +95,12 @@
               </div>
               <div class="row">
                 <div>개인정보 및 고유식별 정보 수집 및 이용동의</div>
-                <textarea class="form-control"  id="floatingTextarea2" style="height: 300px; padding:10px" readonly>
+                <textarea
+                  class="form-control"
+                  id="floatingTextarea2"
+                  style="height: 300px; padding: 10px"
+                  readonly
+                >
                                         ❏ 개인정보의 수집·이용 목적
 
                                         ❍ 귀하의 개인정보는 가이드 등록을 위한 목적으로 수집·이용됩니다.
@@ -169,32 +179,30 @@ export default {
       if (this.check == false) alert("약관에 동의하세요");
       else {
         //console.log(this.accessToken, this.file1, this.file2, this.file3);
-        
+
         const formData = new FormData();
-        formData.append('idFile', this.file1);
-        formData.append('certificateResidence', this.file2);
-        formData.append('certificate', this.file3);
+        formData.append("idFile", this.file1);
+        formData.append("certificateResidence", this.file2);
+        formData.append("certificate", this.file3);
 
         axios
           .post(
             "/users/guide",
             {
-              'idFile':formData.get('idFile'),
-              'certificateResidence':formData.get('certificateResidence'),
-              'certificate':formData.get('certificate')
+              idFile: formData.get("idFile"),
+              certificateResidence: formData.get("certificateResidence"),
+              certificate: formData.get("certificate"),
             },
             {
               headers: {
-                "Authorization": "Bearer " + this.accessToken,
-                'Content-Type': 'multipart/form-data'
+                Authorization: "Bearer " + this.accessToken,
+                "Content-Type": "multipart/form-data",
               },
             }
           )
           .then((res) => {
-            console.log(res.data),
-            router.push({name:"home"})
-          } 
-          );
+            console.log(res.data), router.push({ name: "home" });
+          });
       }
     },
     selectFile1() {

@@ -35,9 +35,10 @@
 
           </h3>
           <div class="logout_approve_button">
-            <button data-bs-dismiss="modal" class="btn btn_theme btn_md">
+            <label data-bs-dismiss="modal" class="btn btn_theme btn_md" for="formFile">
               사진선택
-            </button>
+            </label>
+            <input class="form-control" type="file" id="formFile" accept="image/*" @change="upload" ref="pictureData" style="display:none">
             <button
               data-bs-dismiss="modal"
               class="btn btn_border btn_md"
@@ -51,8 +52,12 @@
     </div>
   </div>
 </template>
+
 <script>
+import { ref, getCurrentInstance } from 'vue'
+
 export default {
+  emits: ["pictureData"],
   name: "picturemodal",
   data() {
     return {
@@ -68,5 +73,19 @@ export default {
         : body.classList.remove("modal-open");
     },
   },
+
+  setup() {
+    const pictureData = ref(null);
+
+    const { emit } = getCurrentInstance();
+
+    const upload = async() => {
+        console.log("selected file", pictureData.value.files[0])
+
+        emit("pictureData", pictureData.value.files[0]);
+    }
+
+    return { pictureData, upload}
+  }
 };
 </script>

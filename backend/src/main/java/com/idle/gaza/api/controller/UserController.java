@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+@CrossOrigin(origins = "*")
 @Api(value = "유저 API", tags = {"User"})
 @Slf4j
 @RestController
@@ -54,7 +55,7 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
 
-    public ResponseEntity<ApiResponse<Object>> join(@RequestPart(value = "user") User user, @RequestPart(value = "file", required = false) MultipartFile pictureFile) {
+    public ResponseEntity<ApiResponse<Object>> join(@RequestPart(value = "user") User user, @RequestPart(value = "picture", required = false) MultipartFile pictureFile) {
         if (pictureFile != null) {
             //make upload folder
             String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
@@ -124,6 +125,8 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<ApiResponse<Object>> getUser(@RequestHeader("Authorization") String accessToken) {
+        log.debug("accessToken = " + accessToken);
+        
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
         String id = tokenUtil.getUserIdFromToken(token);
@@ -160,7 +163,7 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
     @PutMapping("")
-    public ResponseEntity<ApiResponse<Object>> updateUser(@RequestHeader("Authorization") String accessToken, @RequestBody UserUpdateRequest userUpdateRequest, @RequestParam("picture") MultipartFile pictureFile) {
+    public ResponseEntity<ApiResponse<Object>> updateUser(@RequestHeader("Authorization") String accessToken, @RequestPart(value = "userInfo") UserUpdateRequest userUpdateRequest, @RequestPart(value = "picture", required = false) MultipartFile pictureFile) {
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
         String id = tokenUtil.getUserIdFromToken(token);
@@ -191,13 +194,15 @@ public class UserController {
         String uploadFileName = uuid.toString() + "_" + fileName;
 
         try {
-            s3Uploader.upload(pictureFile, uploadFilePath + uploadFileName);
+            s3Uploader.upload(pictureFile, uploadPath + uploadFileName);
             userUpdateRequest.setPicture(uploadFileName);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
 
         int result = userService.updateUser(id, userUpdateRequest);
+
+        log.debug("========================= result = " + result);
 
         if (result == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
@@ -254,12 +259,12 @@ public class UserController {
      * @return ResponseEntity
      */
     @PutMapping("/pw")
-    public ResponseEntity<ApiResponse<Object>> changePassword(@RequestHeader("Authorization") String accessToken, @RequestParam String password) {
+    public ResponseEntity<ApiResponse<Object>> changePassword(@RequestHeader("Authorization") String accessToken, @RequestBody Map<String, String> passwordMap) {
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
         String id = tokenUtil.getUserIdFromToken(token);
 
-        int result = userService.updatePassword(id, password);
+        int result = userService.updatePassword(id, passwordMap.get("password"));
 
         if (result == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()

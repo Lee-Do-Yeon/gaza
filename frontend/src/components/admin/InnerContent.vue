@@ -40,10 +40,10 @@ export default {
         })
 
         const getFileUrl = function(user) {
-            const base = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide_document";
+            const base = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide_document/";
 
             return {
-                idFile : base + "/id_file/" + user.idFile,
+                idFile : base + "id_file/" + user.idFile,
                 certificateResidence : base + "certificate_residence/" + user.certificateResidence,
                 certificate : base + "certificate/" + user.certificate
             }

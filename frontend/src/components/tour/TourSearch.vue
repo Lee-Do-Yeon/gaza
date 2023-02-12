@@ -14,51 +14,14 @@
                     <div class="left_side_search_area">
                         <div class="left_side_search_boxed">
                             <div class="left_side_search_heading">
-                                <h5>Tour type</h5>
+                                <h5>테마</h5>
                             </div>
-                            <div class="tour_search_type">
+                            <div class="tour_search_type" v-for="guidesTheme in resultThema" :key="guidesTheme">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultf1">
-                                    <label class="form-check-label" for="flexCheckDefaultf1">
+                                    <input class="form-check-input" type="checkbox" v-model="checkThema" :value="guidesTheme" :id="guidesTheme">
+                                    <label class="form-check-label" :for="guidesTheme">
                                         <span class="area_flex_one">
-                                            <span>Ecotourism</span>
-                                            <span>17</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultf2">
-                                    <label class="form-check-label" for="flexCheckDefaultf2">
-                                        <span class="area_flex_one">
-                                            <span>Escorted tour </span>
-                                            <span>14</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultf3">
-                                    <label class="form-check-label" for="flexCheckDefaultf3">
-                                        <span class="area_flex_one">
-                                            <span>Family trips</span>
-                                            <span>30</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultf4">
-                                    <label class="form-check-label" for="flexCheckDefaultf4">
-                                        <span class="area_flex_one">
-                                            <span>Group tour</span>
-                                            <span>22</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultf5">
-                                    <label class="form-check-label" for="flexCheckDefaultf5">
-                                        <span class="area_flex_one">
-                                            <span>City trips</span>
-                                            <span>41</span>
+                                            <span>{{ guidesTheme }}</span>
                                         </span>
                                     </label>
                                 </div>
@@ -66,51 +29,14 @@
                         </div>
                         <div class="left_side_search_boxed">
                             <div class="left_side_search_heading">
-                                <h5>Facilities</h5>
+                                <h5>언어</h5>
                             </div>
                             <div class="tour_search_type">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultt1">
-                                    <label class="form-check-label" for="flexCheckDefaultt1">
+                                <div class="form-check" v-for="guidesLang in resultLanguage" :key="guidesLang">
+                                    <input class="form-check-input" type="checkbox" v-model="checkLanguage" :value="guidesLang" :id="guidesLang">
+                                    <label class="form-check-label" :for="guidesLang">
                                         <span class="area_flex_one">
-                                            <span>Gymnasium</span>
-                                            <span>20</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultt2">
-                                    <label class="form-check-label" for="flexCheckDefaultt2">
-                                        <span class="area_flex_one">
-                                            <span>Mountain Bike</span>
-                                            <span>14</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultt3">
-                                    <label class="form-check-label" for="flexCheckDefaultt3">
-                                        <span class="area_flex_one">
-                                            <span>Wifi</span>
-                                            <span>62</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultt4">
-                                    <label class="form-check-label" for="flexCheckDefaultt4">
-                                        <span class="area_flex_one">
-                                            <span>Aerobics Room</span>
-                                            <span>08</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultt5">
-                                    <label class="form-check-label" for="flexCheckDefaultt5">
-                                        <span class="area_flex_one">
-                                            <span>Golf Cages</span>
-                                            <span>12</span>
+                                            <span>{{ guidesLang }}</span>
                                         </span>
                                     </label>
                                 </div>
@@ -120,7 +46,7 @@
                 </div>
                 <div class="col-lg-9">
                     <div class="row">
-                        <div v-for='tourInfo in resultArray' :key="tourInfo.guideId" class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div v-for='tourInfo in resultGuide' :key="tourInfo.guideId" class="col-lg-4 col-md-6 col-sm-6 col-12">
                             <div class="theme_common_box_two img_hover">
                                 <div class="theme_two_box_img">
                                     <router-link 
@@ -212,15 +138,22 @@ export default {
 
         const resultArray = ref([])
 
+        const resultGuide = ref([])
+
         const resultLanguage = ref([])
 
         const resultThema = ref([])
+
+        const checkThema = ref([])
+
+        const checkLanguage = ref([])
 
         const findSearch = async function (item) {
             try {
                 const response = await guideSearch(item)
                 console.log(response.data);
                 resultArray.value = response.data
+                resultGuide.value = resultArray.value
                 let languageSet = new Set()
                 let themaSet = new Set()
 
@@ -247,11 +180,44 @@ export default {
 
         })
 
+
         const resultCount = computed(() => {
             return resultArray.value.length
         })
 
-        return { findSearch, resultArray, resultCount, resultLanguage, resultThema }
+        watch (checkThema, (newVal, oldVal) => {
+            if (checkThema.value.length == 0 && checkLanguage.value.length == 0) {
+                resultGuide.value = resultArray.value
+            } else {
+                const sResult = resultArray.value.filter(function(guide) {
+                    const check = guide.thema.filter(x => checkThema.value.includes(x))
+                    const check2 = guide.language.filter(x => checkLanguage.value.includes(x))
+                    
+                    console.log(check);
+                    return check.length + check2.length > 0
+                })
+                console.log(sResult)
+                resultArray.value = sResult
+            }
+        })
+
+        watch (checkLanguage, (newVal, oldVal) => {
+            if (checkThema.value.length == 0 && checkLanguage.value.length == 0) {
+                resultGuide.value = resultArray.value
+            } else {
+                const sResult = resultArray.value.filter(function(guide) {
+                    const check = guide.thema.filter(x => checkThema.value.includes(x))
+                    const check2 = guide.language.filter(x => checkLanguage.value.includes(x))
+                    
+                    console.log(check);
+                    return check.length + check2.length > 0
+                })
+                console.log(sResult)
+                resultArray.value = sResult
+            }
+        })
+
+        return { findSearch, resultArray, resultCount, resultLanguage, resultThema, checkThema, checkLanguage, resultGuide }
     }
 
 };

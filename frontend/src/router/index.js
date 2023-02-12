@@ -190,12 +190,12 @@ const routes = [
     component: reviewView
   },
   {
-    path:'/guide_schedule/:guideId',
+    path:'/guide_schedule',
     name : 'guide_schedule',
     component:GuideSchedule
   },
   {
-    path: '/guide_review/:guideId',
+    path: '/guide_review',
     name : 'guide_review',
     component : GuideReview
   },
