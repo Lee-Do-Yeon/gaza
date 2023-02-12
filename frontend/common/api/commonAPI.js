@@ -73,7 +73,7 @@ const myPageUpdate = (payload) => {
         headers: {
             "Content-Type": "multipart/form-data"
         }
-      });
+    });
 }
 
 //가이드 마이페이지 조회
@@ -92,4 +92,9 @@ const registerDate = payload => {
     api.post('/api/guides/day', payload).then((res)=>{console.log(res)})
 };
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword };
+
+//가이드 언어 등록
+const guideLangRegister = payload => api.post('/api/guides/lang', payload).then((res) => { console.log(res) });
+
+
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword,guideLangRegister };

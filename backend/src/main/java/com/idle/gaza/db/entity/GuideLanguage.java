@@ -4,14 +4,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 
-@Entity
+@Entity(name = "guide_language")
 @Setter
 @Getter
 @NoArgsConstructor
+@DynamicUpdate
 public class GuideLanguage {
 
     @Id
