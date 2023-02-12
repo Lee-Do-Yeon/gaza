@@ -42,7 +42,7 @@
                 <div class="dashboard_common_table">
                   <h3>프로필 업로드</h3>
                   <div class="profile_update_form">
-                    <form id="profile_form_area" v-on:submit.prevent="updateMyPage">
+                    <form id="profile_form_area" v-on:submit="updateMyPage">
                       <input
                         type="file"
                         @change="selectFile"
@@ -126,17 +126,66 @@
               <div class="row">
                 <div class="col-lg-4 col-md-6 col-sm-12 col-12">
                   <div class="news_item_boxed">
-                    <div class="news_item_img">
-                      <router-link to="/news-details"
-                        ><img src="../../assets/img/news/news-1.png" alt="img"
-                      /></router-link>
-                    </div>
-                    <div class="news_item_content">
-                      <h3>
-                        <router-link to="/news-details">한강 </router-link>
-                      </h3>
-                      <p>대한민국 치킨 맛집</p>
-                    </div>
+                    <form id="profile_form_area" v-on:submit.prevent="locationRegister">
+                      <input
+                        type="file"
+                        @change="getFileName"
+                        id="locPicture"
+                        ref="pictureData2"
+                        accept="image/*"
+                      />
+                      <div class="col-lg-20">
+                        <div class="form-group">
+                          <label for="f-one-liner">장소 이름</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="f-one-liner"
+                            v-model="location.info.name"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-lg-20">
+                        <div class="form-group">
+                          <label for="f-one-liner">주소</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="f-one-liner"
+                            v-model="location.info.address"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-lg-20">
+                        <div class="form-group">
+                          <label for="f-one-liner">카테고리</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="f-one-liner"
+                            v-model="location.info.category_name"
+                          />
+                        </div>
+                      </div>
+
+                      <button class="btn btn_theme btn_sm">submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 가이드 여행 테마 등록 -->
+            <div class="new_main_news_box">
+              <br />
+              <h3 style="font-weight: bold">가이드의 여행 테마</h3>
+              <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                  <div class="news_item_boxed">
+                    <form id="profile_form_area">
+                      <input type="text" id="lang" placeholder="여행 테마 이름 등록" />
+                      <button class="btn btn_theme btn_sm">submit</button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -149,7 +198,7 @@
               <div class="row">
                 <div class="col-lg-4 col-md-6 col-sm-12 col-12">
                   <div class="news_item_boxed">
-                    <form id="profile_form_area" v-on:submit.prevent="langRegister">
+                    <form id="profile_form_area" v-on:submit="langRegister">
                       <input
                         type="text"
                         id="lang"
@@ -175,7 +224,7 @@
               <div class="form_search_date">
                 <div class="flight_Search_boxed date_flex_area">
                   <div class="Journey_date">
-                    <form v-on:submit.prevent="register_date">
+                    <form v-on:submit="register_date">
                       <input type="date" v-model="date_info" />
                       <button class="btn btn_theme btn_sm me-1 mb-2">submit</button>
                     </form>
@@ -215,6 +264,7 @@ import {
   myPageShow,
   registerDate,
   guideLangRegister,
+  guideLocationRegister,
 } from "../../../common/api/commonAPI.js";
 
 export default {
@@ -224,6 +274,7 @@ export default {
 
     const date_info = ref(null);
     const pictureData = ref(null);
+    const pictureData2 = ref(null);
 
     const startTime = ref();
     const endTime = ref();
@@ -239,11 +290,29 @@ export default {
       },
     });
 
+    const guideFile = ref(null);
+
+    const locPicture = ref(null);
+
+    const location = reactive({
+      info: {
+        userId: "",
+        name: "",
+        address: "",
+        category_name: "",
+      },
+    });
+
     const language = ref();
 
     const selectFile = function () {
-      guide.info.picture = pictureData.value.files[0];
-      console.log(guide.info.picture);
+      guideFile.value = pictureData.value.files[0];
+      console.log(guideFile);
+    };
+
+    const getFileName = function () {
+      locPicture.value = pictureData2.value.files[0];
+      console.log(locPicture);
     };
 
     //마이페이지 가이드 정보 조회
@@ -289,7 +358,7 @@ export default {
 
       const payload = {
         guide: JSON.stringify(request),
-        picture: info.picture,
+        picture: guideFile.value,
       };
 
       myPageUpdate(payload); //call axios
@@ -319,6 +388,19 @@ export default {
       guideLangRegister(payload); //call axios
     };
 
+    //가이드 추천 장소 등록
+    const locationRegister = function () {
+      location.info.userId = store.getters["accountStore/getUserId"];
+      const request = location.info;
+
+      const payload = {
+        location: JSON.stringify(request),
+        uploadFile: locPicture,
+      };
+
+      guideLocationRegister(payload); //call axios
+    };
+
     return {
       impossibleTime,
       store,
@@ -333,6 +415,13 @@ export default {
       pictureData,
       langRegister,
       language,
+      locationRegister,
+      location,
+      getFileName,
+      locPicture,
+      guideFile,
+      pictureData2,
+      guideLocationRegister,
     };
   },
 };
