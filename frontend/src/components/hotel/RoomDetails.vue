@@ -123,7 +123,7 @@
             <!--start 추천 장소 -->
             <div class="new_main_news_box">
               <br />
-              <h3 style="font-weight: bold">가이드의 추천 명소</h3>
+              <h3 style="font-weight: bold">가이드의 추천 명소 관리</h3>
               <div class="row">
                 <div class="col-lg-4 col-md-6 col-sm-12 col-12">
                   <div class="news_item_boxed">
@@ -137,36 +137,6 @@
                         <router-link to="/news-details">한강 </router-link>
                       </h3>
                       <p>대한민국 치킨 맛집</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                  <div class="news_item_boxed">
-                    <div class="news_item_img">
-                      <router-link to="/news-details"
-                        ><img src="../../assets/img/news/news-2.png" alt="img"
-                      /></router-link>
-                    </div>
-                    <div class="news_item_content">
-                      <h3>
-                        <router-link to="/news-details"> 전주 </router-link>
-                      </h3>
-                      <p>대한민국 비빔밥 맛집</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                  <div class="news_item_boxed">
-                    <div class="news_item_img">
-                      <router-link to="/news-details"
-                        ><img src="../../assets/img/news/news-3.png" alt="img"
-                      /></router-link>
-                    </div>
-                    <div class="news_item_content">
-                      <h3>
-                        <router-link to="/news-details"> 완도 </router-link>
-                      </h3>
-                      <p>대한민국 김 맛집</p>
                     </div>
                   </div>
                 </div>
@@ -256,7 +226,6 @@ export default {
     //마이페이지 가이드 정보 조회
     const getInfo = async (loginId) => {
       const response = await myPageShow(loginId); //call axios
-      console.log(response.data);
       guide.info = response.data;
       console.log(guide.info);
     };
@@ -314,7 +283,7 @@ export default {
         day: date,
         userId: loginId,
       };
-      registerDate(request);
+      registerDate(request); //call axios
     };
 
     return {

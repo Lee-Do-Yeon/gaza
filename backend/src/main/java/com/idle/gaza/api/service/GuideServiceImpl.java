@@ -373,6 +373,7 @@ public class GuideServiceImpl implements GuideService {
         for (int i = 0; i < locations.size(); i++) {
             GuideRecommendLocation location = locations.get(i);
             LocationResponse res = new LocationResponse(
+                    location.getRecommendId(),
                     location.getName(),
                     location.getAddress(),
                     location.getCategoryCode(),
