@@ -6,9 +6,15 @@
           <div class="dashboard_sidebar">
             <div class="dashboard_sidebar_user">
               <img src="../../assets/img/common/dashboard-user.png" alt="img" />
-              <h3>최지성</h3>
+              <h3>{{loginID}}</h3>
               <div>
-                <picturemodalVue />
+                <div style="text-align: center; padding: 60px">
+                  <input
+                    type="file"
+                    class="btn btn_theme"
+                    style="width: 200px"
+                  />
+                </div>
               </div>
             </div>
             <div class="dashboard_menu_area">
@@ -141,6 +147,7 @@ import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
 import { reviewss } from "../../../common/api/commonAPI";
+import {useStore} from 'vuex';
 
 import { ref, computed } from "vue";
 export default {
@@ -151,6 +158,9 @@ export default {
     picturemodalVue,
   },
   setup() {
+    const store= useStore();
+
+    const loginID = store.getters["accountStore/getUserId"];
 
     const review1 = ref([]);
     const review2 = ref([])
@@ -225,7 +235,8 @@ export default {
       EndDate,
       coputeReview,
       filter_date,
-      getDate
+      getDate,
+      loginID 
 
 
     };
