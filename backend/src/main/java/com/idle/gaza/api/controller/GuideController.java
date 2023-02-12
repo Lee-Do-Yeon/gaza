@@ -1,14 +1,12 @@
 package com.idle.gaza.api.controller;
 
-import com.idle.gaza.api.request.DayOffPostRequest;
-import com.idle.gaza.api.request.GuideRequest;
-import com.idle.gaza.api.request.LocationPostRequest;
-import com.idle.gaza.api.request.TimeRegisterPostRequest;
+import com.idle.gaza.api.request.*;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.common.util.S3Uploader;
 import com.idle.gaza.common.util.TokenUtil;
+import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -111,6 +110,7 @@ public class GuideController {
         GuideResponse response = guideService.getMyPage(id);
 
         if(response == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        log.info(response.toString());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -123,7 +123,8 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> myPageModify(@RequestHeader("Authorization") String accessToken, @RequestBody GuideRequest guide){
+    public ResponseEntity<?> myPageModify(@RequestHeader("Authorization") String accessToken, @RequestBody MyPageRequest guide){
+        log.info("this is test");
         String token = tokenUtil.getTokenFromHeader(accessToken);
         String id = tokenUtil.getUserIdFromToken(token);
 
@@ -381,6 +382,9 @@ public class GuideController {
         LocalDate day = dayOff.getDay();
         String userId = dayOff.getUserId();
 
+        log.info("day" + day);
+        log.info("userId" + userId);
+
         int result = guideService.consultDateRegister(userId, day);
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
@@ -414,9 +418,9 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> timeDelete(@RequestBody TimeRegisterPostRequest time) {
-        int result = guideService.consultTimeRegister(time.getStartTime(), time.getEndTime(), time.getUserId());
-
+    public ResponseEntity<?> timeRegister(@RequestBody TimeRegisterPostRequest time) {
+        log.info(LocalTime.parse(time.getTimeStart()));
+        int result = guideService.consultTimeRegister(LocalTime.parse(time.getTimeStart()), LocalTime.parse(time.getTimeEnd()), time.getUserId());
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(HttpStatus.OK);

@@ -58,23 +58,31 @@ const reserve = payload => {
 
 //상담 불가능 시간대 설정
 const registerTime = payload => {
-    console.log(payload);
+    console.log(payload)
     
-    api.post('/api/guides/time', payload);
+    api.post('/api/guides/time', payload).then((res)=>{console.log(res)});
 }
 
 //가이드 마이페이지 수정
-const myPageUpdate = payload => {
+const myPageUpdate = (payload, accessToken) => {
     console.log(payload);
     api.put('/api/mypage', payload,{headers: {Authorization: accessToken}});
 }
 
-//가이드 마이 페이지 조회
+//가이드 마이페이지 조회
 const myPageShow = accessToken => api.get('/api/guides/mypage', { headers: { Authorization: accessToken } });
+
 
 // 가이드 검색
 const guideSearch = payload => api.get('/api/guides/search/', {params: {searchName: payload }})
 
-const guideDetail = guideId => api.get(`/guides/${guideId}`)
+const guideDetail = guideId => api.get(`/api/guides/${guideId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow};
+
+//상담 불가능 날짜 등록
+const registerDate = payload => {
+    console.log(payload)
+    api.post('/api/guides/day', payload).then((res)=>{console.log(res)})
+};
+
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate};
