@@ -1,8 +1,10 @@
 package com.idle.gaza.api.request;
 
 import lombok.Setter;
+import lombok.Getter;
 
 @Setter
+@getter
 public class UserUpdateRequest {
 
     String name;
