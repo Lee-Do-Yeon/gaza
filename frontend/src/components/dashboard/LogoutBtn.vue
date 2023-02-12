@@ -35,7 +35,12 @@
             로그아웃 하시겠습니까?
           </h3>
           <div class="logout_approve_button">
-            <button data-bs-dismiss="modal" class="btn btn_theme btn_md">
+            <button
+              router-link to="/"
+              @click="clickLogout"
+              data-bs-dismiss="modal"
+              class="btn btn_theme btn_md"
+            >
               네
             </button>
             <button
@@ -52,6 +57,8 @@
   </div>
 </template>
 <script>
+import { useStore } from "vuex";
+
 export default {
   name: "LogoutBtn",
   data() {
@@ -67,6 +74,17 @@ export default {
         ? body.classList.add("modal-open")
         : body.classList.remove("modal-open");
     },
+  },
+  setup() {
+    const store = useStore();
+
+    const clickLogout = () => {
+      store.commit("accountStore/logOutData");
+    };
+
+    return {
+      clickLogout,
+    };
   },
 };
 </script>
