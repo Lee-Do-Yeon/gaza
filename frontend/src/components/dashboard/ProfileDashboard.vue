@@ -93,8 +93,11 @@
                           <input
                             type="password"
                             class="form-control"
-                            placeholder="Old Password"
-                            v-model="state.info.oldPassword"
+                            placeholder="새 비밀번호"
+                            v-model="state.info.newPassword"
+                            :class="{ 'formerror': passwordc }"
+                            @keyup="uppassword"
+                            minlength="6"
                           />
                         </div>
                       </div>
@@ -103,8 +106,11 @@
                           <input
                             type="password"
                             class="form-control"
-                            placeholder="New Password"
-                            v-model="state.info.newPassword"
+                            placeholder="비밀번호 확인"
+                            :class="{ 'formerror': passwordc }"
+                            @keyup="uppassword"
+                            v-model="passwordcheck"
+                            minlength="6"
                           />
                         </div>
                       </div>
@@ -125,8 +131,8 @@
 </template>
 <script>
 import { useStore } from 'vuex';
-import { updateUser, getUserInfo } from "../../../common/api/commonAPI";
-import { onMounted, reactive } from 'vue';
+import { updateUser, getUserInfo, changePassword } from "../../../common/api/commonAPI";
+import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
@@ -149,6 +155,9 @@ export default {
 
     const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/user/picture/";
 
+    const passwordcheck = ref('');
+    const passwordc =ref(true);
+
     const state = reactive({
       info: {
         originName: '',
@@ -158,7 +167,6 @@ export default {
         phone_number:'',
         pictureURL:'',
         pictureData:null,
-        oldPassword:'',
         newPassword:'',
       },
     })
@@ -170,6 +178,7 @@ export default {
 
       const user = user_info.data.result;
 
+      passwordc.value=false;
       state.info.pictureURL=baseURL + user.picture;
       state.info.originName=user.name;
       state.info.first_name=user.name.substring(0,1);
@@ -179,6 +188,10 @@ export default {
 
       console.log(user);
     })
+
+    const uppassword = function () {
+        passwordc.value = false
+    }
 
     const changePicture = function(pictureData) {
       console.log(pictureData);
@@ -208,14 +221,21 @@ export default {
       }
 
       console.log(payload);
-      
-      updateUser(payload, accessToken);
 
-      if(state.info.oldPassword !== '' && state.info.newPassword !== '') {
-        // 비밀번호 변경
+      if(state.info.newPassword !== '' && passwordcheck.value !== '') {
+          if((state.info.newPassword.length < 6) || (state.info.newPassword !== passwordcheck.value)) {
+            alert("비밀번호를 확인해주세요.");
+          } else {
+            updateUser(payload, accessToken);
+            changePassword(JSON.stringify({"password" : state.info.newPassword}), accessToken);
+            alert("회원 정보와 비밀번호가 변경되었습니다.")
+            router.go(0);
+          }
+      } else {
+        updateUser(payload, accessToken);
+        alert("회원 정보가 변경되었습니다.")
+        router.go(0);
       }
-
-      router.go(0);
     }
 
     return {
@@ -225,8 +245,11 @@ export default {
       picturemodalVue,
       MyBookingOption,
       LogoutBtn,
+      passwordcheck,
+      passwordc,
       save,
-      changePicture
+      changePicture,
+      uppassword
     };
   },
 };
