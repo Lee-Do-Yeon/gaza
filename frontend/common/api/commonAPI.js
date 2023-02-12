@@ -47,6 +47,12 @@ const updateUser = () => api.put('/api/users/ssafy');
 const uploadReview =(payload) => api.post('/api/reviews',payload)
 
 
+//유저 마이페이지 조회
+
+const mypage = accessToken => api.get('/api/users', { headers: { Authorization: accessToken } });
+
+
+
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
@@ -85,4 +91,4 @@ const registerDate = payload => {
     api.post('/api/guides/day', payload).then((res)=>{console.log(res)})
 };
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate ,mypage};
