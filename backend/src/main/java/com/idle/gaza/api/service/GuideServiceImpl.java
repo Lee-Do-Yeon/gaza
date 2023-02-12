@@ -1,12 +1,10 @@
 package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.GuideRequest;
+import com.idle.gaza.api.request.LanguageRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
 import com.idle.gaza.api.request.MyPageRequest;
-import com.idle.gaza.api.response.DayOffResponse;
-import com.idle.gaza.api.response.GuideResponse;
-import com.idle.gaza.api.response.LocationResponse;
-import com.idle.gaza.api.response.ReservationResponse;
+import com.idle.gaza.api.response.*;
 import com.idle.gaza.db.entity.*;
 import com.idle.gaza.db.repository.*;
 import lombok.extern.log4j.Log4j2;
@@ -46,6 +44,10 @@ public class GuideServiceImpl implements GuideService {
 
     @Autowired
     ReviewRepository reviewRepository;
+
+    @Autowired
+    LanguageRepository languageRepository;
+
 
     ///////////////////////가이드 조회 기능/////////////////////////
 
@@ -516,11 +518,11 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public GuideResponse getMyPage(String loginId) {
         Optional<User> user = userRepository.findById(loginId);
-        if(!user.isPresent()) return null;
+        if (!user.isPresent()) return null;
 
         User getUser = user.get();
         Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
-        if(!guide.isPresent()) return null;
+        if (!guide.isPresent()) return null;
 
         Guide getGuide = guide.get();
 
@@ -540,11 +542,11 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public int setMyPage(MyPageRequest request) {
         Optional<User> user = userRepository.findById(request.getUserId());
-        if(!user.isPresent()) return 0;
+        if (!user.isPresent()) return 0;
 
         User getUser = user.get();
         Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
-        if(!guide.isPresent()) return 0;
+        if (!guide.isPresent()) return 0;
 
         Guide updateGuide = guide.get();
 
@@ -562,16 +564,88 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public String findGuideProfilePicture(String loginId) {
         Optional<User> user = userRepository.findById(loginId);
-        if(!user.isPresent()) return null;
+        if (!user.isPresent()) return null;
 
         User getUser = user.get();
         Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
-        if(!guide.isPresent()) return null;
+        if (!guide.isPresent()) return null;
 
         Guide getGuide = guide.get();
 
         String file = getGuide.getPicture();
         return file;
     }
+
+
+    //////////////////////////////////가이드 언어 관리 기능/////////////////////////////////////////
+
+    @Override
+    public int languageRegister(LanguageRequest request) {
+        //해당 아이디로 가이드 PK 얻어오기
+        Optional<User> user = userRepository.findById(request.getLoginId());
+        if (!user.isPresent()) return 0;
+
+        User getUser = user.get();
+        Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
+        if (!guide.isPresent()) return 0;
+
+        Guide getGuide = guide.get();
+        String code = getCode(request.getLanguageName());
+
+        GuideLanguage language = GuideLanguage.builder()
+                .guide(getGuide)
+                .langCode(code)
+                .build();
+
+        languageRepository.save(language);
+
+        return 0;
+    }
+
+    @Override
+    public int languageDelete(String loginId, int langId) {
+        //로그인 아이디로 가이드 정보 얻어오기
+        Optional<User> user = userRepository.findById(loginId);
+        if (!user.isPresent()) return 0;
+
+        User getUser = user.get();
+        Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
+        if (!guide.isPresent()) return 0;
+
+        int result = languageRepository.deleteByLanguageId(langId);
+
+        return result;
+    }
+
+    @Override
+    public List<LanguageResponse> getLanguage(String loginId) {
+        //로그인 아이디로 가이드 정보 얻어오기
+        Optional<User> user = userRepository.findById(loginId);
+        if (!user.isPresent()) return null;
+
+        User getUser = user.get();
+        Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
+        if (!guide.isPresent()) return null;
+
+        List<GuideLanguage> languageList = languageRepository.findByGuide(guide.get());
+        List<LanguageResponse> response = new ArrayList<>();
+
+        for (GuideLanguage lang : languageList) {
+            LanguageResponse res = new LanguageResponse();
+            res.setGuide_id(lang.getGuide().getGuideId());
+            res.setLanguage_id(lang.getLanguageId());
+            res.setLang_code(lang.getLangCode());
+            response.add(res);
+        }
+
+
+        return response;
+    }
+
+    //해당 언어의 코드번호 가져오기
+    private String getCode(String name) {
+        return languageRepository.searchCode(name);
+    }
+
 
 }
