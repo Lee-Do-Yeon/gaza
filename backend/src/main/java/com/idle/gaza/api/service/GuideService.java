@@ -2,6 +2,7 @@ package com.idle.gaza.api.service;
 
 import com.idle.gaza.api.request.GuideRequest;
 import com.idle.gaza.api.request.LocationPostRequest;
+import com.idle.gaza.api.request.MyPageRequest;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LocationResponse;
 
@@ -45,6 +46,6 @@ public interface GuideService {
 
     //가이드 마이페이지 기능
     GuideResponse getMyPage(String loginId);
-    int setMyPage(String loginId, GuideRequest request);
+    int setMyPage(String loginId, MyPageRequest request);
 
 }
