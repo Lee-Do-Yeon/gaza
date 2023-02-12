@@ -113,7 +113,7 @@ public class GuideController {
     }
 
     //마이페이지 수정
-    @PutMapping(name="/mypage",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/mypage",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "마이페이지 수정", notes = "가이드 마이페이지 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -306,18 +306,19 @@ public class GuideController {
     })
     public ResponseEntity<?> locationUpdate(@RequestPart LocationPostRequest location, @RequestPart(name="uploadFile", required = false) MultipartFile multipartFile) {
 
-        //파일이 존재한다면 기존 경로에서 파일 삭제
-//        String existFile = guideService.findExistFile(location.getRecommendId());
-//        if (existFile != null) {
-//            String existPath = new String(rootPath + "/" + "loc" + "/" + existFile);
-//            File file = new File(existPath);
-//            log.info("exist file path = " + file);
-//
-//            if (file.exists()) {
-//                log.info("delete file");
-//                file.delete();
-//            }
-//        }
+        //기존 경로에서 사진 삭제
+        String existFile = guideService.findExistFile(location.getRecommendId());
+        if (existFile != null) {
+            String existPath = new String(rootPath + "/" + "guide" + "/" +  "location" + "/" + existFile);
+            File file = new File(existPath);
+            log.info("exist file path = " + file);
+
+            if (file.exists()) {
+                s3Uploader.deleteS3(existPath);
+                log.info("delete file");
+                file.delete();
+            }
+        }
 
         if (!multipartFile.isEmpty()) {
             String uploadPath = rootPath + "/" + "location" + "/" + "picture" + "/";
