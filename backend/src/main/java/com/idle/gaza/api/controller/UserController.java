@@ -54,7 +54,7 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
 
-    public ResponseEntity<ApiResponse<Object>> join(@RequestPart(value = "user") User user, @RequestPart(value = "file", required = false) MultipartFile pictureFile) {
+    public ResponseEntity<ApiResponse<Object>> join(@RequestPart(value = "user") User user, @RequestPart(value = "picture", required = false) MultipartFile pictureFile) {
         if (pictureFile != null) {
             //make upload folder
             String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
@@ -162,7 +162,7 @@ public class UserController {
             @io.swagger.annotations.ApiResponse(code = 204, message = "사용자 없음")
     })
     @PutMapping("")
-    public ResponseEntity<ApiResponse<Object>> updateUser(@RequestHeader("Authorization") String accessToken, @RequestBody UserUpdateRequest userUpdateRequest, @RequestParam("picture") MultipartFile pictureFile) {
+    public ResponseEntity<ApiResponse<Object>> updateUser(@RequestHeader("Authorization") String accessToken, @RequestPart(value = "userInfo") UserUpdateRequest userUpdateRequest, @RequestPart(value = "picture", required = false) MultipartFile pictureFile) {
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
         String id = tokenUtil.getUserIdFromToken(token);
