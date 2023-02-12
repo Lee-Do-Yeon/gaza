@@ -260,6 +260,8 @@ public class UserController {
      */
     @PutMapping("/pw")
     public ResponseEntity<ApiResponse<Object>> changePassword(@RequestHeader("Authorization") String accessToken, @RequestParam String password) {
+        log.debug("비밀번호 수정 ------------------------------------ " + accessToken + " --------------------------------- " + password);
+
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
         String id = tokenUtil.getUserIdFromToken(token);
