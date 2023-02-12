@@ -53,7 +53,7 @@ import "swiper/swiper-bundle.css";
 import { reactive, computed, ref, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import router from "@/router";
-import { popularGuide } from '../../../common/api/commonAPI';
+import { popularGuide, themaGuide } from '../../../common/api/commonAPI';
 
 export default {
   name: "PromotionalTours",
@@ -69,10 +69,10 @@ export default {
       form: {
         swiperItems: null,
       },
-      themas: [ 힐링, 액티비티, 맛집, 유명관광지, 로컬관광지, 쇼핑, 식사, 관광, 숙박, 쇼핑, 체험 ]
+      // themas: [ '힐링', '액티비티', '맛집', '유명관광지', '로컬관광지', '쇼핑', '식사', '관광', '숙박', '쇼핑', '체험' ]
     })
 
-    const rand_0_10 = Math.floor(Math.random() * 11);
+    // const rand_0_10 = Math.floor(Math.random() * 11);
 
     const popularGuides = async function () {
       console.log('popularguides');
@@ -81,9 +81,19 @@ export default {
       console.log(state.form.swiperItems);
     }
 
+    // const themaGuides = async function () {
+    //   console.log('themaguides');
+    //   console.log(rand_0_10);
+    //   const searchT = state.themas[Math.floor(Math.random() * 11)]
+    //   console.log(searchT);
+    //   const response = await themaGuide(searchT)
+    //   console.log(response.data)
+    // }
+
     onMounted(() => {
       console.log('guides mounted')
       popularGuides()
+      // themaGuides()
       
     })
 
