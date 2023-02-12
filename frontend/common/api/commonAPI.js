@@ -100,4 +100,15 @@ const registerDate = payload => {
 const guideLangRegister = payload => api.post('/api/guides/lang', payload).then((res) => { console.log(res) });
 
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister };
+//추천 장소 등록
+const guideLocationRegister = (payload) => {
+    console.log(payload);
+    api.put('/api/guides/location', payload, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
+}
+
+
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister};
