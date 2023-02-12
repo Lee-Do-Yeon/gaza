@@ -24,6 +24,9 @@ const getUserInfo = accessToken => api.get("/api/users", {headers: {Authorizatio
 //유저 로그인 확인
 const requestConfirm = accessToken => api.get("/api/users/isLogin", {headers: {Authorization: accessToken}})
 
+// 유저 패스워드 변경
+const changePassword = (payload, accessToken) => {console.log(payload); api.put('/api/users/pw', payload, {headers: {Authorization: accessToken, "Content-Type": 'application/json',}})};
+
 // 가이드 신청 중인 유저 목록
 const requestGuideRegisterList = (payload) => api.get("/api/users/guide", payload);
 
@@ -84,4 +87,4 @@ const registerDate = payload => {
     api.post('/api/guides/day', payload).then((res)=>{console.log(res)})
 };
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo };
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword };
