@@ -193,7 +193,7 @@ public class UserController {
         String uploadFileName = uuid.toString() + "_" + fileName;
 
         try {
-            s3Uploader.upload(pictureFile, uploadFilePath + uploadFileName);
+            s3Uploader.upload(pictureFile, uploadPath + uploadFileName);
             userUpdateRequest.setPicture(uploadFileName);
         } catch (IOException e) {
             log.error(e.getMessage());
