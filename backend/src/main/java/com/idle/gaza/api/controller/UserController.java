@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+@CrossOrigin(origins = "*")
 @Api(value = "유저 API", tags = {"User"})
 @Slf4j
 @RestController
