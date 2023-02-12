@@ -10,6 +10,9 @@ import lombok.Setter;
 @Setter
 @ApiModel("LocationResponse")
 public class LocationResponse {
+
+    private int locationId;//pk
+
     private String name;
     private String address;
     private String categoryCode;
@@ -17,12 +20,12 @@ public class LocationResponse {
     private String longitude;
 
     @Builder
-    public LocationResponse(String name, String address, String categoryCode, String latitude, String longitude) {
+    public LocationResponse(int locationId, String name, String address, String categoryCode, String latitude, String longitude) {
+        this.locationId = locationId;
         this.name = name;
         this.address = address;
         this.categoryCode = categoryCode;
         this.latitude = latitude;
         this.longitude = longitude;
     }
-
 }
