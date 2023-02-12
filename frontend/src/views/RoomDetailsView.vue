@@ -1,21 +1,13 @@
 <template>
-
-    <!-- Common Banner Area -->
-
-
-    <!-- Room Details Areas -->
-    <RoomDetails />
-
-
-
+  <RoomDetails />
 </template>
 <script>
-import RoomDetails from '@/components/hotel/RoomDetails.vue'
+import RoomDetails from "@/components/hotel/RoomDetails.vue";
 
 export default {
-    name: "RoomDetailsView",
-    components: {
-        RoomDetails
-    }
+  name: "RoomDetailsView",
+  components: {
+    RoomDetails,
+  },
 };
 </script>

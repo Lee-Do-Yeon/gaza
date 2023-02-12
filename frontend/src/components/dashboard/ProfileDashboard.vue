@@ -37,7 +37,7 @@
           <div class="dashboard_common_table">
             <h3>내 정보 수정</h3>
             <div class="profile_update_form">
-              <form action="!#" id="profile_form_area">
+              <form id="profile_form_area" v-on:submit.prevent="updateMyPage">
                 <div class="row">
                   <div class="col-lg-6">
                     <div class="form-group">
@@ -229,6 +229,27 @@ export default {
       changePicture
     };
   },
+  setup(){
+
+      const store = useStore();
+
+      const loginID = store.getters["accountStore/getUserId"];
+      const userInfo = ref([])
+
+
+      const accessToken = store.getters["accountStore/getAccessToken"];
+
+
+      console.log(loginID);
+
+    return{
+
+      userInfo,
+      loginID,
+
+    }
+
+  }
 };
 
 </script>

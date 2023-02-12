@@ -1,5 +1,7 @@
 package com.idle.gaza.api.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,9 +27,16 @@ public class GuideRequest {
 
     private String city;
 
-    private LocalTime closeTimeStart;
+//    @JsonSerialize(as = LocalTime.class)
+//    @JsonFormat(pattern = "kk:mm:ss")
+//    private LocalTime closeTimeStart;
+//
+//    @JsonSerialize(as = LocalTime.class)
+//    @JsonFormat(pattern = "kk:mm:ss")
+//    private LocalTime closeTimeEnd;
 
-    private LocalTime closeTimeEnd;
+    private String timeStart;
+    private String timeEnd;
 
     private Integer price;
 

@@ -6,9 +6,15 @@
           <div class="dashboard_sidebar">
             <div class="dashboard_sidebar_user">
               <img src="../../assets/img/common/dashboard-user.png" alt="img" />
-              <h3>최지성</h3>
+              <h3>{{loginID}}</h3>
               <div>
-                <picturemodalVue />
+                <div style="text-align: center; padding: 60px">
+                  <input
+                    type="file"
+                    class="btn btn_theme"
+                    style="width: 200px"
+                  />
+                </div>
               </div>
             </div>
             <div class="dashboard_menu_area">
@@ -118,6 +124,7 @@ import picturemodalVue from "../modal/picturemodal.vue";
 import { ref } from "vue";
 import { reser } from "../../../common/api/commonAPI";
 import { useRouter } from "vue-router";
+import {useStore} from 'vuex';
 
 import api from "@/api/http"
 
@@ -135,7 +142,10 @@ export default {
         DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay()
       );
     };
+    const store = useStore();
     const router = useRouter();
+
+    const loginID = store.getters["accountStore/getUserId"];
 
     const movereview = (id,name) => {
       router.push({
@@ -146,6 +156,8 @@ export default {
         },
       });
     };
+
+
     const reservation = ref([]);
     const getreservation = async () => {
       try {
@@ -184,7 +196,8 @@ export default {
       getDate,
       router,
       movereview,
-      download
+      download,
+      loginID
     };
   },
 };

@@ -16,7 +16,6 @@ public class DayOffPostRequest {
 
     String userId;
 
-    //@DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonSerialize(as = LocalDate.class)
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate day;

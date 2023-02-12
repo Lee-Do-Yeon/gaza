@@ -240,6 +240,8 @@ public class TokenUtil {
             return Jwts.parserBuilder().setSigningKey(DatatypeConverter.parseBase64Binary(ACCESS_TOKEN_SECRET_KEY)).build()
                     .parseClaimsJws(token).getBody();
         } catch (Exception e) {
+            log.debug("클레임을 가져오는 중 에러 발생");
+
             e.printStackTrace();
 
             return null;
@@ -254,6 +256,7 @@ public class TokenUtil {
      */
     public String getUserIdFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
+        log.debug("-------------------------------------------------- claim = " + claims);
         return claims.get("userId").toString();
     }
 
