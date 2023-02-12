@@ -259,14 +259,12 @@ public class UserController {
      * @return ResponseEntity
      */
     @PutMapping("/pw")
-    public ResponseEntity<ApiResponse<Object>> changePassword(@RequestHeader("Authorization") String accessToken, @RequestBody("password") String password) {
-        log.debug("비밀번호 수정 ------------------------------------ " + accessToken + " --------------------------------- " + password);
-
+    public ResponseEntity<ApiResponse<Object>> changePassword(@RequestHeader("Authorization") String accessToken, @RequestBody("password") Map<String, String> passwordMap) {
         String token = tokenUtil.getTokenFromHeader(accessToken);
 
         String id = tokenUtil.getUserIdFromToken(token);
 
-        int result = userService.updatePassword(id, password);
+        int result = userService.updatePassword(id, passwordMap.get("password"));
 
         if (result == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()
