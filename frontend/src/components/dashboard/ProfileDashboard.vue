@@ -5,16 +5,10 @@
         <div class="col-lg-4">
           <div class="dashboard_sidebar">
             <div class="dashboard_sidebar_user">
-              <img src="../../assets/img/common/dashboard-user.png" alt="img" />
-              <h3>{{loginID}}</h3>
+              <img :src="state.info.pictureURL" alt="img" />
+              <h3>{{ state.info.originName }}</h3>
               <div>
-                <div style="text-align: center; padding: 60px">
-                  <input
-                    type="file"
-                    class="btn btn_theme"
-                    style="width: 200px"
-                  />
-                </div>
+                <picturemodalVue @pictureData="changePicture"/>
               </div>
             </div>
             <div class="dashboard_menu_area">
@@ -53,6 +47,7 @@
                         class="form-control"
                         id="f-name"
                         placeholder="Your Name"
+                        v-model="state.info.first_name"
                       />
                     </div>
                   </div>
@@ -64,6 +59,7 @@
                         class="form-control"
                         id="l-name"
                         placeholder="Last name"
+                        v-model="state.info.last_name"
                       />
                     </div>
                   </div>
@@ -74,6 +70,7 @@
                         type="text"
                         class="form-control"
                         id="mail-address"
+                        v-model="state.info.email"
                       />
                     </div>
                   </div>
@@ -84,6 +81,7 @@
                         type="text"
                         class="form-control"
                         id="mobil-number"
+                        v-model="state.info.phone_number"
                       />
                     </div>
                   </div>
@@ -96,6 +94,7 @@
                             type="password"
                             class="form-control"
                             placeholder="Old Password"
+                            v-model="state.info.oldPassword"
                           />
                         </div>
                       </div>
@@ -105,6 +104,7 @@
                             type="password"
                             class="form-control"
                             placeholder="New Password"
+                            v-model="state.info.newPassword"
                           />
                         </div>
                       </div>
@@ -115,8 +115,8 @@
             </div>
           </div>
           <div class="d-flex justify-content-end mt-3">
-            <button class="btn btn_theme">저장</button>
-            <withdrawVue />
+            <button class="btn btn_theme" @click="save()">저장</button>
+            <withdrawVue/>
           </div>
         </div>
       </div>
@@ -124,23 +124,110 @@
   </section>
 </template>
 <script>
+import { useStore } from 'vuex';
+import { updateUser, getUserInfo } from "../../../common/api/commonAPI";
+import { onMounted, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
 import withdrawVue from "../modal/withdraw.vue";
-import { mypage } from "../../../common/api/commonAPI";
-import {ref} from 'vue';
-import {useStore} from 'vuex';
 
 export default {
-  name: "ProfileDashboard",
   components: {
     LogoutBtn,
     MyBookingOption,
     picturemodalVue,
     withdrawVue,
-    mypage
+  },
 
+
+  setup() {
+    const store = useStore();
+
+    const router = useRouter();
+
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/user/picture/";
+
+    const state = reactive({
+      info: {
+        originName: '',
+        first_name: '',
+        last_name:'',
+        email:'',
+        phone_number:'',
+        pictureURL:'',
+        pictureData:null,
+        oldPassword:'',
+        newPassword:'',
+      },
+    })
+
+    onMounted(async () => {
+      const accessToken = 'Bearer ' + store.getters['accountStore/getAccessToken']
+
+      const user_info = await getUserInfo(accessToken);
+
+      const user = user_info.data.result;
+
+      state.info.pictureURL=baseURL + user.picture;
+      state.info.originName=user.name;
+      state.info.first_name=user.name.substring(0,1);
+      state.info.last_name=user.name.substring(1);
+      state.info.email=user.email + '@' + user.email_domain;
+      state.info.phone_number=user.phone_number;
+
+      console.log(user);
+    })
+
+    const changePicture = function(pictureData) {
+      console.log(pictureData);
+
+      state.info.pictureData = pictureData;
+    }
+
+    const save = function () {
+      const accessToken = 'Bearer ' + store.getters['accountStore/getAccessToken']
+
+      const name = state.info.first_name + state.info.last_name;
+
+      const email = state.info.email.split("@")[0];
+
+      const email_domain = state.info.email.split("@")[1];
+
+      const user_info = {
+        name : name,
+        email : email,
+        email_domain : email_domain,
+        phone_number : state.info.phone_number,
+      }
+
+      let payload = {
+        picture: state.info.pictureData === null ? null : state.info.pictureData,
+        userInfo: JSON.stringify(user_info)
+      }
+
+      console.log(payload);
+      
+      updateUser(payload, accessToken);
+
+      if(state.info.oldPassword !== '' && state.info.newPassword !== '') {
+        // 비밀번호 변경
+      }
+
+      router.go(0);
+    }
+
+    return {
+      store,
+      state,
+      withdrawVue,
+      picturemodalVue,
+      MyBookingOption,
+      LogoutBtn,
+      save,
+      changePicture
+    };
   },
   setup(){
 
@@ -164,4 +251,5 @@ export default {
 
   }
 };
+
 </script>

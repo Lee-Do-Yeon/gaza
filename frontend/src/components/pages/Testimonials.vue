@@ -101,7 +101,7 @@ export default {
   setup() {
     const store = useStore();
 
-    const route = useRoute()
+    const route = useRoute();
 
     const state = reactive({
       info: {
