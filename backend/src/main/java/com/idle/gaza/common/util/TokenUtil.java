@@ -256,6 +256,7 @@ public class TokenUtil {
      */
     public String getUserIdFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
+        log.debug("-------------------------------------------------- claim = " + claims);
         return claims.get("userId").toString();
     }
 
