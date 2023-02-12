@@ -6,9 +6,15 @@
           <div class="dashboard_sidebar">
             <div class="dashboard_sidebar_user">
               <img src="../../assets/img/common/dashboard-user.png" alt="img" />
-              <h3>최지성</h3>
+              <h3>{{loginID}}</h3>
               <div>
-                <picturemodalVue />
+                <div style="text-align: center; padding: 60px">
+                  <input
+                    type="file"
+                    class="btn btn_theme"
+                    style="width: 200px"
+                  />
+                </div>
               </div>
             </div>
             <div class="dashboard_menu_area">
@@ -37,7 +43,7 @@
           <div class="dashboard_common_table">
             <h3>내 정보 수정</h3>
             <div class="profile_update_form">
-              <form action="!#" id="profile_form_area">
+              <form id="profile_form_area" v-on:submit.prevent="updateMyPage">
                 <div class="row">
                   <div class="col-lg-6">
                     <div class="form-group">
@@ -110,7 +116,7 @@
           </div>
           <div class="d-flex justify-content-end mt-3">
             <button class="btn btn_theme">저장</button>
-            <withdrawVue/>
+            <withdrawVue />
           </div>
         </div>
       </div>
@@ -122,7 +128,9 @@ import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
 import withdrawVue from "../modal/withdraw.vue";
-import { updateUser } from "../../../common/api/commonAPI";
+import { mypage } from "../../../common/api/commonAPI";
+import {ref} from 'vue';
+import {useStore} from 'vuex';
 
 export default {
   name: "ProfileDashboard",
@@ -131,7 +139,29 @@ export default {
     MyBookingOption,
     picturemodalVue,
     withdrawVue,
-    updateUser
+    mypage
+
   },
+  setup(){
+
+      const store = useStore();
+
+      const loginID = store.getters["accountStore/getUserId"];
+      const userInfo = ref([])
+
+
+      const accessToken = store.getters["accountStore/getAccessToken"];
+
+
+      console.log(loginID);
+
+    return{
+
+      userInfo,
+      loginID,
+
+    }
+
+  }
 };
 </script>
