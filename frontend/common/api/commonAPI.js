@@ -10,7 +10,6 @@ let axiosConfig = {
 }
 
 
-
 //유저구역
 //유저 회원가입
 const requestSignin = payload => api.post("/api/users",payload,{ headers: {"Content-Type": "multipart/form-data"}})
@@ -18,6 +17,9 @@ const requestSignin = payload => api.post("/api/users",payload,{ headers: {"Cont
 // https://i8c207.p.ssafy.io/api/users
 //유저 로그인
 const requestLogin = (payload) => api.post("/api/users/login", payload);
+
+// 유저 정보 가져오기
+const getUserInfo = accessToken => api.get("/api/users", {headers: {Authorization: accessToken}});
 
 //유저 로그인 확인
 const requestConfirm = accessToken => api.get("/api/users/isLogin", {headers: {Authorization: accessToken}})
@@ -41,18 +43,10 @@ const popularGuide = () => api.get("/api/guides/popular")
 const reviewss = (payload) => api.get('/api/reviews/user/ssafy',payload);
 
 //유저 정보수정
-const updateUser = () => api.put('/api/users/ssafy');
+const updateUser = (payload, accessToken) => api.put('/api/users/', payload, {headers: {Authorization: accessToken, "Content-Type": "multipart/form-data"}});
 
 //리뷰 등록
 const uploadReview =(payload) => api.post('/api/reviews',payload)
-
-
-//유저 마이페이지 조회
-
-const mypage = accessToken => api.get('/api/users', { headers: { Authorization: accessToken } });
-
-
-
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
@@ -84,11 +78,10 @@ const guideSearch = payload => api.get('/api/guides/search/', {params: {searchNa
 
 const guideDetail = guideId => api.get(`/api/guides/${guideId}`)
 
-
 //상담 불가능 날짜 등록
 const registerDate = payload => {
     console.log(payload)
     api.post('/api/guides/day', payload).then((res)=>{console.log(res)})
 };
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate ,mypage};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo };
