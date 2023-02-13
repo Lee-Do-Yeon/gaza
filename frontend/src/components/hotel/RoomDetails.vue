@@ -138,7 +138,7 @@
                   <div class="news_item_boxed">
                     <form
                       id="profile_form_area"
-                      v-on:submit.prevent="locationRegister"
+                      v-on:submit="locationRegister"
                     >
                       <input
                         type="file"
