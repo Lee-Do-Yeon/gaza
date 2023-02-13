@@ -37,7 +37,8 @@ const allowGuideRequest = (payload) => api.put("/api/users/guide/success", paylo
 const rejectGuideRequest = (payload) => api.put("/api/users/guide/failure", payload);
 
 // 예약내역조회 Notification
-const reser = (userId) => api.get(`/api/books/user/${userId}`);
+const reser = userid => api.get(`/api/books/user/${userid}`);
+
 
 // 인기 가이드 조회
 const popularGuide = () => api.get("/api/guides/popular")
@@ -76,11 +77,13 @@ const myPageUpdate = (payload) => {
         headers: {
             "Content-Type": "multipart/form-data"
         }
-    });
+    }).then((res)=>console.log(res));
 }
 
 //가이드 마이페이지 조회
 const myPageShow = loginId => api.get('/api/guides/mypage', { params: { userId: loginId } });
+
+
 
 
 
@@ -101,14 +104,17 @@ const guideLangRegister = payload => api.post('/api/guides/lang', payload).then(
 
 
 //추천 장소 등록
-const guideLocationRegister = (payload) => {
+const guideLocationRegister = payload => {
     console.log(payload);
-    api.put('/api/guides/location', payload, {
+    api.post('/api/guides/location', payload, {
         headers: {
             "Content-Type": "multipart/form-data"
         }
-    });
+    }).then((res) => { console.log(res) });
 }
 
+//유저 예약 조회
+const userBookGuide = (userId) => api.get(`/api/books/user/${userId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister};
+
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide};

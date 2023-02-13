@@ -85,6 +85,7 @@ public class ReservationServiceImpl implements ReservationService {
         for(int i=0; i<reservations.size(); i++){
             Reservation reservation = reservations.get(i);
             ReservationResponse res = new ReservationResponse(
+                    reservation.getUserId().getName(),
                     reservation.getGuideId().getPicture(),
                     reservation.getReservationId(),
                     reservation.getGuideId().getUser().getName(),
@@ -111,6 +112,7 @@ public class ReservationServiceImpl implements ReservationService {
         for(int i=0; i<reservations.size(); i++){
             Reservation reservation = reservations.get(i);
             ReservationResponse res = new ReservationResponse(
+                    reservation.getUserId().getName(),
                     reservation.getGuideId().getPicture(),
                     reservation.getReservationId(),
                     reservation.getGuideId().getUser().getName(),

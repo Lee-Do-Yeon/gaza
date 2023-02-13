@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*")
 @Api(value = "리뷰 API", tags = {"Review"})
 @RestController
 @RequestMapping("/reviews")
@@ -31,6 +32,7 @@ public class ReviewController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> writeReview(@RequestBody @ApiParam(value="리뷰 작성 정보", required = true) ReviewCreatePostRequest reviewInfo){
+        log.debug("리뷰 작성 " + reviewInfo.getContent() + "   " + reviewInfo.getScore());
         try{
             reviewService.writeReview(reviewInfo);
         }catch (Exception e){
@@ -48,7 +50,7 @@ public class ReviewController {
 
     @GetMapping("/guide/{guideId}")
     @ApiOperation(value = "리뷰 조회 (가이드)", notes = "가이드에게 달린 리스트를 볼 수 있다.")
-    public ResponseEntity<?> getReviewsByGuide(@PathVariable String guideId){
+    public ResponseEntity<?> getReviewsByGuide(@PathVariable int guideId){
         List<ReviewResponse> reviews = reviewService.getReviewsByGuide(guideId);
         return new ResponseEntity<List<?>>(reviews, HttpStatus.OK);
     }
