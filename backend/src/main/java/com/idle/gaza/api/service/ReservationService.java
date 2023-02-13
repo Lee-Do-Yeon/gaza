@@ -23,4 +23,6 @@ public interface ReservationService {
     void createConsulting(int reservationId, String sessionId);
 
     void endConsulting(int reservationId);
+
+    void changeReservationState(int reservationId, String status);
 }
