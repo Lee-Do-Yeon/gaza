@@ -46,7 +46,7 @@ public class ReservationController {
     }
     @GetMapping("/guide/{guideId}")
     @ApiOperation(value = "예약 내역 리스트 조회(가이드)", notes = "가이드는 본인의 상담 내역 리스트를 조회 가능하다.")
-    public ResponseEntity<?> getReservationListByGuide(@PathVariable @ApiParam(value="가이드 PK", required = true) String guideId){
+    public ResponseEntity<?> getReservationListByGuide(@PathVariable @ApiParam(value="가이드", required = true) String guideId){
         List<ReservationResponse> reservations = reservationService.getReservationListByGuide(guideId);
         return new ResponseEntity<List<?>>(reservations, HttpStatus.OK);
     }
