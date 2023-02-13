@@ -13,7 +13,7 @@
                   :to="{
                     name: 'guide_schedule',
                   }"
-                  >상담일정 확인</router-link
+                  >예약내역 확인</router-link
                 >
               </li>
 
@@ -42,7 +42,7 @@
                 <div class="dashboard_common_table">
                   <h3>프로필 업로드</h3>
                   <div class="profile_update_form">
-                    <form id="profile_form_area" v-on:submit="updateMyPage">
+                    <form id="profile_form_area" v-on:submit.prevent="updateMyPage">
                       <input
                         type="file"
                         @change="selectFile"
@@ -163,7 +163,7 @@
                             type="text"
                             class="form-control"
                             id="f-one-liner"
-                            v-model="location.info.category_name"
+                            v-model="location.info.categoryName"
                           />
                         </div>
                       </div>
@@ -196,19 +196,7 @@
               <br />
               <h3 style="font-weight: bold">가이드의 사용 가능한 언어</h3>
               <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                  <div class="news_item_boxed">
-                    <form id="profile_form_area" v-on:submit="langRegister">
-                      <input
-                        type="text"
-                        id="lang"
-                        v-model="language"
-                        placeholder="사용 가능 언어 입력"
-                      />
-                      <button class="btn btn_theme btn_sm">submit</button>
-                    </form>
-                  </div>
-                </div>
+                <language-box></language-box>
               </div>
             </div>
           </div>
@@ -217,8 +205,8 @@
           <h3 style="font-weight: bold">상담 불가 날짜/시간 설정</h3>
           <br />
           <!--start 상담 불가능 날짜 form -->
-          <div class="row d-flex justify-content-center">
-            <div class="col-lg-4 me-5">
+          <div class="row d-flex justify-content-start">
+            <div class="col-lg-4 ">
               <h5 style="color: #15d4cd">Choose a Date</h5>
               <br />
               <div class="form_search_date">
@@ -267,8 +255,13 @@ import {
   guideLocationRegister,
 } from "../../../common/api/commonAPI.js";
 
+import { LanguageBox } from "@/components/hotel/guideSettings/LanguageBox";
+
 export default {
   name: "RoomDetails",
+  components:{
+    LanguageBox,
+  },
   setup() {
     const store = useStore();
 
@@ -299,7 +292,7 @@ export default {
         userId: "",
         name: "",
         address: "",
-        category_name: "",
+        categoryName: "",
       },
     });
 
@@ -391,11 +384,18 @@ export default {
     //가이드 추천 장소 등록
     const locationRegister = function () {
       location.info.userId = store.getters["accountStore/getUserId"];
-      const request = location.info;
 
+      const request = {
+        categoryName:location.info.categoryName,
+        address:location.info.address,
+        loginId:location.info.userId,
+        name:location.info.name
+      }
+
+      console.log(locPicture)
       const payload = {
         location: JSON.stringify(request),
-        uploadFile: locPicture,
+        uploadFile: locPicture.value,
       };
 
       guideLocationRegister(payload); //call axios

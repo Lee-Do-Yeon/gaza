@@ -30,12 +30,15 @@ public class ReservationResponse {
 
     String sessionId;
 
+    String userName;
+
     // 예약 내역 제목 정하면 그거 정보도 넘겨주고.
     // 예약 상태에 따라 화상상담 정보랑 일정 정보도 넘겨야줘야햄.
 
 
     @Builder
-    public ReservationResponse(String picture, int reservationId, String guideName, String guideId, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, LocalDateTime consultingDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, String stateCode, String sessionId) {
+    public ReservationResponse(String userName, String picture, int reservationId, String guideName, String guideId, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, LocalDateTime consultingDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, String stateCode, String sessionId) {
+        this.userName = userName;
         this.picture = picture;
         this.reservationId = reservationId;
         this.guideName = guideName;

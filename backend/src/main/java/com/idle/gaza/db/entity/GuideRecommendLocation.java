@@ -1,6 +1,7 @@
 package com.idle.gaza.db.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -9,14 +10,14 @@ import javax.persistence.*;
 /**
  * 가이드 추천 장소 엔티티
  */
-@Entity
-@Table(name = "recommend")
+@Entity(name = "recommend")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @DynamicUpdate
+@DynamicInsert
 public class GuideRecommendLocation {
 
     @Id
