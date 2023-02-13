@@ -22,7 +22,7 @@
                 <h3>{{ guideInfo.name }}</h3>
                 <br />
                 <h5>{{ guideInfo.country }} / {{ guideInfo.city }} / {{ guideInfo.gender }}</h5>
-                <span v-for="data in themaInfo" :key="data.length"> #{{ data }} &nbsp; </span>
+                <span v-for="data in themaInfo" :key="data"> <span v-if="data != null">#{{ data }} &nbsp; </span> </span>
                 <div>{{ guideInfo.introduction }}</div>
               </div>
             </form>
@@ -74,21 +74,22 @@
                   <th>내용</th>
                 </tr>
               </thead>
-              <tbody v-for="rev in guideReview" :key="rev.id">
-                <tr>
-                  <td>{{ rev.userId }}</td>
-                  <td>{{ getDate(rev.createdDate) }}</td>
-                  <td>
-                    <i
-                      v-for="score in rev.score"
-                      :key="score"
-                      class="fas fa-sharp fa-solid fa-star"
-                      style="color: yellow"
-                    ></i>
-                  </td>
-                  <td>{{ rev.content }}</td>
-                </tr>
-              </tbody>
+                <tbody v-for="rev in guideReview" :key="rev.id">
+                  <tr v-if="!isReview"></tr>
+                  <tr v-else>
+                    <td>{{ rev.userId }}</td>
+                    <td>{{ getDate(rev.createdDate) }}</td>
+                    <td>
+                      <i
+                        v-for="score in rev?.score"
+                        :key="score"
+                        class="fas fa-sharp fa-solid fa-star"
+                        style="color: yellow"
+                      ></i>
+                    </td>
+                    <td>{{ rev.content }}</td>
+                  </tr>
+                </tbody>
             </table>
           </div>
 
@@ -148,6 +149,7 @@ export default {
     const themaInfo = ref([]);
 
     const guideReview = ref([]);
+    const isReview = ref(false);
 
     const router = useRouter();
 
@@ -158,6 +160,7 @@ export default {
 
     const getValue = async (page = currentpage.value) => {
       currentpage.value = page;
+      console.log(currentpage.value)
       try {
         const res = await reviewss(`?_sort=id&_order=desc&_page=${page}&_limit=${limit}`);
         numberofreviews.value = res.data["length"];
@@ -187,7 +190,7 @@ export default {
 
     onMounted(() => {
       const guideId = parseInt(route.params.guideId);
-      //console.log(guideId);
+      console.log(guideId);
 
       axios.get(`/guides/${guideId}`).then((res) => {
         guideInfo.value = res.data;
@@ -196,12 +199,22 @@ export default {
         themaInfo.value = res.data.thema;
       });
 
-
-      axios.get(`/reviews/guide/${guideId}`).then((res) => {
-        guideReview.value = res.data;
-        console.log(guideReview.value)
-
-      });
+      try {
+        axios.get(`/reviews/guide/${guideId}`).then((res) => {
+          console.log(res);
+          if (res.data.status == 500) {
+            guideReview.value = [{'id':0, 'name':'리뷰 없음'}]
+          } else {
+            guideReview.value = res.data;
+            isReview.value = true
+            console.log(guideReview.value)
+          }
+        });
+      } catch (err) {
+        guideReview.value = [{'id':0, 'name':'리뷰 없음'}]
+        console.log(guideReview);
+        console.log(err);
+      }
       
 
 
@@ -223,7 +236,8 @@ export default {
       guideInfo,
       recommendInfo,
       themaInfo,
-      guideReview
+      guideReview,
+      isReview
     };
   },
 };

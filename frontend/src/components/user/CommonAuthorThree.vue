@@ -11,6 +11,7 @@
                             <form @submit.prevent="Signin" id="main_author_form" class="row">
                                 <div class="form-group">
                                     <input type="text" :class="{ 'formerror': idc }" class="form-control"  placeholder="아이디를 입력해주세요." minlength="4" v-model="state.form.id" required/>
+                                    <button type="button" @click="duplicated">중복확인</button>
                                 </div>
                                 <div class="form-group">
                                     <label for="formFile" class="form-label">프로필 사진 업로드</label>
@@ -139,7 +140,7 @@
 <script>
 import { reactive, computed, ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
-import { requestSignin, requesttest } from "../../../common/api/commonAPI"
+import { requestSignin, requesttest, checkDuplicated } from "../../../common/api/commonAPI"
 import router from "@/router";
 
 
@@ -174,7 +175,7 @@ export default {
                 email:'',
                 email_domain:'',
             },
-
+            duplicated : false,
         })
 
         onMounted(() => {
@@ -190,7 +191,26 @@ export default {
             state.form.phone_number=''
         })
 
-        
+        const duplicated = async function() {
+            if(state.form.id === ''){
+                state.duplicated = false;
+                alert("아이디를 확인해주세요");
+            } else {
+                const res = checkDuplicated(state.form.id);
+
+                const user = res.data;
+
+                console.log(user);
+
+                if(user !== null) {
+                    state.duplicated = false;
+                    alert("중복된 아이디입니다.");
+                } else {
+                    state.duplicated = true;
+                    alert("사용 가능한 아이디입니다.");
+                }
+            }
+        }
 
         const Signin = async function () {
             console.log('submit sign');
@@ -208,7 +228,7 @@ export default {
                 passwordc.value = false
             }
 
-            if (!passwordc.value && !emailc.value) {
+            if (!passwordc.value && !emailc.value && state.dublicated) {
                 try {
                     const formData = new FormData()
                     
@@ -234,6 +254,7 @@ export default {
 
                     const response = await requestSignin(payload)
                     console.log(response);
+                    alert("회원 가입 완료")
                     router.push({name: "login"})
                 } catch (error) {
                     console.log(error);
@@ -259,7 +280,7 @@ export default {
             //Upload to server
         }
 
-        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, upload, passwordcheck}
+        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, upload, passwordcheck, duplicated}
      },
     
 };

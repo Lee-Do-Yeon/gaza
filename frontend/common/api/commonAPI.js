@@ -12,7 +12,9 @@ let axiosConfig = {
 
 //유저구역
 //유저 회원가입
-const requestSignin = payload => api.post("/api/users",payload,{ headers: {"Content-Type": "multipart/form-data"}})
+const requestSignin = payload => api.post("/api/users",payload,{ headers: {"Content-Type": "multipart/form-data"}});
+
+const checkDuplicated = id => api.get(`/api/users/${id}`);
 
 // https://i8c207.p.ssafy.io/api/users
 //유저 로그인
@@ -31,10 +33,10 @@ const changePassword = (payload, accessToken) => {console.log(payload); api.put(
 const requestGuideRegisterList = (payload) => api.get("/api/users/guide", payload);
 
 // 가이드 신청 승인
-const allowGuideRequest = (payload) => api.put("/api/users/guide/success", payload);
+const allowGuideRequest = (payload) => api.put("/api/admin/guide/success", payload);
 
 // 가이드 신청 거부
-const rejectGuideRequest = (payload) => api.put("/api/users/guide/failure", payload);
+const rejectGuideRequest = (payload) => api.put("/api/admin/guide/failure", payload);
 
 // 예약내역조회 Notification
 const reser = userid => api.get(`/api/books/user/${userid}`);
@@ -129,4 +131,4 @@ const guideLocationRegister = payload => api.post('/api/guides/location', payloa
 //유저 예약 조회
 const userBookGuide = (userId) => api.get(`/api/books/user/${userId}`)
 
-export { reviewss,locdel, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema};
+export { reviewss,locdel, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema, checkDuplicated};
