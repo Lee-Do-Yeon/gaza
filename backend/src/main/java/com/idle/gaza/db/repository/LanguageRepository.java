@@ -24,4 +24,7 @@ public interface LanguageRepository extends JpaRepository<GuideLanguage, Integer
     int deleteByLanguageId(int lang_id);
 
     List<GuideLanguage> findByGuide(Guide guide);
+
+    @Query(value="select description from code where name=:code", nativeQuery = true)
+    String searchCodeName(@Param("code") String code);
 }
