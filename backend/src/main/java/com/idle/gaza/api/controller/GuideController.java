@@ -285,7 +285,7 @@ public class GuideController {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Not Found")
     })
-    public ResponseEntity<?> locationDelete(@RequestParam Map<String, String> map) {
+    public ResponseEntity<?> locationDelete(@RequestBody Map<String, String> map) {
         String loginId = map.get("loginId");
         int recommendId = Integer.parseInt(map.get("recommendId"));
 
