@@ -121,7 +121,7 @@ const actions = {
     try {
       const response = await getUserInfo(`Bearer ${state.accessToken}`);
       if (response.data.resultCode == 200) {
-        await commit("logInData")
+        await commit("logInData", response.data.result.id)
         await dispatch('GuideAction')
       } else {
         await commit("logOutData")
