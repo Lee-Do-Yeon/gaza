@@ -57,10 +57,9 @@
                             <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                                 <div class="others-options d-flex align-items-center">
                                     <div class="option-item">
-                                        <router-link to="/become-vendor" class="btn  btn_navber" v-if="!isGuide">가이드로 가입하기</router-link>
-                                    </div>
-                                    <div class="option-item">
-                                        <router-link to="/become-vendor" class="btn  btn_navber" v-if="isGuide">가이드 마이페이지</router-link>
+                                        <router-link to="/room-details" class="btn btn_navber" v-if="isGuide == 'US1'">가이드 마이페이지</router-link>
+                                        <button to="/" class="btn btn_navber" v-else-if="isGuide == 'US3'" disabled>가이드 심사중</button>
+                                        <router-link to="/become-vendor" class="btn btn_navber" v-else >가이드로 가입하기</router-link>
                                     </div>
                                     <div class="option-item" v-if="!islogin">
                                         <router-link to="/login" class="btn btn_navber">Login</router-link>
@@ -131,7 +130,13 @@ export default {
         const clickLogout = () => {
             store.commit('accountStore/logOutData')
         }
+
+        onMounted(() => {
+            console.log(isGuide)
+        })
+
         return { islogin, clickLogout, isGuide }
+        
     },
     
 }
