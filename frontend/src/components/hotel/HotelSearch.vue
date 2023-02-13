@@ -74,7 +74,7 @@
                   <th>내용</th>
                 </tr>
               </thead>
-              <tbody v-for="rev in review" :key="rev.id">
+              <tbody v-for="rev in guideReview" :key="rev.id">
                 <tr>
                   <td>{{ rev.userId }}</td>
                   <td>{{ getDate(rev.createdDate) }}</td>
@@ -147,6 +147,8 @@ export default {
     const recommendInfo = ref([]);
     const themaInfo = ref([]);
 
+    const guideReview = ref([]);
+
     const router = useRouter();
 
     const getDate = (date) => {
@@ -189,13 +191,20 @@ export default {
 
       axios.get(`/guides/${guideId}`).then((res) => {
         guideInfo.value = res.data;
-        console.log(res.data.gender);
+
         recommendInfo.value = res.data.guideLocationList;
         themaInfo.value = res.data.thema;
       });
 
-      console.log(guideInfo);
-      console.log(recommendInfo);
+
+      axios.get(`/reviews/guide/${guideId}`).then((res) => {
+        guideReview.value = res.data;
+        console.log(guideReview.value)
+
+      });
+      
+
+
     });
 
     return {
@@ -214,6 +223,7 @@ export default {
       guideInfo,
       recommendInfo,
       themaInfo,
+      guideReview
     };
   },
 };
