@@ -104,6 +104,8 @@ const getGuideLang = loginId => api.get('/api/guides/lang', { params: { userId: 
 //가이드 언어 등록
 const guideLangRegister = payload => api.post('/api/guides/lang', payload).then((res) => { console.log(res) });
 
+// 가이드 언어 삭제
+const deleteLanguage = (langId, loginId) => api.delete('/api/guides/lang', { params: { langId: langId, userId: loginId } });
 
 //추천 장소 등록
 const guideLocationRegister = payload => {
@@ -118,6 +120,6 @@ const guideLocationRegister = payload => {
 //유저 예약 조회
 const userBookGuide = (userId) => api.get(`/api/books/user/${userId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage};
 
 
