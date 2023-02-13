@@ -2,6 +2,7 @@ package com.idle.gaza.api.controller;
 
 import com.idle.gaza.api.request.ReviewCreatePostRequest;
 import com.idle.gaza.api.response.ReviewResponse;
+import com.idle.gaza.api.service.ReservationService;
 import com.idle.gaza.api.service.ReviewServiceImpl;
 import com.idle.gaza.common.model.response.BaseResponseBody;
 import io.swagger.annotations.*;
@@ -25,6 +26,9 @@ public class ReviewController {
     @Autowired
     ReviewServiceImpl reviewService;
 
+    @Autowired
+    ReservationService reservationService;
+
     @PostMapping
     @ApiOperation(value = "리뷰 작성", notes = "완료된 상담에 대해 리뷰를 작성한다.")
     @ApiResponses({
@@ -35,6 +39,7 @@ public class ReviewController {
         log.debug("리뷰 작성 " + reviewInfo.getContent() + "   " + reviewInfo.getScore());
         try{
             reviewService.writeReview(reviewInfo);
+            reservationService.changeReservationState(reviewInfo.getReservationId(), "RE04");
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "fail"));
