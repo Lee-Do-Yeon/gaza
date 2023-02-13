@@ -497,9 +497,23 @@ public class GuideServiceImpl implements GuideService {
         return 1;
     }
 
+    @Override
+    public int consultTimeDelete(String loginId) {
+        Optional<User> user = userRepository.findById(loginId);
+        if (!user.isPresent()) return 0;
+
+        Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
+        if (!existGuide.isPresent()) return 0;
+
+        Guide guideInfo = existGuide.get();
+        guideRepository.updateTime(guideInfo.getGuideId());
+
+        return 1;
+    }
+
+
+
     ////////////////////여행 테마 관리///////////////////////
-
-
     @Override
     public int themaRegister(String loginId, String themaName) {
         Optional<User> user = userRepository.findById(loginId);

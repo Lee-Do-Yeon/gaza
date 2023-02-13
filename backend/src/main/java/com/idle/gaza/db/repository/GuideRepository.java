@@ -3,9 +3,11 @@ package com.idle.gaza.db.repository;
 import com.idle.gaza.db.entity.Guide;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,4 +48,9 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     @Query(value = "select * from guide where guide_id IN (select guide_id from guide_thema where thema_code=:code)", nativeQuery = true)
     List<Guide> searchByCode(@Param("code") String code);
 
+
+    @Modifying
+    @Transactional
+    @Query(value = "update guide set close_time_start=0 , close_time_end=0 where guide_id=:guideId", nativeQuery = true)
+    int updateTime(@Param("guideId") int guideId);
 }
