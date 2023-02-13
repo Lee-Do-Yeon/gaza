@@ -412,14 +412,14 @@ public class GuideController {
     }
 
 
-    @GetMapping("/thema/{loginId}")
+    @GetMapping("/thema")
     @ApiOperation(value = "가이드의 여행 테마 조회", notes = "가이드의 여행 테마를 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> tourThemaShow(@PathVariable @ApiParam(value = "로그인 아이디", required = true) String loginId){
+    public ResponseEntity<?> tourThemaShow(@RequestParam @ApiParam(value = "로그인 아이디", required = true) String loginId){
         List<ThemaResponse> results = guideService.themaSelect(loginId);
 
         if(results == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -484,6 +484,21 @@ public class GuideController {
     public ResponseEntity<?> timeRegister(@RequestBody TimeRegisterPostRequest time) {
 
         int result = guideService.consultTimeRegister(LocalTime.parse(time.getTimeStart()), LocalTime.parse(time.getTimeEnd()), time.getUserId());
+        if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/time")
+    @ApiOperation(value = "상담 불가능한 시간대 삭제", notes = "가이드는 상담 불가능한 시작, 종료 시간을 삭제한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message = "사용자 없음")
+    })
+    public ResponseEntity<?> timeDelete(@RequestParam @ApiParam(value = "loginId") String loginId) {
+        int result = guideService.consultTimeDelete(loginId);
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(HttpStatus.OK);

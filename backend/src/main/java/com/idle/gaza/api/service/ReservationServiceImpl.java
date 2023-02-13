@@ -165,4 +165,14 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    @Override
+    public void changeReservationState(int reservationId, String status) {
+        Optional<Reservation> oReservation = reservationRepository.findById(reservationId);
+        if(oReservation.isPresent()) {
+            Reservation reservation = oReservation.get();
+            reservation.setStateCode(status);
+            reservationRepository.save(reservation);
+        }
+    }
+
 }
