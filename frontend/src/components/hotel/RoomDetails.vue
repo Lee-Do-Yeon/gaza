@@ -180,14 +180,7 @@
               <br />
               <h3 style="font-weight: bold">가이드의 여행 테마</h3>
               <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                  <div class="news_item_boxed">
-                    <form id="profile_form_area">
-                      <input type="text" id="lang" placeholder="여행 테마 이름 등록" />
-                      <button class="btn btn_theme btn_sm">submit</button>
-                    </form>
-                  </div>
-                </div>
+                <thema-box></thema-box>
               </div>
             </div>
 
@@ -255,12 +248,14 @@ import {
   guideLocationRegister,
 } from "../../../common/api/commonAPI.js";
 import LanguageBox from "@/components/hotel/guideSettings/LanguageBox";
+import ThemaBox from "@/components/hotel/guideSettings/ThemaBox";
 
 
 export default {
   name: "RoomDetails",
   components:{
     LanguageBox,
+    ThemaBox
   },
   setup() {
     const store = useStore();

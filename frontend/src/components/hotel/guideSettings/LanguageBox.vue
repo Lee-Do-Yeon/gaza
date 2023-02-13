@@ -38,6 +38,8 @@ export default {
         const getLangList = async (loginId) => {
             const response = await getGuideLang(loginId); //call axios
             language_list.value = response.data;
+            console.log("getLangList");
+            console.log(language_list.value);
         };
 
         onMounted(() => {
@@ -54,7 +56,7 @@ export default {
 
             await guideLangRegister(payload); //call axios
             await getLangList(loginId);
-            console.log("여기");
+            console.log("langRegister");
             console.log(language_list.value);
         };
 
