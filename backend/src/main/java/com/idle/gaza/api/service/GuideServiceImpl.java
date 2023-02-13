@@ -548,14 +548,29 @@ public class GuideServiceImpl implements GuideService {
         Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
         if (!guide.isPresent()) return 0;
 
-        Guide updateGuide = guide.get();
+        Guide updateGuide = guide.get();//가이드 얻어옴
 
-        updateGuide.setCity(request.getCity());
-        updateGuide.setCountry(request.getCountry());
-        updateGuide.setIntroduction(request.getIntroduction());
-        updateGuide.setOnlineIntroduction(request.getOnlineIntroduction());
-        updateGuide.setPrice(request.getPrice());
+        if(request.getCity() != null) {
+            updateGuide.setCity(request.getCity());
+        }
+        if(request.getCountry() != null){
+            updateGuide.setCountry(request.getCountry());
+        }
+        if(request.getIntroduction() != null){
+            updateGuide.setIntroduction(request.getIntroduction());
 
+        }
+        if(request.getOnlineIntroduction() != null){
+            updateGuide.setOnlineIntroduction(request.getOnlineIntroduction());
+        }
+        if (request.getPrice() != 0) {
+            updateGuide.setPrice(request.getPrice());
+        }
+        if(request.getPicture() != null){
+            updateGuide.setPicture(request.getPicture());
+        }
+
+        
         guideRepository.save(updateGuide);
 
         return 1;

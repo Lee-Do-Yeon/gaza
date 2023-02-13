@@ -111,6 +111,8 @@ public class GuideController {
     })
     public ResponseEntity<?> myPageModify(@RequestPart MyPageRequest guide, @RequestPart(value = "picture", required = false) MultipartFile multipartFile){
 
+        log.info("guide " + guide.toString());
+
         //파일이 존재한다면 기존 경로에서 파일 삭제
         String originPictureName = guideService.findGuideProfilePicture(guide.getUserId());
 
