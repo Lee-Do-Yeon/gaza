@@ -11,7 +11,7 @@
                             <form @submit.prevent="Signin" id="main_author_form" class="row">
                                 <div class="form-group">
                                     <input type="text" :class="{ 'formerror': idc }" class="form-control"  placeholder="아이디를 입력해주세요." minlength="4" v-model="state.form.id" required/>
-                                    <button @click="">중복확인</button>
+                                    <button type="button" @click="duplicated">중복확인</button>
                                 </div>
                                 <div class="form-group">
                                     <label for="formFile" class="form-label">프로필 사진 업로드</label>
@@ -175,7 +175,7 @@ export default {
                 email:'',
                 email_domain:'',
             },
-            dublicated : false,
+            duplicated : false,
         })
 
         onMounted(() => {
@@ -193,18 +193,20 @@ export default {
 
         const duplicated = async function() {
             if(state.form.id === ''){
-                state.dublicated = false;
+                state.duplicated = false;
                 alert("아이디를 확인해주세요");
             } else {
                 const res = checkDuplicated(state.form.id);
 
                 const user = res.data;
 
-                if(user === null) {
-                    state.dublicated = false;
+                console.log(user);
+
+                if(user !== null) {
+                    state.duplicated = false;
                     alert("중복된 아이디입니다.");
                 } else {
-                    state.dublicated = true;
+                    state.duplicated = true;
                     alert("사용 가능한 아이디입니다.");
                 }
             }
@@ -278,7 +280,7 @@ export default {
             //Upload to server
         }
 
-        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, upload, passwordcheck}
+        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, upload, passwordcheck, duplicated}
      },
     
 };
