@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*")
 @Api(value = "리뷰 API", tags = {"Review"})
 @RestController
 @RequestMapping("/reviews")
@@ -35,6 +36,7 @@ public class ReviewController {
         try{
             reviewService.writeReview(reviewInfo);
         }catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "fail"));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
