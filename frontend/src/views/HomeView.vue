@@ -31,6 +31,10 @@ export default {
   },
 
   setup() {
+    const store = useStore()
+    onMounted(() => {
+      store.dispatch("accountStore/confirmAction")
+    }) 
   }
 }
 </script>
