@@ -1,10 +1,10 @@
 <template>
 <div class="col-lg-4 col-md-6 col-sm-12 col-12">
     <div class="language-list-box">
-        <list-item v-for="(lang,index) in language_list" :key="index" :lang="lang"></list-item>
+        <list-item v-for="(lang,index) in language_list" :key="index" :lang="lang" @deleteLanguage="deleteLang"></list-item>
     </div>
     <div class="news_item_boxed">
-    <form id="profile_form_area" v-on:submit="langRegister">
+    <form id="profile_form_area" @submit.prevent="langRegister">
         <input
         type="text"
         id="lang"
@@ -20,7 +20,7 @@
 <script>
 import { useStore } from "vuex";
 import { onMounted, ref } from "vue";
-import { guideLangRegister, getGuideLang } from "@/../common/api/commonAPI.js";
+import { guideLangRegister, getGuideLang, deleteLanguage } from "@/../common/api/commonAPI.js";
 import ListItem from "@/components/hotel/guideSettings/ListItem";
 
 export default {
@@ -45,21 +45,33 @@ export default {
         });
 
         //가이드 사용 가능한 언어 등록
-        const langRegister = function () {
+        const langRegister = async function () {
             const request = language.value;
             const payload = {
             languageName: request,
             loginId: loginId,
             };
 
-            guideLangRegister(payload); //call axios
+            await guideLangRegister(payload); //call axios
+            await getLangList(loginId);
+            console.log("여기");
+            console.log(language_list.value);
         };
+
+        // 언어 삭제
+        const deleteLang = async function(langId, index) {
+            console.log(langId+" "+loginId);
+            language_list.value.splice(index, 1);
+            await deleteLanguage(langId, loginId); //call axios
+        };
+        
 
         return{
             language,
             langRegister,
             store,
             language_list,
+            deleteLang
         };
     },
 }

@@ -1,16 +1,24 @@
 <template>
-    <span class="language badge bg-primary">{{ lang.lang_code }}</span><span class="lang-delete">x</span>
+    <span class="language badge bg-primary">{{ lang.languageName }}</span><span class="lang-delete" @click="deleteLanguage(lang.language_id, index)">x</span>
 </template>
 
 <script>
-
+import { getCurrentInstance } from 'vue';
 export default {
     props: {
         index: Number,
-        lang: String,
+        lang: Object,
     },
     setup() {
-        
+        const {emit} = getCurrentInstance();
+
+        const deleteLanguage = function(langId, index){
+            emit("deleteLanguage", langId, index);
+        }
+
+        return{
+            deleteLanguage
+        }
     },
 }
 </script>
