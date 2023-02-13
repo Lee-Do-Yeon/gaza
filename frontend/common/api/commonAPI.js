@@ -97,6 +97,8 @@ const registerDate = payload => {
     api.post('/api/guides/day', payload).then((res)=>{console.log(res)})
 };
 
+//가이드 언어 조회
+const getGuideLang = loginId => api.get('/api/guides/lang', { params: { userId: loginId } });
 
 //가이드 언어 등록
 const guideLangRegister = payload => api.post('/api/guides/lang', payload).then((res) => { console.log(res) });
@@ -113,4 +115,4 @@ const guideLocationRegister = payload => {
 }
 
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, getGuideLang};

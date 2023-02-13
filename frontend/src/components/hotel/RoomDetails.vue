@@ -254,7 +254,7 @@ import {
   guideLangRegister,
   guideLocationRegister,
 } from "../../../common/api/commonAPI.js";
-import { LanguageBox } from "@/components/hotel/guideSettings/LanguageBox";
+import LanguageBox from "@/components/hotel/guideSettings/LanguageBox";
 
 export default {
   name: "RoomDetails",
