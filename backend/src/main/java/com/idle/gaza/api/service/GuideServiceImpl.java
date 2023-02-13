@@ -267,43 +267,44 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public List<GuideResponse> guideSearchByTheam(String searchName) {
-        List<Guide> guideList = guideRepository.searchGuideByThema(searchName);
-
+    public List<GuideResponse> guideSearchByThema(String searchName) {
         List<GuideResponse> guideResponseList = new ArrayList<>();
+
+        String code = getCode(searchName);
+        log.info("code = " + code);
+        List<Guide> guideList = guideRepository.searchByCode(code);//해당 테마에 해당하는 가이드 리스트 추출
+        log.info("size = " + guideList.size());
+
         for (Guide guide : guideList) {
-            List<String> codeList = new ArrayList<>();
-            for (GuideLanguage guideLanguage : guide.getLanguageList()) {
-                String code = guideRepository.searchNameByCode(guideLanguage.getLangCode());
-                codeList.add(code);
+            List<String> langList = new ArrayList<>();
+            for (GuideLanguage guideLanguage : guide.getLanguageList()) {//해당 가이드의 언어 리스트 가져옴
+                String codeName = guideRepository.searchNameByCode(guideLanguage.getLangCode());
+                langList.add(codeName);
             }
 
             List<String> themaList = new ArrayList<>();
-            for (GuideThema thema : guide.getGuideThemaList()) {
-                String code = guideRepository.searchNameByCode(thema.getThemaCode());
-                themaList.add(code);
+            for (GuideThema thema : guide.getGuideThemaList()) {//해당 가이드의 여행 테마를 가져옴
+                String codeName = guideRepository.searchNameByCode(thema.getThemaCode());
+                themaList.add(codeName);
             }
 
             GuideResponse guideResponse = GuideResponse.builder()
                     .guideId(guide.getGuideId())
                     .name(guide.getUser().getName())
                     .city(guide.getCity())
-                    .closeTimeEnd(guide.getCloseTimeEnd())
-                    .closeTimeStart(guide.getCloseTimeStart())
-                    .gender(guide.getUser().getGender())
                     .country(guide.getCountry())
                     .price(guide.getPrice())
                     .picture(guide.getPicture())
-                    .language(codeList)
+                    .language(langList)
                     .thema(themaList)
                     .build();
             guideResponseList.add(guideResponse);
-
-
         }
 
         return guideResponseList;
+
     }
+
 
     ////////////////////////추천 장소 기능//////////////////////
     @Override
@@ -500,12 +501,16 @@ public class GuideServiceImpl implements GuideService {
 
 
     @Override
-    public int themaRegister(int guideId, String themaCode) {
-        //가이드 정보 반환
-        Optional<Guide> existGuide = guideRepository.findById(guideId);
+    public int themaRegister(String loginId, String themaName) {
+        Optional<User> user = userRepository.findById(loginId);
+        if (!user.isPresent()) return 0;
+
+        Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
         if (!existGuide.isPresent()) return 0;
 
-        GuideThema thema = GuideThema.builder().themaCode(themaCode).guide(existGuide.get()).build();
+        String code = getCode(themaName);
+
+        GuideThema thema = GuideThema.builder().themaCode(code).guide(existGuide.get()).build();
 
         guideThemaRepository.save(thema);
 
@@ -513,15 +518,19 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public int themaDelete(int guideId, int themaId) {
-        //가이드 정보 반환
-        Optional<Guide> existGuide = guideRepository.findById(guideId);
+    public int themaDelete(String loginId, int themaId) {
+        Optional<User> user = userRepository.findById(loginId);
+        if (!user.isPresent()) return 0;
+
+        Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
         if (!existGuide.isPresent()) return 0;
 
+        log.info(existGuide.get().getGuideId());
+        log.info(themaId);
         //테마를 삭제함
-        guideThemaRepository.deleteByThemaId(themaId);
+        int result = guideThemaRepository.delThema(existGuide.get().getGuideId(), themaId);
 
-        return 1;
+        return result;
     }
 
     @Override
@@ -536,7 +545,7 @@ public class GuideServiceImpl implements GuideService {
         List<GuideThema> themaList = guideThemaRepository.findByGuide(guide.get());
         List<ThemaResponse> response = new ArrayList<>();
 
-        for(GuideThema thema : themaList){
+        for (GuideThema thema : themaList) {
             String name = getCodeDescritpion(thema.getThemaCode());
             ThemaResponse res = ThemaResponse.builder()
                     .guideId(guide.get().getGuideId())
@@ -695,7 +704,7 @@ public class GuideServiceImpl implements GuideService {
         return response;
     }
 
-    //해당 언어의 코드번호 가져오기
+    //해당 테마의 코드번호 가져오기
     private String getCode(String name) {
         return languageRepository.searchCode(name);
     }

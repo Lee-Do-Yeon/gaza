@@ -8,6 +8,7 @@ import com.idle.gaza.api.response.ThemaResponse;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.common.util.S3Uploader;
 import com.idle.gaza.common.util.TokenUtil;
+import com.idle.gaza.db.entity.Guide;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,6 +172,7 @@ public class GuideController {
 
 
     @GetMapping("/search/thema/")
+    @ResponseBody
     @ApiOperation(value = "테마로 가이드 조회", notes = "테마로 가이드 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -178,8 +180,9 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> guideSearchByThema(@RequestParam String themaName){
-        List<GuideResponse> response = guideService.guideSearchByTheam(themaName);
+        List<GuideResponse> response = guideService.guideSearchByThema(themaName);
         if(response.size() == 0 ) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -374,7 +377,7 @@ public class GuideController {
 
     /////////////////////여행 테마 기능///////////////////////////
 
-    @PutMapping("/thema/{guideId}")
+    @PostMapping("/thema")
     @ApiOperation(value = "여행 테마 등록", notes = "여행 테마를 등록한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -385,23 +388,23 @@ public class GuideController {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Not Found")
     })
-    public ResponseEntity<?> tourThemaRegister(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId, @RequestParam(name = "thema", required = false) @ApiParam(value = "테마코드", required = true) String themaCode) {
-        int result = guideService.themaRegister(guideId, themaCode);
+    public ResponseEntity<?> tourThemaRegister(@RequestParam @ApiParam(value = "login id", required = true) String loginId, @RequestParam(name = "thema", required = false) @ApiParam(value = "테마이름", required = true) String themaName) {
+        int result = guideService.themaRegister(loginId, themaName);
 
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/thema/{guideId}")
+    @DeleteMapping("/thema")
     @ApiOperation(value = "여행 테마 삭제", notes = "가이드가 등록한 여행 테마를 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> tourThemaDelete(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId, @RequestParam int themaId) {
-        int result = guideService.themaDelete(guideId, themaId);
+    public ResponseEntity<?> tourThemaDelete(@RequestParam @ApiParam(value = "login id", required = true) String loginId, @RequestParam int themaId) {
+        int result = guideService.themaDelete(loginId, themaId);
 
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 

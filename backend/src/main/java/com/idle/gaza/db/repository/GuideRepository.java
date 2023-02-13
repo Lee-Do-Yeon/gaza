@@ -43,5 +43,7 @@ public interface GuideRepository extends JpaRepository<Guide, Integer> {
     @Query(value="select * from guide left join guide_thema on guide.guide_id = guide_thema.guide_id where thema_code = (select thema_code from code where description=:themaName)",nativeQuery = true)
     List<Guide> searchGuideByThema(@Param("themaName") String themaName);
 
+    @Query(value = "select * from guide where guide_id IN (select guide_id from guide_thema where thema_code=:code)", nativeQuery = true)
+    List<Guide> searchByCode(@Param("code") String code);
 
 }
