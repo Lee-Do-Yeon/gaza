@@ -163,7 +163,7 @@
                             type="text"
                             class="form-control"
                             id="f-one-liner"
-                            v-model="location.info.category_name"
+                            v-model="location.info.categoryName"
                           />
                         </div>
                       </div>
@@ -266,7 +266,7 @@ import {
   guideLangRegister,
   guideLocationRegister,
 } from "../../../common/api/commonAPI.js";
-
+import api from "@/api/http";
 export default {
   name: "RoomDetails",
   setup() {
@@ -299,7 +299,7 @@ export default {
         userId: "",
         name: "",
         address: "",
-        category_name: "",
+        categoryName: "",
       },
     });
 
@@ -391,14 +391,26 @@ export default {
     //가이드 추천 장소 등록
     const locationRegister = function () {
       location.info.userId = store.getters["accountStore/getUserId"];
-      const request = location.info;
 
+      const request = {
+        categoryName:location.info.categoryName,
+        address:location.info.address,
+        loginId:location.info.userId,
+        name:location.info.name
+      }
+
+      console.log(locPicture)
       const payload = {
         location: JSON.stringify(request),
-        uploadFile: locPicture,
+        uploadFile: locPicture.value,
       };
 
-      guideLocationRegister(payload); //call axios
+      api.post('http://localhost:8080/guides/location', payload, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    }).then((res) => { console.log(res) });
+      //guideLocationRegister(payload); //call axios
     };
 
     return {
