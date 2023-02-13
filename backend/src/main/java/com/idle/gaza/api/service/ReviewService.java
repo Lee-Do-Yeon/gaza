@@ -17,6 +17,6 @@ public interface ReviewService {
     List<ReviewResponse> getReviewsByUser(String userId);
 
     // 가이드에게 달린 리뷰 리스트 조회
-    List<ReviewResponse> getReviewsByGuide(String guideId);
+    List<ReviewResponse> getReviewsByGuide(int guideId);
     Optional<Review> getReviewById(int reviewId);
 }
