@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*")
 @Api(value = "리뷰 API", tags = {"Review"})
 @RestController
 @RequestMapping("/reviews")
