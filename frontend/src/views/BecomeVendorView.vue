@@ -1,8 +1,6 @@
 <template>
-  <Banner/>
-  <!-- How It Work
-    <HowWork /> -->
-  <!-- Vendor Form Area -->
+  <div style="height:100px">
+  </div>
   <VendorForm />
 
  
