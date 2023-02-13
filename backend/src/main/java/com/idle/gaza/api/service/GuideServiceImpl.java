@@ -337,21 +337,16 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public int locationDelete(String guideId, int recommendId) {
-        Optional<User> user = userRepository.findById(guideId);
+    public int locationDelete(String loginId, int recommendId) {
+        Optional<User> user = userRepository.findById(loginId);
         if (!user.isPresent()) return 0;
 
-        Optional<Guide> existGuide = guideRepository.findGuideByGuideId(user.get().getUserId());
-
+        Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
         if (!existGuide.isPresent()) return 0;
 
-        Optional<GuideRecommendLocation> location = guideRecommendRepository.findByRecommendId(recommendId);
-
-        if (!location.isPresent()) return 0;
-
         //추천 장소를 삭제한다.
-        guideRecommendRepository.deleteByRecommendId(recommendId);
-        return 1;
+        int result = guideRecommendRepository.delRecommendLocation(recommendId, existGuide.get().getGuideId());
+        return result;
     }
 
     @Override
@@ -360,8 +355,8 @@ public class GuideServiceImpl implements GuideService {
         Optional<User> user = userRepository.findById(locations.getLoginId());
         if (!user.isPresent()) return 0;
 
-        Optional<Guide> existGuide = guideRepository.findGuideByGuideId(user.get().getUserId());
-        if (!existGuide.isPresent()) return 0;
+        Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
+        if (existGuide.isPresent()) return 0;
 
 
         //해당 가이드 추천장소가 존재하는 경우에만 수행
