@@ -13,7 +13,7 @@ public class LocationPostRequest {
 
     private Integer recommendId;
 
-    private Integer guideId;
+    //private Integer guideId;
 
     private String name;
 
@@ -27,5 +27,8 @@ public class LocationPostRequest {
 
     private String longitude;
 
+    private String categoryName;
+
+    private String loginId;
 
 }
