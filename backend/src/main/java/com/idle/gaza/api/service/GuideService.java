@@ -23,7 +23,7 @@ public interface GuideService {
 
     //가이드 추천 장소 기능
     int locationRegister(LocationPostRequest locations);
-    int locationDelete(int guideId, int recommendId);
+    int locationDelete(String loginId, int recommendId);
     int locationUpdate(LocationPostRequest locations);
     List<LocationResponse> locationSearch(String guideId);
 
