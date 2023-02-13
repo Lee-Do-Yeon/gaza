@@ -1,7 +1,7 @@
 <template>
 <div class="col-lg-4 col-md-6 col-sm-12 col-12">
     <div class="thema-list-box">
-        <list-item2 v-for="(thema,index) in thema_list" :key="index" :thema="thema" @deleteThema="delThema"></list-item2>
+        <list-item2 v-for="(thema,index) in thema_list" :key="index" :index="index" :thema="thema" @deleteThema="delThema"></list-item2>
     </div>
     <div class="news_item_boxed">
     <form id="profile_form_area" @submit.prevent="themaRegister">
@@ -48,22 +48,15 @@ export default {
 
         //테마 등록
         const themaRegister = async function () {
-            const payload = {
-                loginId: loginId,
-                thema: thema.value,
-            };
-            await guideThemaRegister(payload); //call axios
+            await guideThemaRegister(loginId, thema.value); //call axios
             await getThemaList(loginId);
         };
 
         // 테마 삭제
-        const delThema = async function(index, themaId) {
-            const payload = {
-                loginId: loginId,
-                themaId: themaId,  
-            };
+        const delThema = async function(themaId, index) {
             thema_list.value.splice(index, 1);
-            await deleteThema(payload); //call axios
+            console.log(loginId+" "+themaId);
+            await deleteThema(loginId, themaId); //call axios
         };
         
 

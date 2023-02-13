@@ -176,7 +176,7 @@
             </div>
 
             <!-- 가이드 여행 테마 등록 -->
-            <div class="new_main_news_box">
+            <div class="new_main_news_box mybox">
               <br />
               <h3 style="font-weight: bold">가이드의 여행 테마</h3>
               <div class="row">
@@ -185,7 +185,7 @@
             </div>
 
             <!--start 가이드 언어-->
-            <div class="new_main_news_box">
+            <div class="new_main_news_box mybox">
               <br />
               <h3 style="font-weight: bold">가이드의 사용 가능한 언어</h3>
               <div class="row">
@@ -421,4 +421,9 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+
+.mybox {
+  width:100%;
+}
+</style>

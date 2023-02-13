@@ -1,5 +1,5 @@
 <template>
-    <span class="language badge bg-primary">{{ thema.themaName }}</span><span class="lang-delete" @click="deleteThema(thema.themaCode, index)">x</span>
+    <span class="language badge bg-primary">{{ thema.themaName }}</span><span class="lang-delete" @click="deleteThema(thema.themaId, index)">x</span>
 </template>
 
 <script>
@@ -13,6 +13,7 @@ export default {
         const {emit} = getCurrentInstance();
 
         const deleteThema = function(ThemaId, index){
+            console.log(ThemaId+" "+index);
             emit("deleteThema", ThemaId, index);
         }
 
