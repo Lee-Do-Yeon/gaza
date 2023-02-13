@@ -225,6 +225,7 @@ export default {
     onMounted(async () => {
       const isLogin = store.getters['accountStore/getLogin']
       if (!isLogin) {
+        alert("로그인 먼저 해주세요.")
         router.push({ name: "login" });
       }
     })
