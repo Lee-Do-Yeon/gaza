@@ -37,7 +37,7 @@ const allowGuideRequest = (payload) => api.put("/api/users/guide/success", paylo
 const rejectGuideRequest = (payload) => api.put("/api/users/guide/failure", payload);
 
 // 예약내역조회 Notification
-const reser = (payload) => api.get("/api/books/user/ssafy",payload);
+const reser = userid => api.get(`/api/books/user/${userid}`);
 
 // 인기 가이드 조회
 const popularGuide = () => api.get("/api/guides/popular")
