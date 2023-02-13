@@ -1,6 +1,6 @@
 <template>
-  <section id="vendor_form_area" class="section_padding_bottom" style="height: 300px">
     <div class="container">
+      <h3>가자의 가이드가 되어보세요!</h3>
       <div class="row">
         <div class="vendor_form">
           <div class="tour_booking_form_box">
@@ -10,7 +10,7 @@
               enctype="multipart/form-data"
             >
               <div class="row">
-                <div class="col-lg-2">신분증</div>
+                <div class="col-lg-2 subject-text">신분증</div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <input
@@ -26,7 +26,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-lg-2">체류증명서류</div>
+                <div class="col-lg-2 subject-text">체류증명서류</div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <input
@@ -42,7 +42,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-lg-2">가이드 자격증</div>
+                <div class="col-lg-2 subject-text">가이드 자격증</div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <input
@@ -58,11 +58,12 @@
                 </div>
               </div>
               <div class="row">
-                <div>파트너 약관</div>
+                <div class="subject-text">파트너 약관</div>
                 <textarea
                   class="form-control"
                   id="floatingTextarea2"
                   style="height: 300px; padding: 10px"
+                  rows="10"
                   readonly
                 >
  
@@ -93,12 +94,15 @@
 
                 </textarea>
               </div>
+              <br />
+              <br />
               <div class="row">
-                <div>개인정보 및 고유식별 정보 수집 및 이용동의</div>
+                <div class="subject-text">개인정보 및 고유식별 정보 수집 및 이용동의</div>
                 <textarea
                   class="form-control"
                   id="floatingTextarea2"
                   style="height: 300px; padding: 10px"
+                  rows="10"
                   readonly
                 >
                                         ❏ 개인정보의 수집·이용 목적
@@ -123,33 +127,30 @@
                                     </textarea
                 >
               </div>
-              <div class="booking_tour_form_submit pt-4">
+              <div class="booking_tour_form_submit pt-4" style="float:right; text-align: right;">
                 <div class="form-check write_spical_check">
-                  <input
+                  <label class="form-check-label" for="flexCheckDefaultf1">
+                    <input
                     class="form-check-input"
                     type="checkbox"
                     value=""
                     v-model="check"
                     id="flexCheckDefaultf1"
                   />
-                  <label class="form-check-label" for="flexCheckDefaultf1">
-                    I have read and accept the
-                    <router-link to="/terms-service">Terms and conditions</router-link>
-                    and
-                    <router-link to="/privacy-policy">Privacy policy</router-link>
+                    위 약관을 읽고 이에 동의합니다. 
                   </label>
                 </div>
-                <button class="btn btn_theme btn_md">Sign up</button>
+                <button class="btn btn_theme btn_md">신청하기</button>
                 <!-- <router-link to="/booking-confirmation" class="btn btn_theme btn_md"
                   >Sign up</router-link
                 > -->
               </div>
+              <div style="clear:both;"></div>
             </form>
           </div>
         </div>
       </div>
     </div>
-  </section>
 </template>
 
 <script>
@@ -217,3 +218,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.subject-text {
+  color: var(--main-color);
+  font-weight: bold;
+}
+</style>
