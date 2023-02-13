@@ -84,7 +84,8 @@ const myPageUpdate = (payload) => {
 const myPageShow = loginId => api.get('/api/guides/mypage', { params: { userId: loginId } });
 
 
-
+// 추천장소 삭제
+const locdel = payload => api.delete('/api/guides/location/', payload)
 
 
 // 가이드 검색
@@ -104,17 +105,16 @@ const guideLangRegister = payload => api.post('/api/guides/lang', payload).then(
 
 
 //추천 장소 등록
-const guideLocationRegister = payload => {
-    console.log(payload);
-    api.post('/api/guides/location', payload, {
+const guideLocationRegister = payload => api.post('/api/guides/location', payload, {
         headers: {
             "Content-Type": "multipart/form-data"
         }
     }).then((res) => { console.log(res) });
-}
+
+
 
 //유저 예약 조회
 const userBookGuide = (userId) => api.get(`/api/books/user/${userId}`)
 
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide};
+export { reviewss, locdel,requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide};

@@ -124,7 +124,7 @@ export default {
   computed: {
     ...mapState(accountStore, ["userId"]),
   },
-  created() {
+  created() { 
     this.showList(this.userId);
   },
 
