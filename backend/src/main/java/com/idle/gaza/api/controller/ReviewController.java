@@ -48,7 +48,7 @@ public class ReviewController {
 
     @GetMapping("/guide/{guideId}")
     @ApiOperation(value = "리뷰 조회 (가이드)", notes = "가이드에게 달린 리스트를 볼 수 있다.")
-    public ResponseEntity<?> getReviewsByGuide(@PathVariable String guideId){
+    public ResponseEntity<?> getReviewsByGuide(@PathVariable int guideId){
         List<ReviewResponse> reviews = reviewService.getReviewsByGuide(guideId);
         return new ResponseEntity<List<?>>(reviews, HttpStatus.OK);
     }
