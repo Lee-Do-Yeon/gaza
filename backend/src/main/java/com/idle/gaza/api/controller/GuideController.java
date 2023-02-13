@@ -4,6 +4,7 @@ import com.idle.gaza.api.request.*;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LanguageResponse;
 import com.idle.gaza.api.response.LocationResponse;
+import com.idle.gaza.api.response.ThemaResponse;
 import com.idle.gaza.api.service.GuideService;
 import com.idle.gaza.common.util.S3Uploader;
 import com.idle.gaza.common.util.TokenUtil;
@@ -257,12 +258,13 @@ public class GuideController {
 
             try {
                 //upload file
-                s3Uploader.upload(multipartFile, uploadPath+ uploadFileName);
+                s3Uploader.upload(multipartFile, uploadPath + uploadFileName);
                 location.setPicture(uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
         }
+
         int result = guideService.locationRegister(location);
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
@@ -384,7 +386,7 @@ public class GuideController {
             @ApiResponse(code = 404, message = "Not Found")
     })
     public ResponseEntity<?> tourThemaRegister(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId, @RequestParam(name = "thema", required = false) @ApiParam(value = "테마코드", required = true) String themaCode) {
-        int result = guideService.tourThemaRegister(guideId, themaCode);
+        int result = guideService.themaRegister(guideId, themaCode);
 
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
@@ -399,11 +401,27 @@ public class GuideController {
             @ApiResponse(code = 204, message = "사용자 없음")
     })
     public ResponseEntity<?> tourThemaDelete(@PathVariable @ApiParam(value = "가이드PK", required = true) int guideId, @RequestParam int themaId) {
-        int result = guideService.tourThemaDelete(guideId, themaId);
+        int result = guideService.themaDelete(guideId, themaId);
 
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @GetMapping("/thema/{loginId}")
+    @ApiOperation(value = "가이드의 여행 테마 조회", notes = "가이드의 여행 테마를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+            @ApiResponse(code = 204, message = "사용자 없음")
+    })
+    public ResponseEntity<?> tourThemaShow(@PathVariable @ApiParam(value = "로그인 아이디", required = true) String loginId){
+        List<ThemaResponse> results = guideService.themaSelect(loginId);
+
+        if(results == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
 
