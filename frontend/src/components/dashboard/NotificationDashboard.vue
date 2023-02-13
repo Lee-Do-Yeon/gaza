@@ -90,7 +90,7 @@
 
                         <button
                           @click="movereview(res.reservationId,res.guideName)"
-                          class="me-2 btn btn_theme btn-lg"
+                          class="me-2 btn btn_theme btn-lg" v-if="res.stateCode == 'RE01'"
                         >
                           후기작성
                         </button>
