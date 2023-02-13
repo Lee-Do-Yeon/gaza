@@ -22,7 +22,7 @@ const requestLogin = (payload) => api.post("/api/users/login", payload);
 const getUserInfo = accessToken => api.get("/api/users", {headers: {Authorization: accessToken}});
 
 //유저 로그인 확인
-const requestConfirm = accessToken => api.get("/api/users/isLogin", {headers: {Authorization: accessToken}})
+const requestConfirm = accessToken => api.post("/api/users/isLogin", {headers: {Authorization: accessToken}})
 
 // 유저 패스워드 변경
 const changePassword = (payload, accessToken) => {console.log(payload); api.put('/api/users/pw', payload, {headers: {Authorization: accessToken, "Content-Type": 'application/json',}})};
@@ -53,7 +53,7 @@ const reviewss = (userId) => api.get(`/api/reviews/user/${userId}`);
 const updateUser = (payload, accessToken) => api.put('/api/users/', payload, {headers: {Authorization: accessToken, "Content-Type": "multipart/form-data"}});
 
 //리뷰 등록
-const uploadReview =(payload) => api.post('/api/reviews', { params: { reviewInfo: payload }})
+const uploadReview =(payload) => api.post('/api/reviews', payload)
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
@@ -84,7 +84,8 @@ const myPageUpdate = (payload) => {
 const myPageShow = loginId => api.get('/api/guides/mypage', { params: { userId: loginId } });
 
 
-
+// 추천장소 삭제
+const locdel = payload => api.delete('/api/guides/location/', payload)
 
 
 // 가이드 검색
@@ -117,18 +118,15 @@ const guideThemaRegister = (loginId, thema) => api.post(`/api/guides/thema?login
 const deleteThema = (loginId, themaId) => api.delete(`/api/guides/thema?loginId=${loginId}&themaId=${themaId}`);
 
 //추천 장소 등록
-const guideLocationRegister = payload => {
-    console.log(payload);
-    api.post('/api/guides/location', payload, {
+const guideLocationRegister = payload => api.post('/api/guides/location', payload, {
         headers: {
             "Content-Type": "multipart/form-data"
         }
     }).then((res) => { console.log(res) });
-}
+
+
 
 //유저 예약 조회
 const userBookGuide = (userId) => api.get(`/api/books/user/${userId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema};
-
-
+export { reviewss,locdel, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema};

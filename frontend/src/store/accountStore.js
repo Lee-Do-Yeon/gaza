@@ -1,4 +1,4 @@
-import {  requestLogin } from "../../common/api/commonAPI";
+import {  requestLogin, getUserInfo, requestConfirm, requestSignin } from "../../common/api/commonAPI";
 import router from '../router';
 
 const state = {
@@ -7,6 +7,7 @@ const state = {
   isLogin: false,
   signRegister: false,
   userId: null,
+  isGuide: false,
 };
 
 const getters = {
@@ -27,25 +28,28 @@ const getters = {
   },
   getAccessToken: state => {
     return state.accessToken;
-  }
+  },
+  getIsGuide: state => {
+    return state.isGuide
+  },
 };
 
 const mutations = {
   setToken: (state, data) => {
-    console.log('token mutations');
     state.accessToken = data.accessToken
     state.refreshToken = data.refreshToken
   },
   getLogin: (state) => {
-    console.log(state.accessToken);
-    console.log(state.refreshToken);
-    console.log(response);
+    // console.log(state.accessToken);
+    // console.log(state.refreshToken);
+    // console.log(response);
   },
   logOutData: (state) => {
     state.accessToken = null,
     state.refreshToken = null,
     state.isLogin = false
-    window.location.href = '/'
+    state.isGuide = false
+    
     // window.location.reload(true)
   },
   logOutDataWithoutRefresh: (state) => {
@@ -56,28 +60,43 @@ const mutations = {
     console.log('로그인됨');
     state.isLogin = true
     state.userId = data
-    console.log(state);
   },
   signRegister: (state) => {
     state.signRegister = true
   },
   signRegisterFalse: (state) => {
     state.signRegister = false
-  }
-
+  },
+  isItGuide: (state, data) => {
+    if (data) {
+      state.isGuide = true
+    } else {
+      state.isGuide = false
+    }
+  },
 }
 
 const actions = {
-  loginAction: async ({ commit }, loginData) => {
-    console.log('store');
+  GuideAction: async ({commit, state}) =>{
     try {
-      console.log('trylogin');
+      const res = await getUserInfo(`Bearar ${state.accessToken}`)
+      if (res.data.result.state == 'US1') {
+        commit('isItGuide', true)
+      } else {
+        commit('isItGuide', false)
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  loginAction: async ({ commit, dispatch, state }, loginData) => {
+    try {
       const response = await requestLogin(loginData);
-      console.log(response.data);
       if (response.data.resultCode == 200) {
         alert('로그인 성공')
-        commit("logInData", loginData.id)
-        commit("setToken", response.data);
+        await commit("logInData", loginData.id)
+        await commit("setToken", response.data)
+        await dispatch('GuideAction')
         router.push({name: "home"})
       } else {
         console.log(response.data.status);
@@ -98,14 +117,17 @@ const actions = {
     }
   },
 
-  confirmAction: async ({ commit,state }) => {
-    if (state.token) {
-      try {
-        const response = await requestConfirm(`Bearer ${state.accessToken}`);
-        commit("logInData")
-      } catch (error) {
-        console.log(error.response);
+  confirmAction: async ({ commit, state, dispatch, getters }) => {
+    try {
+      const response = await getUserInfo(`Bearer ${state.accessToken}`);
+      if (response.data.resultCode == 200) {
+        await commit("logInData", response.data.result.id)
+        await dispatch('GuideAction')
+      } else {
+        await commit("logOutData")
       }
+    } catch (error) {
+      commit("logOutData")
     }
   },
 
