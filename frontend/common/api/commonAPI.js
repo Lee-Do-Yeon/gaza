@@ -111,10 +111,10 @@ const deleteLanguage = (langId, loginId) => api.delete('/api/guides/lang', { par
 const getGuideThema = loginId => api.get(`/api/guides/thema/${loginId}`);
 
 //가이드 테마 등록
-const guideThemaRegister = (guideId, thema) => api.put(`/guides/thema/${guideId}`, thema).then((res) => { console.log(res) });
+const guideThemaRegister = payload => api.post(`/api/guides/thema`, payload).then((res) => { console.log(res) });
 
 // 가이드 테마 삭제
-const deleteThema = (loginId) => api.delete(`/guides/thema/${loginId}`);
+const deleteThema = payload => api.delete(`/api/guides/thema`, payload);
 
 //추천 장소 등록
 const guideLocationRegister = payload => {

@@ -48,14 +48,22 @@ export default {
 
         //테마 등록
         const themaRegister = async function () {
-            await guideThemaRegister(loginId, thema.value); //call axios
+            const payload = {
+                loginId: loginId,
+                thema: thema.value,
+            };
+            await guideThemaRegister(payload); //call axios
             await getThemaList(loginId);
         };
 
         // 테마 삭제
         const delThema = async function(index, themaId) {
+            const payload = {
+                loginId: loginId,
+                themaId: themaId,  
+            };
             thema_list.value.splice(index, 1);
-            await deleteThema(loginId, themaId); //call axios
+            await deleteThema(payload); //call axios
         };
         
 
