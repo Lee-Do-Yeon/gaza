@@ -309,17 +309,19 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public int locationRegister(LocationPostRequest locations) {
         //해당 가이드가 존재하는지 확인함
-        Optional<Guide> guide = guideRepository.findGuideByGuideId(locations.getGuideId());
+        Optional<User> user = userRepository.findById(locations.getLoginId());
+        if(!user.isPresent()) return 0;
 
-        if (!guide.isPresent()) return 0;
+        Optional<Guide> guide = guideRepository.findGuideByGuideId(user.get().getUserId());
+        if(!guide.isPresent()) return 0;
+
+        String code = getCode(locations.getCategoryName());//해당 테마의 코드 번호 가져옴
 
         GuideRecommendLocation loc = GuideRecommendLocation
                 .builder()
                 .guide(guide.get())
                 .address(locations.getAddress())
-                .latitude(locations.getLatitude())
-                .longitude(locations.getLongitude())
-                .categoryCode(locations.getCategoryCode())
+                .categoryCode(code)
                 .picture(locations.getPicture())
                 .name(locations.getName())
                 .build();
@@ -329,8 +331,11 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public int locationDelete(int guideId, int recommendId) {
-        Optional<Guide> existGuide = guideRepository.findGuideByGuideId(guideId);
+    public int locationDelete(String guideId, int recommendId) {
+        Optional<User> user = userRepository.findById(guideId);
+        if(!user.isPresent()) return 0;
+
+        Optional<Guide> existGuide = guideRepository.findGuideByGuideId(user.get().getUserId());
 
         if (!existGuide.isPresent()) return 0;
 
@@ -346,22 +351,25 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public int locationUpdate(LocationPostRequest locations) {
         //해당 가이드가 존재하는지 확인함
-        Optional<Guide> guide = guideRepository.findGuideByGuideId(locations.getGuideId());
-        if (!guide.isPresent()) return 0;
+        Optional<User> user = userRepository.findById(locations.getLoginId());
+        if(!user.isPresent()) return 0;
+
+        Optional<Guide> existGuide = guideRepository.findGuideByGuideId(user.get().getUserId());
+        if (!existGuide.isPresent()) return 0;
+
 
         //해당 가이드 추천장소가 존재하는 경우에만 수행
         Optional<GuideRecommendLocation> existLocation = guideRecommendRepository.findByRecommendId(locations.getRecommendId());
 
         if (!existLocation.isPresent()) return 0;
 
+        String code = getCode(locations.getCategoryName());
         GuideRecommendLocation updateLocation = existLocation.get();
-        updateLocation.setGuide(guide.get());
+        updateLocation.setGuide(existGuide.get());
         updateLocation.setAddress(locations.getAddress());
-        updateLocation.setLongitude(locations.getLongitude());
-        updateLocation.setLatitude(locations.getLatitude());
         updateLocation.setName(locations.getName());
         updateLocation.setPicture(locations.getPicture());
-        updateLocation.setCategoryCode(locations.getCategoryCode());
+        updateLocation.setCategoryCode(code);
 
         guideRecommendRepository.save(updateLocation);
 
@@ -570,7 +578,7 @@ public class GuideServiceImpl implements GuideService {
             updateGuide.setPicture(request.getPicture());
         }
 
-        
+
         guideRepository.save(updateGuide);
 
         return 1;
