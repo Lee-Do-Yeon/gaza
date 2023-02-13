@@ -9,7 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "guide_thema")
 @Setter
 @Getter
 @NoArgsConstructor
