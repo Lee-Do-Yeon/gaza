@@ -111,6 +111,8 @@ public class GuideController {
     })
     public ResponseEntity<?> myPageModify(@RequestPart MyPageRequest guide, @RequestPart(value = "picture", required = false) MultipartFile multipartFile){
 
+        log.info("guide " + guide.toString());
+
         //파일이 존재한다면 기존 경로에서 파일 삭제
         String originPictureName = guideService.findGuideProfilePicture(guide.getUserId());
 
@@ -279,7 +281,7 @@ public class GuideController {
             @ApiResponse(code = 404, message = "Not Found")
     })
     public ResponseEntity<?> locationDelete(@RequestParam Map<String, String> map) {
-        int guideId = Integer.parseInt(map.get("guideId"));
+        String loginId = map.get("loginId");
         int recommendId = Integer.parseInt(map.get("recommendId"));
 
         //파일이 존재한다면 기존 경로에서 파일 삭제
@@ -297,7 +299,7 @@ public class GuideController {
             }
         }
 
-        guideService.locationDelete(guideId, recommendId);
+        guideService.locationDelete(loginId, recommendId);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
