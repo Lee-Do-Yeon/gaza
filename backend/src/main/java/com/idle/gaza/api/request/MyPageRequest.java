@@ -4,10 +4,12 @@ package com.idle.gaza.api.request;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @ApiModel("MyPageRequest")
+@ToString
 public class MyPageRequest {
 
     private String userId;
