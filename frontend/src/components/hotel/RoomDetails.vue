@@ -196,19 +196,7 @@
               <br />
               <h3 style="font-weight: bold">가이드의 사용 가능한 언어</h3>
               <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                  <div class="news_item_boxed">
-                    <form id="profile_form_area" v-on:submit="langRegister">
-                      <input
-                        type="text"
-                        id="lang"
-                        v-model="language"
-                        placeholder="사용 가능 언어 입력"
-                      />
-                      <button class="btn btn_theme btn_sm">submit</button>
-                    </form>
-                  </div>
-                </div>
+                <language-box></language-box>
               </div>
             </div>
           </div>
@@ -266,9 +254,14 @@ import {
   guideLangRegister,
   guideLocationRegister,
 } from "../../../common/api/commonAPI.js";
-import api from "@/api/http";
+
+import { LanguageBox } from "@/components/hotel/guideSettings/LanguageBox";
+
 export default {
   name: "RoomDetails",
+  components:{
+    LanguageBox,
+  },
   setup() {
     const store = useStore();
 
@@ -405,12 +398,7 @@ export default {
         uploadFile: locPicture.value,
       };
 
-      api.post('http://localhost:8080/guides/location', payload, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    }).then((res) => { console.log(res) });
-      //guideLocationRegister(payload); //call axios
+      guideLocationRegister(payload); //call axios
     };
 
     return {
