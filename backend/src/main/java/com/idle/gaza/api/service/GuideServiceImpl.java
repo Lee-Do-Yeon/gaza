@@ -659,9 +659,10 @@ public class GuideServiceImpl implements GuideService {
 
         for (GuideLanguage lang : languageList) {
             LanguageResponse res = new LanguageResponse();
-            res.setGuide_id(lang.getGuide().getGuideId());
+            String description = getCodeDescritpion(lang.getLangCode());
             res.setLanguage_id(lang.getLanguageId());
-            res.setLang_code(lang.getLangCode());
+            res.setLanguageName(description);
+
             response.add(res);
         }
 
@@ -674,5 +675,8 @@ public class GuideServiceImpl implements GuideService {
         return languageRepository.searchCode(name);
     }
 
+    private String getCodeDescritpion(String code){
+        return languageRepository.searchCodeName(code);
+    }
 
 }
