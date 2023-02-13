@@ -15,7 +15,7 @@ import ErrorView from '../views/ErrorView.vue'
 import CompleteView from '../views/CompleteView.vue'
 import BecomeVendorView from '../views/BecomeVendorView.vue'
 import NotFound from '../components/NotFound.vue'
-import reviewView from '../views/reviewView.vue'
+import ReviewView from '../views/ReviewView.vue'
 import GuideSchedule from '@/components/hotel/GuideSchedule'
 import GuideReviewView from '../views/GuideReviewView.vue'
 import OpenViduView from '../views/OpenViduView.vue'
@@ -192,7 +192,7 @@ const routes = [
   {
     path :'/review/:id/:name',
     name: 'review',
-    component: reviewView
+    component: ReviewView
   },
   {
     path:'/guide_schedule',

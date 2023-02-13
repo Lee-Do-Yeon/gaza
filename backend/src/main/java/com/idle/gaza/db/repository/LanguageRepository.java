@@ -14,8 +14,8 @@ import java.util.List;
 public interface LanguageRepository extends JpaRepository<GuideLanguage, Integer> {
 
     /* 해당 언어의 코드명 가져오기 */
-    @Query(value="select name from code where description=:language", nativeQuery = true)
-    String searchCode(@Param("language") String language);
+    @Query(value="select name from code where description=:description", nativeQuery = true)
+    String searchCode(@Param("description") String description);
 
 //    @Query(value="delete from guide_language where guide_id=:guideId and guide_language_id=:langId", nativeQuery = true)
 //    int deleteLang(@Param("guideId") int guideId, @Param("langId") int langId);
@@ -24,4 +24,7 @@ public interface LanguageRepository extends JpaRepository<GuideLanguage, Integer
     int deleteByLanguageId(int lang_id);
 
     List<GuideLanguage> findByGuide(Guide guide);
+
+    @Query(value="select description from code where name=:code", nativeQuery = true)
+    String searchCodeName(@Param("code") String code);
 }

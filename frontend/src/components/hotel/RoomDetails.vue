@@ -176,7 +176,7 @@
                             type="text"
                             class="form-control"
                             id="f-one-liner"
-                            v-model="location.info.category_name"
+                            v-model="location.info.categoryName"
                           />
                         </div>
                       </div>
@@ -189,27 +189,16 @@
             </div>
 
             <!-- 가이드 여행 테마 등록 -->
-            <div class="new_main_news_box">
+            <div class="new_main_news_box mybox">
               <br />
               <h3 style="font-weight: bold">가이드의 여행 테마</h3>
               <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                  <div class="news_item_boxed">
-                    <form id="profile_form_area">
-                      <input
-                        type="text"
-                        id="lang"
-                        placeholder="여행 테마 이름 등록"
-                      />
-                      <button class="btn btn_theme btn_sm">submit</button>
-                    </form>
-                  </div>
-                </div>
+                <thema-box></thema-box>
               </div>
             </div>
 
             <!--start 가이드 언어-->
-            <div class="new_main_news_box">
+            <div class="new_main_news_box mybox">
               <br />
               <h3 style="font-weight: bold">가이드의 사용 가능한 언어</h3>
               <div class="row">
@@ -273,12 +262,15 @@ import {
   guideLangRegister,
   guideLocationRegister,
 } from "../../../common/api/commonAPI.js";
-import { LanguageBox } from "@/components/hotel/guideSettings/LanguageBox";
+import LanguageBox from "@/components/hotel/guideSettings/LanguageBox";
+import ThemaBox from "@/components/hotel/guideSettings/ThemaBox";
+
 
 export default {
   name: "RoomDetails",
   components: {
     LanguageBox,
+    ThemaBox
   },
   setup() {
     const store = useStore();
@@ -310,7 +302,7 @@ export default {
         userId: "",
         name: "",
         address: "",
-        category_name: "",
+        categoryName: "",
       },
     });
 
@@ -402,11 +394,18 @@ export default {
     //가이드 추천 장소 등록
     const locationRegister = function () {
       location.info.userId = store.getters["accountStore/getUserId"];
-      const request = location.info;
 
+      const request = {
+        categoryName:location.info.categoryName,
+        address:location.info.address,
+        loginId:location.info.userId,
+        name:location.info.name
+      }
+
+      console.log(locPicture)
       const payload = {
         location: JSON.stringify(request),
-        uploadFile: locPicture,
+        uploadFile: locPicture.value,
       };
 
       guideLocationRegister(payload); //call axios
@@ -437,4 +436,9 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+
+.mybox {
+  width:100%;
+}
+</style>
