@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-      <h3 class="main-text">가자의 가이드가 되어보세요!</h3>
+      <h3 class="main-text mb-5">가자의 가이드가 되어보세요!</h3>
       <div class="row">
         <div class="vendor_form">
           <div class="tour_booking_form_box">
