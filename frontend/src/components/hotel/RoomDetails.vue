@@ -205,8 +205,8 @@
           <h3 style="font-weight: bold">상담 불가 날짜/시간 설정</h3>
           <br />
           <!--start 상담 불가능 날짜 form -->
-          <div class="row d-flex justify-content-center">
-            <div class="col-lg-4 me-5">
+          <div class="row d-flex justify-content-start">
+            <div class="col-lg-4 ">
               <h5 style="color: #15d4cd">Choose a Date</h5>
               <br />
               <div class="form_search_date">
