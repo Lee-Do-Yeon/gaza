@@ -101,13 +101,13 @@ const guideLangRegister = payload => api.post('/api/guides/lang', payload).then(
 
 
 //추천 장소 등록
-const guideLocationRegister = (payload) => {
+const guideLocationRegister = payload => {
     console.log(payload);
     api.put('/api/guides/location', payload, {
         headers: {
             "Content-Type": "multipart/form-data"
         }
-    });
+    }).then((res) => { console.log(res) });
 }
 
 
