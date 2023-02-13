@@ -22,7 +22,7 @@ const requestLogin = (payload) => api.post("/api/users/login", payload);
 const getUserInfo = accessToken => api.get("/api/users", {headers: {Authorization: accessToken}});
 
 //유저 로그인 확인
-const requestConfirm = accessToken => api.get("/api/users/isLogin", {headers: {Authorization: accessToken}})
+const requestConfirm = accessToken => api.post("/api/users/isLogin", {headers: {Authorization: accessToken}})
 
 // 유저 패스워드 변경
 const changePassword = (payload, accessToken) => {console.log(payload); api.put('/api/users/pw', payload, {headers: {Authorization: accessToken, "Content-Type": 'application/json',}})};
@@ -53,7 +53,7 @@ const reviewss = (userId) => api.get(`/api/reviews/user/${userId}`);
 const updateUser = (payload, accessToken) => api.put('/api/users/', payload, {headers: {Authorization: accessToken, "Content-Type": "multipart/form-data"}});
 
 //리뷰 등록
-const uploadReview =(payload) => api.post('/api/reviews', { params: { reviewInfo: payload }})
+const uploadReview =(payload) => api.post('/api/reviews', payload)
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
