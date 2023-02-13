@@ -124,6 +124,8 @@ export default {
     this.showList(this.userId)
   },
 
+
+
   methods: {
     showList(guideId) {
       //상담 일정을 가져옴

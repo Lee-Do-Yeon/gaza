@@ -42,7 +42,7 @@
                 <div class="dashboard_common_table">
                   <h3>프로필 업로드</h3>
                   <div class="profile_update_form">
-                    <form id="profile_form_area" v-on:submit="updateMyPage">
+                    <form id="profile_form_area" v-on:submit.prevent="updateMyPage">
                       <input
                         type="file"
                         @change="selectFile"
