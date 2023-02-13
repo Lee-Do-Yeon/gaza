@@ -186,7 +186,6 @@ export default {
       state.info.email=user.email + '@' + user.email_domain;
       state.info.phone_number=user.phone_number;
 
-      console.log(user);
     })
 
     const uppassword = function () {
