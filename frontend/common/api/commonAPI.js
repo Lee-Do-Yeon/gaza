@@ -76,7 +76,7 @@ const myPageUpdate = (payload) => {
         headers: {
             "Content-Type": "multipart/form-data"
         }
-    });
+    }).then((res)=>console.log(res));
 }
 
 //가이드 마이페이지 조회
