@@ -37,7 +37,7 @@ const allowGuideRequest = (payload) => api.put("/api/users/guide/success", paylo
 const rejectGuideRequest = (payload) => api.put("/api/users/guide/failure", payload);
 
 // 예약내역조회 Notification
-const reser = (payload) => api.get("/api/books/user/ssafy",payload);
+const reser = (userId) => api.get(`/api/books/user/${userId}`);
 
 // 인기 가이드 조회
 const popularGuide = () => api.get("/api/guides/popular")
@@ -46,13 +46,13 @@ const popularGuide = () => api.get("/api/guides/popular")
 const themaGuide = (payload) => api.get("api/guides/search/thema/", { params: { themaName : payload } })
 
 // 유저 예약내역 조회
-const reviewss = (payload) => api.get('/api/reviews/user/ssafy',payload);
+const reviewss = (userId) => api.get(`/api/reviews/user/${userId}`);
 
 //유저 정보수정
 const updateUser = (payload, accessToken) => api.put('/api/users/', payload, {headers: {Authorization: accessToken, "Content-Type": "multipart/form-data"}});
 
 //리뷰 등록
-const uploadReview =(payload) => api.post('/api/reviews',payload)
+const uploadReview =(payload) => api.post('/api/reviews', { params: { reviewInfo: payload }})
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 

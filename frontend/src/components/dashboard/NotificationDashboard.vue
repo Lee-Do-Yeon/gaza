@@ -5,17 +5,8 @@
         <div class="col-lg-4">
           <div class="dashboard_sidebar">
             <div class="dashboard_sidebar_user">
-              <img src="../../assets/img/common/dashboard-user.png" alt="img" />
-              <h3>{{loginID}}</h3>
-              <div>
-                <div style="text-align: center; padding: 60px">
-                  <input
-                    type="file"
-                    class="btn btn_theme"
-                    style="width: 200px"
-                  />
-                </div>
-              </div>
+              <img :src="state.info.pictureURL" alt="img" />
+              <h3>{{ state.info.originName }}</h3>
             </div>
             <div class="dashboard_menu_area">
               <ul>
@@ -121,10 +112,11 @@
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
 import picturemodalVue from "../modal/picturemodal.vue";
-import { ref } from "vue";
+import { getUserInfo } from "../../../common/api/commonAPI";
+import { ref, onMounted, reactive } from "vue";
 import { reser } from "../../../common/api/commonAPI";
 import { useRouter } from "vue-router";
-import {useStore} from 'vuex';
+import { useStore } from 'vuex';
 
 import api from "@/api/http"
 
@@ -136,6 +128,32 @@ export default {
     picturemodalVue,
   },
   setup() {
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/user/picture/";
+
+    const state = reactive({
+      info: {
+        originName: '',
+        first_name: '',
+        last_name:'',
+        pictureURL:'',
+      },
+    })
+
+    onMounted(async () => {
+      const accessToken = 'Bearer ' + store.getters['accountStore/getAccessToken']
+
+      const user_info = await getUserInfo(accessToken);
+
+      const user = user_info.data.result;
+
+      state.info.pictureURL=baseURL + user.picture;
+      state.info.originName=user.name;
+      state.info.first_name=user.name.substring(0,1);
+      state.info.last_name=user.name.substring(1);
+
+      console.log(user);
+    })
+
     const getDate = (date) => {
       const DAT = new Date(date);
       return (
@@ -160,8 +178,10 @@ export default {
 
     const reservation = ref([]);
     const getreservation = async () => {
+      const loginID = store.getters["accountStore/getUserId"];
+
       try {
-        const res = await reser();
+        const res = await reser(loginID);
         reservation.value = res.data;
       } catch (err) {
         console.log(err);
@@ -191,6 +211,7 @@ export default {
 
 
     return {
+      state,
       reservation,
       getreservation,
       getDate,
