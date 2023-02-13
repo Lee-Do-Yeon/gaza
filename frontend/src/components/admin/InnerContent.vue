@@ -16,7 +16,7 @@
                     <td><a :href="getFileUrl(user).idFile"><img src="../../assets/img/admin/file.png" alt=""></a></td>
                     <td><a :href="getFileUrl(user).certificateResidence"><img src="../../assets/img/admin/file.png" alt=""></a></td>
                     <td><a :href="getFileUrl(user).certificate"><img src="../../assets/img/admin/file.png" alt=""></a></td>
-                    <td><button type="button" class="btn btn-outline-info" @click="allow()">승인</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button type="button" class="btn btn-outline-info" @click="reject()">거절</button></td>
+                    <td><button type="button" class="btn btn-outline-info" @click="allow()">승인</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button type="button" class="btn btn-outline-info" @click="reject()">거절</button></td>
                 </tr>
             </tbody>
         </table>
