@@ -151,7 +151,8 @@ export default {
             // 세션 아이디 저장.
             await axios
                 .post("/map/session", {
-                    params: { reservationId: reservationId, sessionId: base.mySessionId },
+                    reservationId: reservationId + "",
+                    sessionId: base.mySessionId,
                 })
                 .then((data) => {
                     console.log(data);
@@ -164,6 +165,7 @@ export default {
         async createConsulting(reservationId) {
             console.log("아이디: " + reservationId);
             await this.createMapRoom(reservationId);
+            console.log("세션 아이디: " + this.mySessionId);
             const routeData = this.$router.resolve({
                 name: "mapdetail",
                 params: {
