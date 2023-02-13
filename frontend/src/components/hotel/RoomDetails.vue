@@ -163,7 +163,7 @@
                             type="text"
                             class="form-control"
                             id="f-one-liner"
-                            v-model="location.info.category_name"
+                            v-model="location.info.categoryName"
                           />
                         </div>
                       </div>
@@ -205,8 +205,8 @@
           <h3 style="font-weight: bold">상담 불가 날짜/시간 설정</h3>
           <br />
           <!--start 상담 불가능 날짜 form -->
-          <div class="row d-flex justify-content-center">
-            <div class="col-lg-4 me-5">
+          <div class="row d-flex justify-content-start">
+            <div class="col-lg-4 ">
               <h5 style="color: #15d4cd">Choose a Date</h5>
               <br />
               <div class="form_search_date">
@@ -256,6 +256,7 @@ import {
 } from "../../../common/api/commonAPI.js";
 import LanguageBox from "@/components/hotel/guideSettings/LanguageBox";
 
+
 export default {
   name: "RoomDetails",
   components:{
@@ -291,7 +292,7 @@ export default {
         userId: "",
         name: "",
         address: "",
-        category_name: "",
+        categoryName: "",
       },
     });
 
@@ -383,11 +384,18 @@ export default {
     //가이드 추천 장소 등록
     const locationRegister = function () {
       location.info.userId = store.getters["accountStore/getUserId"];
-      const request = location.info;
 
+      const request = {
+        categoryName:location.info.categoryName,
+        address:location.info.address,
+        loginId:location.info.userId,
+        name:location.info.name
+      }
+
+      console.log(locPicture)
       const payload = {
         location: JSON.stringify(request),
-        uploadFile: locPicture,
+        uploadFile: locPicture.value,
       };
 
       guideLocationRegister(payload); //call axios

@@ -19,13 +19,13 @@ public class LocationPostRequest {
 
     private String address;
 
-    private String categoryCode;
+    //private String categoryCode;
 
     private String picture;
 
-    private String latitude;
-
-    private String longitude;
+//    private String latitude;
+//
+//    private String longitude;
 
     private String categoryName;
 
