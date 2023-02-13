@@ -38,6 +38,7 @@ public interface GuideService {
 
     //상담 시간대 관리 기능
     int consultTimeRegister(LocalTime startTime, LocalTime endTime, String userId);
+    int consultTimeDelete(String loginId);
 
     //가이드 사용 언어 관리 기능
     int languageRegister(LanguageRequest request);
