@@ -156,6 +156,9 @@
 import axios from "@/api/http";
 import { mapState } from "vuex";
 import router from "@/router";
+import { ref, onMounted, reactive } from "vue";
+import { useStore } from 'vuex';
+import { useRouter } from "vue-router";
 
 const accountStore = "accountStore";
 
@@ -215,6 +218,17 @@ export default {
       this.file3 = this.$refs["img3"].files[0];
     },
   },
+
+  setup() {
+    const store = useStore()
+    const router = useRouter();
+    onMounted(async () => {
+      const isLogin = store.getters['accountStore/getLogin']
+      if (!isLogin) {
+        router.push({ name: "login" });
+      }
+    })
+  }
 };
 </script>
 
