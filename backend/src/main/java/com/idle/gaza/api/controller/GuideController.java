@@ -257,12 +257,13 @@ public class GuideController {
 
             try {
                 //upload file
-                s3Uploader.upload(multipartFile, uploadPath+ uploadFileName);
+                s3Uploader.upload(multipartFile, uploadPath + uploadFileName);
                 location.setPicture(uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
         }
+
         int result = guideService.locationRegister(location);
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
