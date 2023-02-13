@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 /**
@@ -44,6 +46,7 @@ public class ReservationController {
         List<ReservationResponse> reservations = reservationService.getReservationListByUser(userId);
         return new ResponseEntity<List<?>>(reservations, HttpStatus.OK);
     }
+
     @GetMapping("/guide/{guideId}")
     @ApiOperation(value = "예약 내역 리스트 조회(가이드)", notes = "가이드는 본인의 상담 내역 리스트를 조회 가능하다.")
     public ResponseEntity<?> getReservationListByGuide(@PathVariable @ApiParam(value="가이드", required = true) String guideId){
@@ -69,6 +72,17 @@ public class ReservationController {
         Date date = Date.valueOf(selectedDate);
         List<Integer> timeList = reservationService.getImpossibleTime(guideId, date);
         return new ResponseEntity<List<?>>(timeList, HttpStatus.OK);
+    }
+
+    @PutMapping("/{reservationId}")
+    @ApiOperation(value = "예약 상태 변경", notes = "예약 상태를 변경한다.")
+    public ResponseEntity<? extends BaseResponseBody> changeReservationState(@PathVariable @ApiParam(value="예약 PK", required = true) int reservationId, @RequestBody Map<String, String> statusMap){
+        try{
+            reservationService.changeReservationState(reservationId, statusMap.get("status"));
+        }catch (Exception e){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(500, "Fail"));
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
     @PatchMapping("/consulting/create/{reservationId}")
