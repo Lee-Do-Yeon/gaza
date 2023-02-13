@@ -7,7 +7,7 @@ const state = {
   isLogin: false,
   signRegister: false,
   userId: null,
-  isGuide: false,
+  isGuide: null,
 };
 
 const getters = {
@@ -48,7 +48,7 @@ const mutations = {
     state.accessToken = null,
     state.refreshToken = null,
     state.isLogin = false
-    state.isGuide = false
+    state.isGuide = null
     
     // window.location.reload(true)
   },
@@ -68,11 +68,7 @@ const mutations = {
     state.signRegister = false
   },
   isItGuide: (state, data) => {
-    if (data) {
-      state.isGuide = true
-    } else {
-      state.isGuide = false
-    }
+    state.isGuide = data
   },
 }
 
@@ -80,11 +76,7 @@ const actions = {
   GuideAction: async ({commit, state}) =>{
     try {
       const res = await getUserInfo(`Bearar ${state.accessToken}`)
-      if (res.data.result.state == 'US1') {
-        commit('isItGuide', true)
-      } else {
-        commit('isItGuide', false)
-      }
+      commit('isItGuide', res.data.result.state)
     } catch (err) {
       console.log(err);
     }
