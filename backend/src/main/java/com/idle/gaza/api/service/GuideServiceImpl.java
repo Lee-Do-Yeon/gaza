@@ -316,7 +316,7 @@ public class GuideServiceImpl implements GuideService {
         if (!guide.isPresent()) return 0;
 
         String code = getCode(locations.getCategoryName());//해당 테마의 코드 번호 가져옴
-        if(code == null) return 0;
+        if (code == null) return 0;
 
         //추천 장소 등록
 
@@ -500,7 +500,7 @@ public class GuideServiceImpl implements GuideService {
 
 
     @Override
-    public int tourThemaRegister(int guideId, String themaCode) {
+    public int themaRegister(int guideId, String themaCode) {
         //가이드 정보 반환
         Optional<Guide> existGuide = guideRepository.findById(guideId);
         if (!existGuide.isPresent()) return 0;
@@ -513,7 +513,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public int tourThemaDelete(int guideId, int themaId) {
+    public int themaDelete(int guideId, int themaId) {
         //가이드 정보 반환
         Optional<Guide> existGuide = guideRepository.findById(guideId);
         if (!existGuide.isPresent()) return 0;
@@ -524,6 +524,31 @@ public class GuideServiceImpl implements GuideService {
         return 1;
     }
 
+    @Override
+    public List<ThemaResponse> themaSelect(String loginId) {
+        Optional<User> user = userRepository.findById(loginId);
+        if (!user.isPresent()) return null;
+
+        User getUser = user.get();
+        Optional<Guide> guide = guideRepository.findGuideByUser(getUser.getUserId());
+        if (!guide.isPresent()) return null;
+
+        List<GuideThema> themaList = guideThemaRepository.findByGuide(guide.get());
+        List<ThemaResponse> response = new ArrayList<>();
+
+        for(GuideThema thema : themaList){
+            String name = getCodeDescritpion(thema.getThemaCode());
+            ThemaResponse res = ThemaResponse.builder()
+                    .guideId(guide.get().getGuideId())
+                    .themaCode(thema.getThemaCode())
+                    .themaName(name)
+                    .themaId(thema.getThemaId())
+                    .build();
+            response.add(res);
+        }
+
+        return response;
+    }
 
     /////////////////////////마이페이지 기능////////////////////////////
 
@@ -675,7 +700,7 @@ public class GuideServiceImpl implements GuideService {
         return languageRepository.searchCode(name);
     }
 
-    private String getCodeDescritpion(String code){
+    private String getCodeDescritpion(String code) {
         return languageRepository.searchCodeName(code);
     }
 
