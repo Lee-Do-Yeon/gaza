@@ -8,6 +8,7 @@ import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LanguageResponse;
 import com.idle.gaza.api.response.LocationResponse;
 import com.idle.gaza.api.response.ThemaResponse;
+import com.idle.gaza.db.entity.Guide;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,7 +21,7 @@ public interface GuideService {
     List<GuideResponse> famousGuideSearch();
     GuideResponse guideDetailSearch(int guideId);
     List<GuideResponse> guideSearchBar(String searchName);
-    List<GuideResponse> guideSearchByTheam(String searchName);
+    List<GuideResponse> guideSearchByThema(String searchName);
 
     //가이드 추천 장소 기능
     int locationRegister(LocationPostRequest locations);
@@ -44,8 +45,8 @@ public interface GuideService {
     List<LanguageResponse> getLanguage(String loginId);
 
     //여행 테마 관리 기능
-    int themaRegister(int guideId, String themaCode);
-    int themaDelete(int guideId, int themaId);
+    int themaRegister(String loginId, String themaName);
+    int themaDelete(String loginId, int themaId);
     List<ThemaResponse> themaSelect(String loginId);
 
 

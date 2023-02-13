@@ -93,7 +93,6 @@ public class Guide{
 
 
 
-
     public void addGuideLocation(GuideRecommendLocation guideLocationList){
         this.guideLocationList.add(guideLocationList);
     }
