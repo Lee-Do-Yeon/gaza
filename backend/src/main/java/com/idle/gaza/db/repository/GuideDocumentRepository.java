@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface GuideDocumentRepository extends JpaRepository<GuideDocument, Integer> {
-    @Query(value = "SELECT g.* FROM user as u, guide_document as g WHERE g.user_id = u.user_id and u.state_code='US2'", nativeQuery = true)
+    @Query(value = "SELECT g.* FROM user as u, guide_document as g WHERE g.user_id = u.user_id and u.state_code='US3'", nativeQuery = true)
     Optional<List<GuideDocument>> searchGuideRegisterList();
 }
