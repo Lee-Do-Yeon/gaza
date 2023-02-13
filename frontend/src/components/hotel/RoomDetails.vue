@@ -13,7 +13,7 @@
                   :to="{
                     name: 'guide_schedule',
                   }"
-                  >상담일정 확인</router-link
+                  >예약내역 확인</router-link
                 >
               </li>
 

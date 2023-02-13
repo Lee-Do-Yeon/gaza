@@ -6,14 +6,16 @@
           <div class="dashboard_menu_area">
             <ul>
               <li>
-                <router-link to="/room-details">내 정보 확인 및 수정</router-link>
+                <router-link to="/room-details"
+                  >내 정보 확인 및 수정</router-link
+                >
               </li>
               <li>
                 <router-link
                   :to="{
                     name: 'guide_schedule',
                   }"
-                  >상담일정 확인</router-link
+                  class="active">예약내역 확인</router-link
                 >
               </li>
               <li>
@@ -34,7 +36,11 @@
             </div>
             <div class="notification_wrapper">
               <div class="accordion" id="accordionExample">
-                <div v-for="(res, index) in reservation" :key="res.id" class="accordion-item">
+                <div
+                  v-for="(res, index) in reservation"
+                  :key="res.id"
+                  class="accordion-item"
+                >
                   <h2 class="accordion-header" :id="'heading' + index">
                     <button
                       class="accordion-button active d-flex justify-content-between"
@@ -45,9 +51,9 @@
                       :aria-controls="'collapse' + index"
                     >
                       <div>
-                        {{ res.guide_id }}
+                        {{ res.userName }}
                       </div>
-                      <div>Date : {{ res.travel_start_date }}</div>
+                      <div>Date : {{ getDate(res.travelStartDate) }}</div>
                     </button>
                   </h2>
                   <div
@@ -58,23 +64,20 @@
                   >
                     <div class="accordion-body">
                       <div>
-                        <img src="../../assets/img/common/dashboard-user.png" alt="img" />
+                        <img
+                          src="../../assets/img/common/dashboard-user.png"
+                          alt="img"
+                        />
                       </div>
-                      <div>가이드 : {{ res.guide_id }}</div>
-                      <div>인원 : {{ res.number_of_people }}</div>
-                      <div>여행날짜 : {{ res.travel_start_date }}</div>
+                      <div>인원 : {{res.numberOfPeople}}</div>
+                      <div>여행날짜 : {{ getDate(res.travelStartDate) }}</div>
                       <div>
-                        유아 동반 : {{ res.with_children }} 장애 여부 :
-                        {{ res.with_disabled }} 노약자 동반 :
-                        {{ res.with_elderly }}
+                        유아 동반 : {{ res.withChildren}} 장애 여부 :
+                        {{ res.withDisabled }} 노약자 동반 :
+                        {{ res.withElderly }}
                       </div>
                       <div>특이사항 : {{ res.note }}</div>
                       <div class="d-flex justify-content-end">
-                        <button class="me-2 btn btn_theme btn-lg">일정확인</button>
-
-                        <router-link to="/review"
-                          ><button class="me-2 btn btn_theme btn-lg">후기작성</button></router-link
-                        >
 
                         <button class="btn btn_theme btn-lg">입장</button>
                       </div>
@@ -96,6 +99,18 @@ const accountStore = "accountStore";
 
 export default {
   name: "GuideSchedule",
+  setup(){
+    const getDate = (date) => {
+      const DAT = new Date(date);
+      return (
+        DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay()
+      );
+    };
+    return{
+      getDate
+    }
+
+  },
 
   data() {
     return {
@@ -104,6 +119,9 @@ export default {
   },
   computed: {
     ...mapState(accountStore, ["userId"]),
+  },
+  created(){
+    this.showList(this.userId)
   },
 
   methods: {
