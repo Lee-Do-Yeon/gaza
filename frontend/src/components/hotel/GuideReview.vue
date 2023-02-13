@@ -9,6 +9,11 @@
                 <router-link to="/room-details">내 정보 확인 및 수정</router-link>
               </li>
               <li>
+                <router-link to="/guideInfoDelete"
+                  >내 정보 삭제</router-link
+                >
+              </li>
+              <li>
                 <router-link
                   :to="{
                     name: 'guide_schedule',
