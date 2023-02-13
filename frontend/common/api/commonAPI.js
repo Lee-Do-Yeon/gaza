@@ -39,6 +39,7 @@ const rejectGuideRequest = (payload) => api.put("/api/users/guide/failure", payl
 // 예약내역조회 Notification
 const reser = userid => api.get(`/api/books/user/${userid}`);
 
+
 // 인기 가이드 조회
 const popularGuide = () => api.get("/api/guides/popular")
 
@@ -114,5 +115,9 @@ const guideLocationRegister = payload => {
     }).then((res) => { console.log(res) });
 }
 
+//유저 예약 조회
+const userBookGuide = (userId) => api.get(`/api/books/user/${userId}`)
 
-export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, getGuideLang};
+export { reviewss, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang};
+
+
