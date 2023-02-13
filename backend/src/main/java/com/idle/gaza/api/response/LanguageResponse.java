@@ -12,7 +12,8 @@ import lombok.Setter;
 public class LanguageResponse {
 
     private int language_id;
-    private int guide_id;
-    private String lang_code;
+    //private int guide_id;
+    //private String lang_code;
+    private String languageName;
 
 }
