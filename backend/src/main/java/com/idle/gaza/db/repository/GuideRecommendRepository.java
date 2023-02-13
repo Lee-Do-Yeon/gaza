@@ -1,9 +1,13 @@
 package com.idle.gaza.db.repository;
 
 import com.idle.gaza.db.entity.GuideRecommendLocation;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +22,11 @@ public interface GuideRecommendRepository extends JpaRepository<GuideRecommendLo
     //Optional<GuideRecommendLocation> findBy();
 
     Optional<GuideRecommendLocation> findByRecommendId(int recommendId);
-    void deleteByRecommendId(int recommendId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from recommend where recommend_id=:recommendId and guide_id=:guideId", nativeQuery = true)
+    int delRecommendLocation(@Param("recommendId") int recommendId, @Param("guideId") int guideId);
 
     List<GuideRecommendLocation> findByGuide_UserId_Id(String guideId);
 }
