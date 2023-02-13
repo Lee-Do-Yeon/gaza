@@ -317,6 +317,7 @@ public class GuideServiceImpl implements GuideService {
         if (!guide.isPresent()) return 0;
 
         String code = getCode(locations.getCategoryName());//해당 테마의 코드 번호 가져옴
+        log.info(code);
         if (code == null) return 0;
 
         //추천 장소 등록
