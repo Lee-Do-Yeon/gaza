@@ -7,7 +7,7 @@
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
           <div class="section_heading_center">
-            <h2>인기 가이드</h2>
+            <h2>추천 가이드</h2>
           </div>
         </div>
       </div>
@@ -15,7 +15,7 @@
         <div class="col-lg-12">
           <div class="promotional_tour_slider owl-theme owl-carousel dot_style">
             <swiper :slides-per-view="4"  :space-between="20" :pagination="{ clickable: true }">
-              <swiper-slide v-for="guide in state.form.swiperItems" :key="guide.name">
+              <swiper-slide v-for="guide in state.form.swiperItems" :key="guide.guideId">
                 <div class="theme_common_box_two img_hover">
                   <div class="theme_two_box_img">
                     <router-link :to="{
@@ -51,9 +51,7 @@
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/swiper-bundle.css";
 import { reactive, computed, ref, onMounted, watch } from 'vue';
-import { useStore } from 'vuex';
-import router from "@/router";
-import { popularGuide, themaGuide } from '../../../common/api/commonAPI';
+import { themaGuide } from '../../../common/api/commonAPI';
 
 export default {
   name: "PromotionalToursRecommand",
@@ -74,28 +72,16 @@ export default {
 
     const rand_0_10 = Math.floor(Math.random() * 11);
 
-    // const popularGuides = async function () {
-    //   console.log('popularguides');
-    //   const response = await popularGuide()
-    //   state.form.swiperItems = response.data
-    //   console.log(state.form.swiperItems);
-    // }
-
     const themaGuides = async function () {
-      console.log('themaguides');
-      console.log(rand_0_10);
       const searchT = state.themas[Math.floor(Math.random() * 11)]
-      console.log(searchT);
+      // console.log(searchT);
       const response = await themaGuide(searchT)
-      console.log(response.data)
+      // console.log(response.data)
       state.form.swiperItems = response.data
     }
 
     onMounted(() => {
-      console.log('guides mounted')
-      // popularGuides()
       themaGuides()
-      
     })
 
     return { themaGuides, state}
