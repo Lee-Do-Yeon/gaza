@@ -11,11 +11,17 @@
                 >
               </li>
               <li>
+                <router-link to="/guideInfoDelete"
+                  >내 정보 삭제</router-link
+                >
+              </li>
+              <li>
                 <router-link
                   :to="{
                     name: 'guide_schedule',
                   }"
-                  class="active">예약내역 확인</router-link
+                  class="active"
+                  >예약내역 확인</router-link
                 >
               </li>
               <li>
@@ -69,16 +75,15 @@
                           alt="img"
                         />
                       </div>
-                      <div>인원 : {{res.numberOfPeople}}</div>
+                      <div>인원 : {{ res.numberOfPeople }}</div>
                       <div>여행날짜 : {{ getDate(res.travelStartDate) }}</div>
                       <div>
-                        유아 동반 : {{ res.withChildren}} 장애 여부 :
+                        유아 동반 : {{ res.withChildren }} 장애 여부 :
                         {{ res.withDisabled }} 노약자 동반 :
                         {{ res.withElderly }}
                       </div>
                       <div>특이사항 : {{ res.note }}</div>
                       <div class="d-flex justify-content-end">
-
                         <button class="btn btn_theme btn-lg">입장</button>
                       </div>
                     </div>
@@ -99,17 +104,16 @@ const accountStore = "accountStore";
 
 export default {
   name: "GuideSchedule",
-  setup(){
+  setup() {
     const getDate = (date) => {
       const DAT = new Date(date);
       return (
         DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay()
       );
     };
-    return{
-      getDate
-    }
-
+    return {
+      getDate,
+    };
   },
 
   data() {
@@ -120,11 +124,9 @@ export default {
   computed: {
     ...mapState(accountStore, ["userId"]),
   },
-  created(){
-    this.showList(this.userId)
+  created() { 
+    this.showList(this.userId);
   },
-
-
 
   methods: {
     showList(guideId) {

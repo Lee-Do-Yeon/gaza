@@ -26,7 +26,7 @@ import AppMap from "../views/AppMap.vue";
 import AppChat from "../views/AppChat.vue";
 import ChatDetail from "@/components/chat/ChatDetail.vue";
 import ChatEnter from "@/components/chat/ChatEnter.vue";
-
+import GuideInfoDeleteView from "../views/GuideInfoDeleteView.vue"
 import Admin from "../views/AdminView.vue"
 
 // --------------------------
@@ -151,6 +151,11 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: DashboardView
+  },
+  {
+    path: '/guideInfoDelete',
+    name: 'guideInfoDelete',
+    component:GuideInfoDeleteView
   },
 
 

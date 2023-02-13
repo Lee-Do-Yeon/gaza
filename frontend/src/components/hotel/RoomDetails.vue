@@ -6,7 +6,14 @@
           <div class="dashboard_menu_area">
             <ul>
               <li>
-                <router-link to="/room-details" class="active">내 정보 확인 및 수정</router-link>
+                <router-link to="/room-details" class="active"
+                  >내 정보 확인 및 수정</router-link
+                >
+              </li>
+              <li>
+                <router-link to="/guideInfoDelete"
+                  >내 정보 삭제</router-link
+                >
               </li>
               <li>
                 <router-link
@@ -42,7 +49,10 @@
                 <div class="dashboard_common_table">
                   <h3>프로필 업로드</h3>
                   <div class="profile_update_form">
-                    <form id="profile_form_area" v-on:submit.prevent="updateMyPage">
+                    <form
+                      id="profile_form_area"
+                      v-on:submit.prevent="updateMyPage"
+                    >
                       <input
                         type="file"
                         @change="selectFile"
@@ -126,7 +136,10 @@
               <div class="row">
                 <div class="col-lg-4 col-md-6 col-sm-12 col-12">
                   <div class="news_item_boxed">
-                    <form id="profile_form_area" v-on:submit.prevent="locationRegister">
+                    <form
+                      id="profile_form_area"
+                      v-on:submit.prevent="locationRegister"
+                    >
                       <input
                         type="file"
                         @change="getFileName"
@@ -199,7 +212,7 @@
           <br />
           <!--start 상담 불가능 날짜 form -->
           <div class="row d-flex justify-content-start">
-            <div class="col-lg-4 ">
+            <div class="col-lg-4">
               <h5 style="color: #15d4cd">Choose a Date</h5>
               <br />
               <div class="form_search_date">
@@ -207,7 +220,9 @@
                   <div class="Journey_date">
                     <form v-on:submit="register_date">
                       <input type="date" v-model="date_info" />
-                      <button class="btn btn_theme btn_sm me-1 mb-2">submit</button>
+                      <button class="btn btn_theme btn_sm me-1 mb-2">
+                        submit
+                      </button>
                     </form>
                   </div>
                 </div>
@@ -253,7 +268,7 @@ import ThemaBox from "@/components/hotel/guideSettings/ThemaBox";
 
 export default {
   name: "RoomDetails",
-  components:{
+  components: {
     LanguageBox,
     ThemaBox
   },
