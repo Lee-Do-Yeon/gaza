@@ -334,24 +334,34 @@ export default {
             var ps = new kakao.maps.services.Places();
 
             // 키워드로 장소를 검색합니다
+            const keyword = this.guideCountry + " " + this.guideCity + " 관광명소";
             ps.keywordSearch(
-                this.guideCountry + " " + this.guideCity + " 관광명소",
+                keyword,
                 placesSearchCB
             );
 
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
             function placesSearchCB(data, status, pagination) {
                 if (status === kakao.maps.services.Status.OK) {
-                    if (data.length < 300) {
+                    for (var i = 0; i < data.length; i++) {
+                        displayMarker(data[i]);
+                    }
+                    popular_list_index += data.leghth;
+
+                    if(pagination.hasNextPage){
+                        pagination.nextPage();
                         for (var i = 0; i < data.length; i++) {
                             displayMarker(data[i]);
                         }
                         popular_list_index += data.leghth;
-                    } else {
-                        for (var i = 0; i < 300; i++) {
+                    }
+
+                    if(pagination.hasNextPage){
+                        pagination.nextPage();
+                        for (var i = 0; i < data.length; i++) {
                             displayMarker(data[i]);
                         }
-                        popular_list_index += 300;
+                        popular_list_index += data.leghth;
                     }
                 }
             }
