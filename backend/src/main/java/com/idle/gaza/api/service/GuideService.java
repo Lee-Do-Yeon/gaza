@@ -7,6 +7,7 @@ import com.idle.gaza.api.request.MyPageRequest;
 import com.idle.gaza.api.response.GuideResponse;
 import com.idle.gaza.api.response.LanguageResponse;
 import com.idle.gaza.api.response.LocationResponse;
+import com.idle.gaza.api.response.ThemaResponse;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -43,8 +44,11 @@ public interface GuideService {
     List<LanguageResponse> getLanguage(String loginId);
 
     //여행 테마 관리 기능
-    int tourThemaRegister(int guideId, String themaCode);
-    int tourThemaDelete(int guideId, int themaId);
+    int themaRegister(int guideId, String themaCode);
+    int themaDelete(int guideId, int themaId);
+    List<ThemaResponse> themaSelect(String loginId);
+
+
 
     //가이드 등록
     int guideRegister(GuideRequest guide);

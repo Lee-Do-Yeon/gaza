@@ -3,7 +3,7 @@
     <!-- Common Banner Area -->
     <!-- <NBanner /> -->
 
-    <reviewDashboard />
+    <ReviewDashboard />
 
 
 
@@ -12,12 +12,12 @@
 
 
 <script>
-import reviewDashboard from '@/components/dashboard/reviewDashboard.vue'
+import ReviewDashboard from '@/components/dashboard/ReviewDashboard.vue'
 
 export default {
     name: "reviewView",
     components: {
-        reviewDashboard
+        ReviewDashboard
     }
 };
 </script>

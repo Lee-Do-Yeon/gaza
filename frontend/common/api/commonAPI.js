@@ -47,13 +47,13 @@ const popularGuide = () => api.get("/api/guides/popular")
 const themaGuide = (payload) => api.get("api/guides/search/thema/", { params: { themaName : payload } })
 
 // 유저 예약내역 조회
-const reviewss = (payload) => api.get('/api/reviews/user/ssafy',payload);
+const reviewss = (userId) => api.get(`/api/reviews/user/${userId}`);
 
 //유저 정보수정
 const updateUser = (payload, accessToken) => api.put('/api/users/', payload, {headers: {Authorization: accessToken, "Content-Type": "multipart/form-data"}});
 
 //리뷰 등록
-const uploadReview =(payload) => api.post('/api/reviews',payload)
+const uploadReview =(payload) => api.post('/api/reviews', { params: { reviewInfo: payload }})
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
