@@ -160,6 +160,7 @@ export default {
         console.log(this.isGuide);
         console.log(this.roomId);
         this.connect();
+        this.getCity();
         this.getRecommend();
         this.joinSession();
     },
@@ -537,6 +538,17 @@ export default {
                     this.recommend_location_list = res.data;
                 });
             console.log("추천장소는 "+this.recommend_location_list);
+        },
+        // [Function] 현재 가이드의 국가와 도시를 가져오는 함수.
+        async getCity() {
+            console.log("getCity("+this.guideId+") call.");
+            await axios
+                .get(APPLICATION_SERVER_URL + `/guides/${this.guideId}`)
+                .then((res) => {
+                    this.guideCity = res.data.city;
+                    this.guideCountry = res.data.country;
+                });
+            console.log("현재 가이드의 당담 도시는 "+this.guideCountry+" "+this.guideCity);
         },
         // [Function] 좌표를 이용해서 법정동 주소를 얻는 함수.
         getAddress(lat, lng) {
