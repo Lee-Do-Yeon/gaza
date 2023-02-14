@@ -44,9 +44,8 @@ public class GuideController {
     @Autowired
     private TokenUtil tokenUtil;
 
-    private final String locationPath = "/" + "guide" + "/" +  "location" + "/";//추천장소 파일 업로드 경로
+    private final String locationPath = "/" + "guide" + "/" + "location" + "/";//추천장소 파일 업로드 경로
     private final String myPagePath = "/" + "guide" + "/" + "mypage" + "/";//가이드 마이 페이지 파일 업로드 경로
-
 
 
     //가이드 등록
@@ -67,7 +66,7 @@ public class GuideController {
             log.info("file name = " + uploadFileName);
 
             try {
-                s3Uploader.upload(multipartFile, uploadPath+ uploadFileName);
+                s3Uploader.upload(multipartFile, uploadPath + uploadFileName);
                 guide.setPicture(fileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -82,8 +81,6 @@ public class GuideController {
     }
 
 
-
-
     ///////////////////////마이 페이지///////////////////////////////
 
     //마이페이지 조회
@@ -94,24 +91,24 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> myPageShow(@RequestParam String userId){
+    public ResponseEntity<?> myPageShow(@RequestParam String userId) {
         GuideResponse response = guideService.getMyPage(userId);
 
-        if(response == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (response == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         log.info(response.toString());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //마이페이지 수정
-    @PutMapping(value="/mypage",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/mypage", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "마이페이지 수정", notes = "가이드 마이페이지 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> myPageModify(@RequestPart MyPageRequest guide, @RequestPart(value = "picture", required = false) MultipartFile multipartFile){
+    public ResponseEntity<?> myPageModify(@RequestPart MyPageRequest guide, @RequestPart(value = "picture", required = false) MultipartFile multipartFile) {
 
         log.info("guide " + guide.toString());
 
@@ -125,11 +122,11 @@ public class GuideController {
             try {
                 s3Uploader.deleteS3(originPictureName);
                 log.info("delete file");
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        
+
         //파일 업로드
         String uploadPath = rootPath + myPagePath;
         String fileName = multipartFile.getOriginalFilename();
@@ -146,11 +143,10 @@ public class GuideController {
 
         int result = guideService.setMyPage(guide);
 
-        if(result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 
     //////////////////////가이드 조회///////////////////////////
@@ -162,10 +158,10 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> search(@RequestParam String searchName){
+    public ResponseEntity<?> search(@RequestParam String searchName) {
         List<GuideResponse> searchList = guideService.guideSearchBar(searchName);
 
-        if(searchList.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (searchList.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         log.info("search size = " + searchList.size());
         return new ResponseEntity<>(searchList, HttpStatus.OK);
     }
@@ -179,9 +175,9 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> guideSearchByThema(@RequestParam String themaName){
+    public ResponseEntity<?> guideSearchByThema(@RequestParam String themaName) {
         List<GuideResponse> response = guideService.guideSearchByThema(themaName);
-        if(response.size() == 0 ) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (response.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -237,8 +233,6 @@ public class GuideController {
     }
 
 
-
-
     ////////////////////////추천 장소/////////////////////////////
 
     @PostMapping(value = "/location", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -285,26 +279,26 @@ public class GuideController {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Not Found")
     })
-    public ResponseEntity<?> locationDelete(@RequestBody Map<String, String> map) {
-        String loginId = map.get("loginId");
-        int recommendId = Integer.parseInt(map.get("recommendId"));
+    public ResponseEntity<?> locationDelete(@RequestParam("loginId") String loginId, @RequestParam("recommendId") String recommendId) {
+//        String loginId = map.get("loginId");
+        int id = Integer.parseInt(recommendId);
 
         //파일이 존재한다면 기존 경로에서 파일 삭제
-        String existFile = guideService.findExistFile(recommendId);
+        String existFile = guideService.findExistFile(id);
 
         if (existFile != null) {
             String existPath = new String(rootPath + locationPath + existFile);
             log.info("exist file path = " + existPath);
 
-            try{
+            try {
                 s3Uploader.deleteS3(existPath);
                 log.info("delete file");
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        guideService.locationDelete(loginId, recommendId);
+        guideService.locationDelete(loginId, id);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -320,7 +314,7 @@ public class GuideController {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Not Found")
     })
-    public ResponseEntity<?> locationUpdate(@RequestPart LocationPostRequest location, @RequestPart(name="uploadFile", required = false) MultipartFile multipartFile) {
+    public ResponseEntity<?> locationUpdate(@RequestPart LocationPostRequest location, @RequestPart(name = "uploadFile", required = false) MultipartFile multipartFile) {
 
         //기존 경로에서 사진 삭제
         String existFile = guideService.findExistFile(location.getRecommendId());
@@ -331,11 +325,11 @@ public class GuideController {
             try {
                 s3Uploader.deleteS3(originalFile);
                 log.info("delete file");
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        
+
         //수정한 사진 업로드
         if (!multipartFile.isEmpty()) {
             String uploadPath = rootPath + locationPath;
@@ -345,7 +339,7 @@ public class GuideController {
             log.info("file name = " + uploadFileName);
 
             try {
-                s3Uploader.upload(multipartFile, uploadPath+ uploadFileName);
+                s3Uploader.upload(multipartFile, uploadPath + uploadFileName);
                 location.setPicture(uploadFileName);
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -371,8 +365,6 @@ public class GuideController {
         List<LocationResponse> list = guideService.locationSearch(guideId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
-
-
 
 
     /////////////////////여행 테마 기능///////////////////////////
@@ -419,10 +411,10 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> tourThemaShow(@RequestParam @ApiParam(value = "로그인 아이디", required = true) String loginId){
+    public ResponseEntity<?> tourThemaShow(@RequestParam @ApiParam(value = "로그인 아이디", required = true) String loginId) {
         List<ThemaResponse> results = guideService.themaSelect(loginId);
 
-        if(results == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (results == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
@@ -514,7 +506,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> languageRegister(@RequestBody LanguageRequest request){
+    public ResponseEntity<?> languageRegister(@RequestBody LanguageRequest request) {
 
         int result = guideService.languageRegister(request);
 
@@ -530,7 +522,7 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> languageDelete(@RequestParam String userId, @RequestParam int langId){
+    public ResponseEntity<?> languageDelete(@RequestParam String userId, @RequestParam int langId) {
         int result = guideService.languageDelete(userId, langId);
 
         if (result == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -545,11 +537,11 @@ public class GuideController {
             @ApiResponse(code = 500, message = "서버 오류"),
             @ApiResponse(code = 204, message = "사용자 없음")
     })
-    public ResponseEntity<?> getLanaguage(@RequestParam String userId){
+    public ResponseEntity<?> getLanaguage(@RequestParam String userId) {
         List<LanguageResponse> lang = guideService.getLanguage(userId);
-        if(lang == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (lang == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(lang, HttpStatus.OK);
     }
-    
-    
+
+
 }
