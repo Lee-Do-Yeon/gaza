@@ -51,6 +51,7 @@ export default {
 
         const allow = function (id) {
             console.log("신청 승인");
+            console.log(id);
             store.dispatch('adminStore/allowGuideRequest', id);
         }
 

@@ -30,18 +30,18 @@ const actions = {
         console.log(error);
     }
   },
-  allowGuideRequest: async ({id}) => {
+  allowGuideRequest: async ({}, id) => {
     try {
-        const response = await allowGuideRequest(id);
+        const response = await allowGuideRequest({"id" : id});
 
         console.log('가이드 신청 승인');
     } catch (error) {
         console.log(error);
     }
   },
-  rejectGuideRequest: async ({id}) => {
+  rejectGuideRequest: async ({}, id) => {
     try {
-        const response = await rejectGuideRequest(id);
+        const response = await rejectGuideRequest({"id" : id});
         
         console.log('가이드 신청 거절');
     } catch (error) {
