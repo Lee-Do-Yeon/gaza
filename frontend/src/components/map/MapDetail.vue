@@ -268,7 +268,7 @@ export default {
                 base.sendPoint("CLICK");
             });
             // End of 클릭했을 때 마커 세팅.
-
+            
             // Start of 가이드의 추천 장소 출력.
             this.recommend_location_list.forEach(function (location) {
                 geocoder.addressSearch(
@@ -535,6 +535,7 @@ export default {
                 .then((res) => {
                     this.recommend_location_list = res.data;
                 });
+            console.log("추천장소는 "+this.recommend_location_list);
         },
         // [Function] 좌표를 이용해서 법정동 주소를 얻는 함수.
         getAddress(lat, lng) {
