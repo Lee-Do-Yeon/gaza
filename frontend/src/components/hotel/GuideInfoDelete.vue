@@ -46,12 +46,12 @@
               <div
                 class="col-lg-4 col-md-6 col-sm-12 col-12"
                 v-for="loc in recommendLoc"
-                :key="loc.name"
+                :key="loc.locationId"
               >
                 <div class="news_item_boxed">
                   <form
                     id="profile_form_area"
-                    v-on:submit.prevent="locationdelete"
+                    v-on:submit.prevent="locationdelete(loc.locationId)"
                   >
                     <div class="news_item_img">
                       <img src="../../assets/img/news/news-1.png" alt="img" />
@@ -64,7 +64,7 @@
 
                       <!--end 추천장소 -->
                     </div>
-                    <button class="btn btn_theme btn_sm">Delete</button>
+                    <button class="btn btn_theme btn_sm" >Delete</button>
                   </form>
                 </div>
               </div>
@@ -102,13 +102,9 @@ export default {
     });
 
     //가이드 추천 장소 삭제
-    const locationdelete = function () {
+    const locationdelete = function (recommendId) {
       const loginId = store.getters["accountStore/getUserId"];
-
-      const recommendId = recommendLoc.value[0].locationId;
-
       locdel(loginId, recommendId);
-
     };
 
     return {
