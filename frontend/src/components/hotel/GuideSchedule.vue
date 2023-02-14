@@ -150,17 +150,13 @@ export default {
                 });
             // 세션 아이디 저장.
             await axios
-                .post("/map/session", {
-                    reservationId: reservationId + "",
-                    sessionId: base.mySessionId,
-                })
-                .then((data) => {
-                    console.log(data);
-                    console.log("예약 " + reservationId + " - " + base.mySessionId + " 저장");
-                })
-                .catch(() => {
-                    alert("세션 저장에 실패하였습니다.");
-                });
+            .post("/books/consulting/create/"+ this.reservationId, base.mySessionId)
+            .then((data) => {
+              console.log("예약 테이블에 세션 아이디 추가. " + base.mySessionId);
+            })
+            .catch(() => {
+              alert("예약 데이터 업데이트에 실패하였습니다.");
+            });
         },
         async createConsulting(reservationId) {
             console.log("아이디: " + reservationId);

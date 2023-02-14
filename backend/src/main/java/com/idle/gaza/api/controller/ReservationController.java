@@ -96,7 +96,18 @@ public class ReservationController {
     @PatchMapping("/consulting/end/{reservationId}")
     @ApiOperation(value = "컨설팅 끝", notes = "상태를 완료로 업그레이드한다.(RE01)")
     public ResponseEntity<?> endConsulting(@RequestParam("reservationId") @ApiParam(value = "예약 PK", required = true) int reservationId){
+        try{
         reservationService.endConsulting(reservationId);
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(BaseResponseBody.of(500, "Fail"));
+        }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
+    @GetMapping("/consulting/{reservationId}")
+    @ApiOperation(value = "컨설팅 세션아이디 가져오기", notes = "관광객이 입장할 수 있도록 세션 아이디를 조회한다.")
+    public String getConsulting(@RequestParam("reservationId") @ApiParam(value = "예약 PK", required = true) int reservationId){
+        String sessionId = reservationService.getConsulting(reservationId);
+        return sessionId;
     }
 }
