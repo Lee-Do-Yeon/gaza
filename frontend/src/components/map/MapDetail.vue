@@ -97,7 +97,8 @@ import ListItem from "@/components/map/list/ListItem";
 import axios from "axios";
 import UserVideo from "@/openvidu/UserVideo";
 import { OpenVidu } from "openvidu-browser";
-
+import { mapState } from "vuex";
+const accountStore = "accountStore";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
 // const APPLICATION_SERVER_URL = "http://localhost:8080";
@@ -114,6 +115,7 @@ export default {
             userName: this.$route.params.userName,
             reservationId: this.$route.params.reservationId,
             guideId: this.$route.params.guideId,
+            guidePk: this.$route.params.guidePk,
             // --------채팅 데이터-----------
             msg: "",
             messages: [],
@@ -152,9 +154,14 @@ export default {
             popular_list: [],
         };
     },
+    computed: {
+        ...mapState(accountStore, ["isGuide"]),
+    },
     created() {
+        console.log(this.isGuide);
         console.log(this.roomId);
         this.connect();
+        this.getCity();
         this.getRecommend();
         this.joinSession();
     },
@@ -264,7 +271,7 @@ export default {
                 base.sendPoint("CLICK");
             });
             // End of 클릭했을 때 마커 세팅.
-
+            
             // Start of 가이드의 추천 장소 출력.
             this.recommend_location_list.forEach(function (location) {
                 geocoder.addressSearch(
@@ -531,6 +538,18 @@ export default {
                 .then((res) => {
                     this.recommend_location_list = res.data;
                 });
+            console.log("추천장소는 "+this.recommend_location_list);
+        },
+        // [Function] 현재 가이드의 국가와 도시를 가져오는 함수.
+        async getCity() {
+            console.log("getCity("+this.guidePk+") call.");
+            await axios
+                .get(APPLICATION_SERVER_URL + `/guides/${this.guidePk}`)
+                .then((res) => {
+                    this.guideCity = res.data.city;
+                    this.guideCountry = res.data.country;
+                });
+            console.log("현재 가이드의 당담 도시는 "+this.guideCountry+" "+this.guideCity);
         },
         // [Function] 좌표를 이용해서 법정동 주소를 얻는 함수.
         getAddress(lat, lng) {
@@ -648,8 +667,8 @@ export default {
             this.setMarker(route.latitude, route.longitude, saveMarkerImage);
         },
         // [Function] 현재의 travel_route 리스트를 DB에 저장하는 함수.
-        insertToDB() {
-            axios
+        async insertToDB() {
+            await axios
                 .post(
                     APPLICATION_SERVER_URL + `/routes/${this.reservationId}`,
                     JSON.stringify(this.travel_route)
@@ -790,6 +809,11 @@ export default {
             this.OpenVidu.publisher = undefined;
             this.OpenVidu.subscribers = [];
             this.OpenVidu.OV = undefined;
+
+            if(this.isGuide == "US1"){
+                // 저장 후 종료.
+                this.insertToDB();
+            }
 
             // Remove beforeunload listener
             window.removeEventListener("beforeunload", this.leaveSession);

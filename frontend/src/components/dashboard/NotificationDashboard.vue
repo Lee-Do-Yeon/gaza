@@ -31,65 +31,65 @@
           </div>
         </div>
 
-        <div class="col-lg-8">
-          <div class="dashboard_common_table">
-            <div class="notification_top_heading">
-              <h3>예약 내역</h3>
-            </div>
-            <div class="notification_wrapper">
-              <div class="accordion" id="accordionExample">
-                <div
-                  v-for="(res, index) in reservation"
-                  :key="res.id"
-                  class="accordion-item"
-                >
-                  <h2 class="accordion-header" :id="'heading' + index">
-                    <button
-                      class="accordion-button active d-flex justify-content-end"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      :data-bs-target="'#collapse' + index"
-                      aria-expanded="true"
-                      :aria-controls="'collapse' + index"
-                    >
-                      <div class="me-2">
-                        {{ res.reservationId }}
-                      </div>
-                      <div class="me-2">
-                        {{ res.guideName }}
-                      </div>
-                      <div>Date : {{ getDate(res.travelStartDate) }}</div>
-                    </button>
-                  </h2>
-                  <div
-                    :id="'collapse' + index"
-                    class="accordion-collapse collapse"
-                    :aria-labelledby="'heading' + index"
-                    data-bs-parent="#accordionExample"
-                  >
-                    <div class="accordion-body">
-                      <div>
-                        <img
-                          src="../../assets/img/common/dashboard-user.png"
-                          alt="img"
-                        />
-                      </div>
-                      <div>가이드 : {{ res.guideName }}</div>
-                      <div>인원 : {{ res.numberOfPeople }}</div>
-                      <div>여행날짜 : {{ getDate(res.travelStartDate) }}</div>
-                      <div>
-                        유아 동반 : {{ res.withChildren }} 장애 여부 :
-                        {{ res.withDisabled }} 노약자 동반 :
-                        {{ res.withElderly }}
-                      </div>
-                      <div>특이사항 : {{ res.note }}</div>
-                      <div class="d-flex justify-content-end">
-                        <button
-                          class="me-2 btn btn_theme btn-lg"
-                          @click="download(res.reservationId)"
-                        >
-                          일정확인
-                        </button>
+                <div class="col-lg-8">
+                    <div class="dashboard_common_table">
+                        <div class="notification_top_heading">
+                            <h3>예약 내역</h3>
+                        </div>
+                        <div class="notification_wrapper">
+                            <div class="accordion" id="accordionExample">
+                                <div
+                                    v-for="(res, index) in reservation"
+                                    :key="res.id"
+                                    class="accordion-item"
+                                >
+                                    <h2 class="accordion-header" :id="'heading' + index">
+                                        <button
+                                            class="accordion-button active d-flex justify-content-end"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            :data-bs-target="'#collapse' + index"
+                                            aria-expanded="true"
+                                            :aria-controls="'collapse' + index"
+                                        >
+                                            <div class="me-2">
+                                                {{ res.reservationId }}
+                                            </div>
+                                            <div class="me-2">
+                                                {{ res.guideName }}
+                                            </div>
+                                            <div>Date : {{ getDate(res.travelStartDate) }}</div>
+                                        </button>
+                                    </h2>
+                                    <div
+                                        :id="'collapse' + index"
+                                        class="accordion-collapse collapse"
+                                        :aria-labelledby="'heading' + index"
+                                        data-bs-parent="#accordionExample"
+                                    >
+                                        <div class="accordion-body">
+                                            <div>
+                                                <img
+                                                    src="../../assets/img/common/dashboard-user.png"
+                                                    alt="img"
+                                                />
+                                            </div>
+                                            <div>가이드 : {{ res.guideName }}</div>
+                                            <div>인원 : {{ res.numberOfPeople }}</div>
+                                            <div>여행날짜 : {{ getDate(res.travelStartDate) }}</div>
+                                            <div>
+                                                유아 동반 : {{ res.withChildren }} 장애 여부 :
+                                                {{ res.withDisabled }} 노약자 동반 :
+                                                {{ res.withElderly }}
+                                            </div>
+                                            <div>특이사항 : {{ res.note }}</div>
+                                            <div class="d-flex justify-content-end">
+                                                <button
+                                                    class="me-2 btn btn_theme btn-lg"
+                                                    @click="download(res.reservationId)"
+                                                >
+                                                    일정확인
+                                                </button>
 
                         <button
                           @click="movereview(res.reservationId, res.guideName)"
@@ -99,23 +99,23 @@
                           후기작성
                         </button>
 
-                        <button
-                          class="btn btn_theme btn-lg"
-                          @click="enterConsulting(res.reservationId)"
-                        >
-                          입장
-                        </button>
-                      </div>
+                                                <button
+                                                    class="btn btn_theme btn-lg"
+                                                    @click="enterConsulting(res.reservationId)"
+                                                >
+                                                    입장
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 </template>
 <script>
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
@@ -166,14 +166,12 @@ export default {
       getreservation();
     });
 
-    const getDate = (date) => {
-      const DAT = new Date(date);
-      return (
-        DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay()
-      );
-    };
-    const store = useStore();
-    const router = useRouter();
+        const getDate = (date) => {
+            const DAT = new Date(date);
+            return DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay();
+        };
+        const store = useStore();
+        const router = useRouter();
 
     const loginID = store.getters["accountStore/getUserId"];
 
@@ -191,13 +189,13 @@ export default {
     const getreservation = async () => {
       const loginID = store.getters["accountStore/getUserId"];
 
-      try {
-        const res = await reser(loginID);
-        reservation.value = res.data;
-      } catch (err) {
-        console.log(err);
-      }
-    };
+            try {
+                const res = await reser(loginID);
+                reservation.value = res.data;
+            } catch (err) {
+                console.log(err);
+            }
+        };
 
     onUpdated(() => {
       getreservation();
@@ -217,41 +215,41 @@ export default {
         fileLink.setAttribute("download", "여행일정.xlsx");
         document.body.appendChild(fileLink);
 
-        fileLink.click();
-      });
-    };
+                fileLink.click();
+            });
+        };
 
-    const enterConsulting = async function (reservationId) {
-      const roomId = "";
-      api({
-        url: `/map/session?reservationId=${reservationId}`,
-        method: "GET",
-      }).then((response) => {
-        roomId = response.data;
-      });
+        const enterConsulting = async function (reservationId) {
+            const roomId = "";
+            api({
+                url: `/map/session?reservationId=${reservationId}`,
+                method: "GET",
+            }).then((response) => {
+                roomId = response.data;
+            });
 
-      this.$router.push({
-        name: "mapdetail",
-        params: {
-          roomId: roomId,
-          reservationId: reservationId,
-          guideId: loginID,
-          userName: loginID,
-        },
-      });
-    };
+            this.$router.push({
+                name: "mapdetail",
+                params: {
+                    roomId: roomId,
+                    reservationId: reservationId,
+                    guideId: loginID,
+                    userName: loginID,
+                },
+            });
+        };
 
-    return {
-      state,
-      reservation,
-      getreservation,
-      getDate,
-      router,
-      movereview,
-      download,
-      loginID,
-      enterConsulting,
-    };
-  },
+        return {
+            state,
+            reservation,
+            getreservation,
+            getDate,
+            router,
+            movereview,
+            download,
+            loginID,
+            enterConsulting,
+        };
+    },
 };
 </script>
