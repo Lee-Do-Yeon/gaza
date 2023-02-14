@@ -151,11 +151,10 @@ export default {
             // 세션 아이디 저장.
             await axios
                 .post("/map/session", {
-                    reservationId: reservationId + "",
-                    sessionId: base.mySessionId,
+                    "reservationId": reservationId+"",
+                    "sessionId": base.mySessionId
                 })
                 .then((data) => {
-                    console.log(data);
                     console.log("예약 " + reservationId + " - " + base.mySessionId + " 저장");
                 })
                 .catch(() => {
