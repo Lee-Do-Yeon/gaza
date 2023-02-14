@@ -11,7 +11,7 @@
                             <form @submit.prevent="Signin" id="main_author_form" class="row">
                                 <div class="form-group">
                                     <input type="text" :class="{ 'formerror': idc }" class="form-control"  placeholder="아이디를 입력해주세요." minlength="4" v-model="state.form.id" required/>
-                                    <button type="button" @click="duplicated">중복확인</button>
+                                    <button type="button" @keyup="idCheck" @click="duplicated">중복확인</button>
                                 </div>
                                 <div class="form-group">
                                     <label for="formFile" class="form-label">프로필 사진 업로드</label>
@@ -191,14 +191,18 @@ export default {
             state.form.phone_number=''
         })
 
+        const idCheck = function() {
+            state.duplicated = false;
+        }
+
         const duplicated = async function() {
             if(state.form.id === ''){
                 state.duplicated = false;
                 alert("아이디를 확인해주세요");
             } else {
-                const res = checkDuplicated(state.form.id);
+                const res = await checkDuplicated(state.form.id);
 
-                const user = res.data;
+                const user = res.data.result;
 
                 console.log(user);
 
@@ -228,7 +232,7 @@ export default {
                 passwordc.value = false
             }
 
-            if (!passwordc.value && !emailc.value && state.dublicated) {
+            if (!passwordc.value && !emailc.value && state.duplicated) {
                 try {
                     const formData = new FormData()
                     
@@ -280,7 +284,7 @@ export default {
             //Upload to server
         }
 
-        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, upload, passwordcheck, duplicated}
+        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, idCheck, upload, passwordcheck, duplicated}
      },
     
 };
