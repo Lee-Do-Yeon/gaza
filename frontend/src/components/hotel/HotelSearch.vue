@@ -6,17 +6,16 @@
           <div class="tour_details_leftside_wrapper">
             <div class="tour_details_heading_wrapper">
               <div>
-                <h3>
-                  <img src="../../assets/img/banner/guide_profile.jpg" />
-                </h3>
               </div>
             </div>
             <hr />
             <form class="d-flex">
               <img
                 style="border-radius: 50%"
-                src="../../assets/img/common/dashboard-user.png"
+                :src="baseURL+guideInfo.picture"
                 alt="img"
+                height="100"
+                width="100"
               />
               <div class="ms-3">
                 <h3>{{ guideInfo.name }}</h3>
@@ -47,7 +46,7 @@
                 >
                   <div class="news_item_boxed">
                     <div class="news_item_img">
-                      <img src="../../assets/img/news/news-1.png" alt="img" />
+                      <img :src="baseURLregi+loc.picture" alt="img" height="280" width="450"/>
                     </div>
                     <div class="news_item_content">
                       <h3>
@@ -136,6 +135,8 @@ import axios from "@/api/http";
 
 export default {
   setup() {
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
+    const baseURLregi = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/location/";
     const route = useRoute();
     const review = ref([]);
     const numberofreviews = ref(0);
@@ -237,7 +238,9 @@ export default {
       recommendInfo,
       themaInfo,
       guideReview,
-      isReview
+      isReview,
+      baseURL,
+      baseURLregi
     };
   },
 };

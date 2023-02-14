@@ -67,7 +67,7 @@
                                         <div class="accordion-body">
                                             <div>
                                                 <img
-                                                    src="../../assets/img/common/dashboard-user.png"
+                                                    :src="baseURL+res.picture"
                                                     alt="img"
                                                 />
                                             </div>
@@ -106,12 +106,14 @@ const accountStore = "accountStore";
 export default {
     name: "GuideSchedule",
     setup() {
+        const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
         const getDate = (date) => {
             const DAT = new Date(date);
             return DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay();
         };
         return {
             getDate,
+            baseURL
         };
     },
 

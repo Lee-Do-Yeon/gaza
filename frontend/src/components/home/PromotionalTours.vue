@@ -22,14 +22,13 @@
                       name: 'hotel-details',
                       params: { guideId: guide.guideId },
                   }"><img :src="baseURL+guide.picture" alt="img"></router-link>
-                    <p><i class="fas fa-map-marker-alt"></i>{{ guide.country }}, {{ guide.city }}</p>
                   </div>
                   <div class="theme_two_box_content">
                     <h4><router-link :to="{
                         name: 'hotel-details',
                         params: { guideId: guide.guideId  },
                       }"
-                      >{{ guide.name }}</router-link></h4>
+                      >{{ guide.name }} <p><i class="fas fa-map-marker-alt"></i>{{ guide.country }}, {{ guide.city }}</p></router-link></h4>
                     <p><span class="review_rating">
                         <span v-for="lang in guide.language" :key="lang">#{{ lang }}</span>
                     </span> <span class="review_count">
