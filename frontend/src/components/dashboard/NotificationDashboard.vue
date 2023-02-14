@@ -216,25 +216,25 @@ export default {
                 fileLink.click();
             });
         };
-
+        const roomId = ref();
         const enterConsulting = async function (reservationId) {
-            const roomId = "";
-            api({
+            await api({
                 url: `/books/consulting/`+"?reservationId="+ reservationId,
                 method: "GET",
             }).then((response) => {
-                roomId = response.data;
+                roomId.value = response.data;
             });
-
-            this.$router.push({
+            console.log("룸아이디 "+roomId.value);
+            const routeData = router.push({
                 name: "mapdetail",
                 params: {
-                    roomId: roomId,
+                    roomId: roomId.value,
                     reservationId: reservationId,
                     guideId: loginID,
                     userName: loginID,
                 },
             });
+            window.open(routeData.href, "_blank");
         };
 
         return {
@@ -247,6 +247,7 @@ export default {
             download,
             loginID,
             enterConsulting,
+            roomId
         };
     },
 };
