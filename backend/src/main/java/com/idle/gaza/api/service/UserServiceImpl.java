@@ -115,9 +115,12 @@ public class UserServiceImpl implements UserService{
 
         log.debug("-------------------- update Info + " + userUpdateRequest.getName() + "    " + userUpdateRequest.getPicture());
 
+        if(userUpdateRequest.getPicture() != null) {
+            updateUser.setPicture(userUpdateRequest.getPicture());
+        }
+
         updateUser.setName(userUpdateRequest.getName());
         updateUser.setPhone_number(userUpdateRequest.getPhone_number());
-        updateUser.setPicture(userUpdateRequest.getPicture());
         updateUser.setEmail(userUpdateRequest.getEmail());
         updateUser.setEmail_domain(userUpdateRequest.getEmail_domain());
 
