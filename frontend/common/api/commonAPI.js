@@ -33,10 +33,10 @@ const changePassword = (payload, accessToken) => {console.log(payload); api.put(
 const requestGuideRegisterList = (payload) => api.get("/api/users/guide", payload);
 
 // 가이드 신청 승인
-const allowGuideRequest = (payload) => api.put("/api/admin/guide/success", payload);
+const allowGuideRequest = (payload) => api.put("/api/admin/guide/success", payload, {headers: {"Content-Type": 'application/json'}});
 
 // 가이드 신청 거부
-const rejectGuideRequest = (payload) => api.put("/api/admin/guide/failure", payload);
+const rejectGuideRequest = (payload) => api.put("/api/admin/guide/failure", payload, {headers: {"Content-Type": 'application/json'}});
 
 // 예약내역조회 Notification
 const reser = userid => api.get(`/api/books/user/${userid}`);
