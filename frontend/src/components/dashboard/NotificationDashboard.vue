@@ -225,7 +225,7 @@ export default {
                 roomId.value = response.data;
             });
             console.log("룸아이디 "+roomId.value);
-            const routeData = router.push({
+            const routeData = router.resolve({
                 name: "mapdetail",
                 params: {
                     roomId: roomId.value,
