@@ -231,7 +231,7 @@ const routes = [
         component: MapTest,
       },
       {
-        path: "detail/:roomId/:reservationId/:guideId/:userName",
+        path: "detail/:roomId/:reservationId/:guideId/:userName/:guidePk",
         name: "mapdetail",
         component: MapDetail,
       },
