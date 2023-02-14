@@ -78,7 +78,7 @@
 <script>
 import axios from "@/api/http";
 import { useStore } from "vuex";
-import { ref,onMounted } from "vue";
+import { ref, onMounted, onUpdated } from "vue";
 import { locdel } from "../../../common/api/commonAPI.js";
 import { LanguageBox } from "@/components/hotel/guideSettings/LanguageBox";
 export default {
@@ -97,20 +97,19 @@ export default {
     onMounted(() => {
       getvalue();
     });
+    onUpdated(() => {
+      getvalue();
+    });
 
     //가이드 추천 장소 삭제
     const locationdelete = function () {
       const loginId = store.getters["accountStore/getUserId"];
 
-      const recommendId= recommendLoc.value[0].locationId;
+      const recommendId = recommendLoc.value[0].locationId;
 
-      
-      locdel(JSON.stringify(loginId),JSON.stringify(recommendId));
+      locdel(loginId, recommendId);
 
-
-      
     };
-
 
     return {
       recommendLoc,
