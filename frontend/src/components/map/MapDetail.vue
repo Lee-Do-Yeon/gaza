@@ -556,7 +556,7 @@ export default {
                         console.log("찍은 주소 이름은 : " + data[0].place_name);
                         resolve(data[0].place_name);
                     } else {
-                        reject(status);
+                        resolve(address);
                     }
                 });
             });
