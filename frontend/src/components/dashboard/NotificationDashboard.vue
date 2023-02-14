@@ -237,7 +237,7 @@ export default {
                     roomId: roomId.value,
                     reservationId: reservationId,
                     guideId: guideId,
-                    guideId: guidePk,
+                    guidePk: guidePk,
                     userName: loginID,
                 },
             });
