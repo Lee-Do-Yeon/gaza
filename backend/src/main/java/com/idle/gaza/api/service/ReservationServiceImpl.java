@@ -85,6 +85,7 @@ public class ReservationServiceImpl implements ReservationService {
         for(int i=0; i<reservations.size(); i++){
             Reservation reservation = reservations.get(i);
             ReservationResponse res = new ReservationResponse(
+                    reservation.getGuideId().getGuideId(),
                     reservation.getUserId().getName(),
                     reservation.getGuideId().getPicture(),
                     reservation.getReservationId(),
@@ -112,6 +113,7 @@ public class ReservationServiceImpl implements ReservationService {
         for(int i=0; i<reservations.size(); i++){
             Reservation reservation = reservations.get(i);
             ReservationResponse res = new ReservationResponse(
+                    reservation.getGuideId().getGuideId(),
                     reservation.getUserId().getName(),
                     reservation.getGuideId().getPicture(),
                     reservation.getReservationId(),
@@ -173,6 +175,17 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.setStateCode(status);
             reservationRepository.save(reservation);
         }
+    }
+
+    @Override
+    public String getConsulting(int reservationId) {
+        String sessionId = null;
+        Optional<Reservation> oReservation = reservationRepository.findById(reservationId);
+        if(oReservation.isPresent()) {
+            Reservation reservation = oReservation.get();
+            sessionId = reservation.getSessionId();
+        }
+        return sessionId;
     }
 
 }

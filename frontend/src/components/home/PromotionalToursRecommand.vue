@@ -21,7 +21,7 @@
                     <router-link :to="{
                       name: 'hotel-details',
                       params: { guideId: guide.guideId },
-                  }"><img src="../../assets/img/tab-img/hotel1.png" alt="img"></router-link>
+                  }"><img :src="baseURL+guide.picture" alt="img"></router-link>
                     <p><i class="fas fa-map-marker-alt"></i>{{ guide.country }}, {{ guide.city }}</p>
                   </div>
                   <div class="theme_two_box_content">
@@ -80,11 +80,13 @@ export default {
       state.form.swiperItems = response.data
     }
 
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
+    
     onMounted(() => {
       themaGuides()
     })
 
-    return { themaGuides, state}
+    return { themaGuides, state, baseURL}
   },
 };
 </script>
