@@ -57,16 +57,18 @@ public class ConsultingRoomController {
 
 
 	@PostMapping("/session")
-	public void setSession(@RequestBody Map<String, String> maps){
+	public ResponseEntity<?> setSession(@RequestBody Map<String, String> maps){
 		String sessionId = maps.get("sessionId");
 		String key = maps.get("reservationId");
 
 		httpSession.setAttribute(key, sessionId);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping("/session")
 	public ResponseEntity<?> getSession(@RequestParam String reservationId){
 		String key = reservationId;
+		log.info("key" +httpSession.getAttribute(key) );
 		return new ResponseEntity<>(httpSession.getAttribute(key), HttpStatus.OK);
 	}
 
