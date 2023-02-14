@@ -54,7 +54,7 @@
                     v-on:submit.prevent="locationdelete(loc.locationId)"
                   >
                     <div class="news_item_img">
-                      <img src="../../assets/img/news/news-1.png" alt="img" />
+                      <img :src="baseURL + loc.picture" alt="img" />
                     </div>
                     <div class="news_item_content">
                       <h3>
@@ -84,6 +84,8 @@ import { LanguageBox } from "@/components/hotel/guideSettings/LanguageBox";
 export default {
   name: "GuideInfoDelete",
   setup() {
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/location/";
+
     const recommendLoc = ref([]);
 
     const store = useStore();
@@ -112,6 +114,7 @@ export default {
       store,
       locationdelete,
       location,
+      baseURL
     };
   },
 };
