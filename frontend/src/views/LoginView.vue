@@ -1,10 +1,11 @@
 <template>
     <div>
         <!-- Common Banner Area -->
-        <LoginBanner />
+
+        <!-- <LoginBanner /> -->
     
         <!--  Common Author Area -->
-        <CommonAuthorFour />
+        <CommonAuthorFour/>
     
         <!-- Cta Area -->
     </div>

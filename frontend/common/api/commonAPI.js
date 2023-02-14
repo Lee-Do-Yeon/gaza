@@ -87,7 +87,7 @@ const myPageShow = loginId => api.get('/api/guides/mypage', { params: { userId: 
 
 
 // 추천장소 삭제
-const locdel = payload => api.delete('/api/guides/location/', payload)
+
 
 
 // 가이드 검색
@@ -118,6 +118,11 @@ const guideThemaRegister = (loginId, thema) => api.post(`/api/guides/thema?login
 
 // 가이드 테마 삭제
 const deleteThema = (loginId, themaId) => api.delete(`/api/guides/thema?loginId=${loginId}&themaId=${themaId}`);
+
+// 가이드 추천장소 삭제
+
+// const locdel = (loginId,recommendId) => api.delete(`/api/guides/location?loginId=${loginId}&recommendId=${recommendId}/`);
+const locdel = (loginId,recommendId) => api.delete(`/api/guides/location`, {params: {loginId: loginId, recommendId : recommendId}});
 
 //추천 장소 등록
 const guideLocationRegister = payload => api.post('/api/guides/location', payload, {

@@ -1,6 +1,7 @@
 <template>
 
-    <section id="common_author_area" class="section_padding">
+    <section id="common_author_area" class="section_padding" >
+        <div style="padding-top: 10px;"></div>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
