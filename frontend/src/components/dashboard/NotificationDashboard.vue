@@ -34,17 +34,98 @@
                 <div class="col-lg-8">
                     <div class="dashboard_common_table">
                         <div class="notification_top_heading">
-                            <h3>예약 내역</h3>
+                            <h3>상담 대기</h3>
                         </div>
                         <div class="notification_wrapper">
                             <div class="accordion" id="accordionExample">
                                 <div
-                                    v-for="(res, index) in reservation"
+                                    v-for="(res, index) in res_wait"
                                     :key="res.id"
                                     class="accordion-item"
                                 >
                                     <h2 class="accordion-header" :id="'heading' + index">
                                         <button
+                                            class="accordion-button active d-flex justify-content-end"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            :data-bs-target="'#collapse' + index"
+                                            aria-expanded="true"
+                                            :aria-controls="'collapse' + index"
+                                        >
+                                            <div class="me-2">
+                                                {{ res.reservationId }}
+                                            </div>
+                                            <div class="me-2">
+                                                {{ res.guideName }}
+                                            </div>
+                                            <div>Date : {{ getDate(res.travelStartDate) }}</div>
+                                        </button>
+                                    </h2>
+                                    <div
+                                        :id="'collapse' + index"
+                                        class="accordion-collapse collapse"
+                                        :aria-labelledby="'heading' + index"
+                                        data-bs-parent="#accordionExample"
+                                    >
+                                        <div class="accordion-body">
+                                            <div>
+                                                <img
+                                                    src="../../assets/img/common/dashboard-user.png"
+                                                    alt="img"
+                                                />
+                                            </div>
+                                            <div>가이드 : {{ res.guideName }}</div>
+                                            <div>인원 : {{ res.numberOfPeople }}</div>
+                                            <div>여행날짜 : {{ getDateTime(res.travelStartDate) }}</div>
+                                            <div>
+                                                유아 동반 : {{ res.withChildren }} 장애 여부 :
+                                                {{ res.withDisabled }} 노약자 동반 :
+                                                {{ res.withElderly }}
+                                            </div>
+                                            <div>특이사항 : {{ res.note }}</div>
+                                            <div class="d-flex justify-content-end">
+                                                <button
+                                                    class="me-2 btn btn_theme btn-lg"
+                                                    @click="download(res.reservationId)"
+                                                >
+                                                    일정확인
+                                                </button>
+
+                                                <button
+                                                    @click="
+                                                        movereview(res.reservationId, res.guideName)
+                                                    "
+                                                    class="me-2 btn btn_theme btn-lg"
+                                                    v-if="res.stateCode == 'RE01'"
+                                                >
+                                                    후기작성
+                                                </button>
+
+                                                <button
+                                                    class="btn btn_theme btn-lg"
+                                                    @click="enterConsulting(res.reservationId, res.guideId, res.guidePk)"
+                                                >
+                                                    입장
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notification_top_heading">
+                            <h3>상담 완료</h3>
+                        </div>
+                        <div class="notification_wrapper">
+                            <div class="accordion" id="accordionExample">
+                                <div
+                                    v-for="(res, index) in res_completed"
+                                    :key="res.id"
+                                    class="accordion-item"
+                                >
+                                    <h2 class="accordion-header" :id="'heading' + index">
+                                        <button
+                                            :class="{ 'review': res.stateCode === 'RE01' }"
                                             class="accordion-button active d-flex justify-content-end"
                                             type="button"
                                             data-bs-toggle="collapse"
@@ -119,6 +200,11 @@
         </div>
     </section>
 </template>
+<style>
+.review{
+    border: 1px solid red !important;
+}
+</style>
 <script>
 import LogoutBtn from "@/components/dashboard/LogoutBtn.vue";
 import MyBookingOption from "@/components/dashboard/MyBookingOption.vue";
@@ -191,13 +277,25 @@ export default {
         };
 
         const reservation = ref([]);
+        const res_wait = ref([]);
+        const res_completed = ([]);
         const getreservation = async () => {
             const loginID = store.getters["accountStore/getUserId"];
 
             try {
                 const res = await reser(loginID);
                 reservation.value = res.data;
-                console.log(res.data);
+
+                res.data.forEach((r) => {
+                    if(r.stateCode === 'RE01' || r.stateCode === 'RE04') {
+                        res_completed.value.push(r);
+                    } else {
+                        res_wait.value.push(r);
+                    }
+                })
+
+                console.log(res_wait.value);
+                console.log(res_completed.value);
             } catch (err) {
                 console.log(err);
             }
@@ -255,7 +353,9 @@ export default {
             loginID,
             enterConsulting,
             roomId,
-            getDateTime
+            getDateTime,
+            res_wait,
+            res_completed
         };
     },
 };
