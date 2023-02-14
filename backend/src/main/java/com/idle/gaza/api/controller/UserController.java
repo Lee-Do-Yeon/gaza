@@ -195,36 +195,39 @@ public class UserController {
 
         String id = tokenUtil.getUserIdFromToken(token);
 
-        //파일이 존재한다면 기존 경로에서 파일 삭제
-        User user = userService.searchUser(id);
 
-        String originPictureName = user.getPicture();
+        if(pictureFile != null) {
+            //파일이 존재한다면 기존 경로에서 파일 삭제
+            User user = userService.searchUser(id);
 
-        if (originPictureName != null) {
-            String originPicture = new String(rootPath + "/" + "user" + "/" + "picture" + "/" + originPictureName);
-            log.info("exist file path = " + originPicture);
+            String originPictureName = user.getPicture();
+
+            if (originPictureName != null) {
+                String originPicture = new String(rootPath + "/" + "user" + "/" + "picture" + "/" + originPictureName);
+                log.info("exist file path = " + originPicture);
+
+                try {
+                    s3Uploader.deleteS3(originPictureName);
+                    log.info("delete file");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
+            File uploadFilePath = new File(rootPath, uploadPath);
+
+            String fileName = pictureFile.getOriginalFilename();
+
+            UUID uuid = UUID.randomUUID();
+            String uploadFileName = uuid.toString() + "_" + fileName;
 
             try {
-                s3Uploader.deleteS3(originPictureName);
-                log.info("delete file");
-            } catch(Exception e) {
-                e.printStackTrace();
+                s3Uploader.upload(pictureFile, uploadPath + uploadFileName);
+                userUpdateRequest.setPicture(uploadFileName);
+            } catch (IOException e) {
+                log.error(e.getMessage());
             }
-        }
-
-        String uploadPath = rootPath + "/" + "user" + "/" + "picture" + "/";
-        File uploadFilePath = new File(rootPath, uploadPath);
-
-        String fileName = pictureFile.getOriginalFilename();
-
-        UUID uuid = UUID.randomUUID();
-        String uploadFileName = uuid.toString() + "_" + fileName;
-
-        try {
-            s3Uploader.upload(pictureFile, uploadPath + uploadFileName);
-            userUpdateRequest.setPicture(uploadFileName);
-        } catch (IOException e) {
-            log.error(e.getMessage());
         }
 
         int result = userService.updateUser(id, userUpdateRequest);
