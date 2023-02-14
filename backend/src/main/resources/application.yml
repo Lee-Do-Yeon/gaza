@@ -51,6 +51,8 @@ cloud:
       auto: false
     directory: /gaza
 
+session:
+  store-type:redis
 
 OPENVIDU_URL: https://i8c207.p.ssafy.io:8443/
 OPENVIDU_SECRET: GAZA
