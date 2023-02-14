@@ -220,7 +220,7 @@ export default {
         const enterConsulting = async function (reservationId) {
             const roomId = "";
             api({
-                url: `/map/session?reservationId=${reservationId}`,
+                url: `/books/consulting/${reservationId}`,
                 method: "GET",
             }).then((response) => {
                 roomId = response.data;

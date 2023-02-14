@@ -175,4 +175,15 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    @Override
+    public String getConsulting(int reservationId) {
+        String sessionId = null;
+        Optional<Reservation> oReservation = reservationRepository.findById(reservationId);
+        if(oReservation.isPresent()) {
+            Reservation reservation = oReservation.get();
+            sessionId = reservation.getSessionId();
+        }
+        return sessionId;
+    }
+
 }
