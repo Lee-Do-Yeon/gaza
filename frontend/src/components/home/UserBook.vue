@@ -17,8 +17,7 @@
                   <div class="theme_two_box_img">
                     <router-link :to="{
                       name: 'notification',
-                  }"><img src="../../assets/img/tab-img/hotel1.png" alt="img"></router-link>
-                    <p>{{ guide.guideName }}</p>
+                  }"><img :src="baseURL+guide.picture" alt="img"></router-link>
                   </div>
                   <div class="theme_two_box_content">
                     <h4><router-link :to="{
@@ -67,6 +66,8 @@ export default {
       istemplate: true,
     })
 
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
+
     const bookedGuides = async function () {
       const userId = store.getters["accountStore/getUserId"]
       const response = await userBookGuide(userId)
@@ -81,7 +82,7 @@ export default {
       bookedGuides()
     })
 
-    return { state }
+    return { state, baseURL }
   },
 };
 </script>
