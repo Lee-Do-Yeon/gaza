@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Api(value = "관리자 API", tags = {"Admin"})
 @Slf4j
 @RestController
@@ -40,7 +42,9 @@ public class AdminController {
      *
      */
     @PutMapping("/guide/success")
-    public ResponseEntity<ApiResponse<Object>> acceptGuide(@RequestParam String id) {
+    public ResponseEntity<ApiResponse<Object>> acceptGuide(@RequestBody Map<String, String> idMap) {
+        String id = idMap.get("id");
+
         userService.changeState(id, "US1");
 
         User user = userService.searchUserById(id);
@@ -77,7 +81,9 @@ public class AdminController {
      *
      */
     @PutMapping("/guide/failure")
-    public ResponseEntity<ApiResponse<Object>> rejectGuide(@RequestParam String id) {
+    public ResponseEntity<ApiResponse<Object>> rejectGuide(@RequestBody Map<String, String> idMap) {
+        String id = idMap.get("id");
+
         userService.changeState(id, "US2");
 
         ApiResponse<Object> ar = ApiResponse.builder()
