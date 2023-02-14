@@ -78,6 +78,9 @@ dependencies {
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
 
 
+    //redis session
+    implementation 'org.springframework.session:spring-session-data-redis:2.7.0'
+
 }
 
 tasks.named('test') {

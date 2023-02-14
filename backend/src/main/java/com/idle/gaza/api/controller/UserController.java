@@ -91,6 +91,33 @@ public class UserController {
     }
 
     /**
+     * [API] 가이드 신청 리스트
+     *
+     * @return ResponseEntity
+     *
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<Object>> checkDuplicated(@PathVariable String id) {
+        User user = userService.searchUserById(id);
+
+        if (user != null) {
+            ApiResponse<Object> ar = ApiResponse.builder()
+                    .result(user)
+                    .resultCode(HttpStatus.NO_CONTENT.value())
+                    .resultMsg("중복된 아이디입니다.")
+                    .build();
+            return new ResponseEntity<>(ar, HttpStatus.NO_CONTENT);
+        } else {
+            ApiResponse<Object> ar = ApiResponse.builder()
+                    .result(null)
+                    .resultCode(SuccessCode.SELECT.getStatus())
+                    .resultMsg("사용 가능한 아이디입니다.")
+                    .build();
+            return new ResponseEntity<>(ar, HttpStatus.OK);
+        }
+    }
+
+    /**
      * [API] 비밀 번호 찾기
      *
      * @param user User
@@ -255,7 +282,8 @@ public class UserController {
     /**
      * [API] 비밀번호 수정
      *
-     * @param password String
+     * @param accessToken String
+     * @param passwordMap Map<String, String>
      * @return ResponseEntity
      */
     @PutMapping("/pw")
