@@ -21,7 +21,7 @@
                     <router-link :to="{
                       name: 'hotel-details',
                       params: { guideId: guide.guideId },
-                  }"><img src="../../assets/img/tab-img/hotel1.png" alt="img"></router-link>
+                  }"><img :src="baseURL+guide.picture" alt="img"></router-link>
                     <p><i class="fas fa-map-marker-alt"></i>{{ guide.country }}, {{ guide.city }}</p>
                   </div>
                   <div class="theme_two_box_content">
@@ -50,10 +50,8 @@
 <script>
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/swiper-bundle.css";
-import { reactive, computed, ref, onMounted, watch } from 'vue';
-import { useStore } from 'vuex';
-import router from "@/router";
-import { popularGuide, themaGuide } from '../../../common/api/commonAPI';
+import { reactive, onMounted } from 'vue';
+import { popularGuide} from '../../../common/api/commonAPI';
 
 export default {
   name: "PromotionalTours",
@@ -64,6 +62,8 @@ export default {
   },
 
   setup(props, { emit }) {
+
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
 
     const state = reactive({
       form: {
@@ -83,7 +83,7 @@ export default {
       popularGuides()
     })
 
-    return { popularGuides, state}
+    return { popularGuides, state, baseURL}
   },
 };
 </script>
