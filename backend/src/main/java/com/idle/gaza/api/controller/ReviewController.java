@@ -55,9 +55,16 @@ public class ReviewController {
     }
 
     @GetMapping("/guide/{guideId}")
-    @ApiOperation(value = "리뷰 조회 (가이드)", notes = "가이드에게 달린 리스트를 볼 수 있다.")
+    @ApiOperation(value = "리뷰 조회 (가이드)", notes = "가이드에게 달린 리스트를 볼 수 있다.(PK)")
     public ResponseEntity<?> getReviewsByGuide(@PathVariable int guideId){
         List<ReviewResponse> reviews = reviewService.getReviewsByGuide(guideId);
+        return new ResponseEntity<List<?>>(reviews, HttpStatus.OK);
+    }
+
+    @GetMapping("/guide/id/{guideId}")
+    @ApiOperation(value = "리뷰 조회 (가이드)", notes = "가이드에게 달린 리스트를 볼 수 있다.(아이디)")
+    public ResponseEntity<?> getReviewsByGuideId(@PathVariable String guideId){
+        List<ReviewResponse> reviews = reviewService.getReviewsByGuideId(guideId);
         return new ResponseEntity<List<?>>(reviews, HttpStatus.OK);
     }
 }
