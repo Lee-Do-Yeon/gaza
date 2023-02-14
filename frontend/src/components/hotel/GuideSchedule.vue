@@ -150,7 +150,7 @@ export default {
                 });
             // 세션 아이디 저장.
             await axios
-            .post("/books/consulting/create/"+ this.reservationId, base.mySessionId)
+            .post("/books/consulting/create?reservationId="+ this.reservationId+"&sessionId="+base.mySessionId)
             .then((data) => {
               console.log("예약 테이블에 세션 아이디 추가. " + base.mySessionId);
             })
