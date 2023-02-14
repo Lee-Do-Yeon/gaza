@@ -10,8 +10,10 @@
                         <div class="common_author_form">
                             <form @submit.prevent="Signin" id="main_author_form" class="row">
                                 <div class="form-group">
-                                    <input type="text" :class="{ 'formerror': idc }" class="form-control"  placeholder="아이디를 입력해주세요." minlength="4" v-model="state.form.id" required/>
-                                    <button type="button" @keyup="idCheck" @click="duplicated">중복확인</button>
+                                    <span style="position: relative;">
+                                        <input type="text" :class="{ 'formerror': idc }" class="form-control"  placeholder="아이디를 입력해주세요." minlength="4" v-model="state.form.id" @keyup="upid" required/>
+                                        <button type="button" class="btn btn_navber" @click="duplicated" style="position: absolute; top: 13%; right: 20px;">중복확인</button>
+                                    </span>
                                 </div>
                                 <div class="form-group">
                                     <label for="formFile" class="form-label">프로필 사진 업로드</label>
@@ -138,28 +140,20 @@
 </style>
     
 <script>
-import { reactive, computed, ref, onMounted, watch } from 'vue'
-import { useStore } from 'vuex'
-import { requestSignin, requesttest, checkDuplicated } from "../../../common/api/commonAPI"
+import { reactive, ref } from 'vue'
+import { requestSignin, checkDuplicated } from "../../../common/api/commonAPI"
 import router from "@/router";
-
 
 export default {
     name: "CommonAuthorThree",
 
-    setup(props, { emit }) {
-        // const store = useStore()
-        const birthy = ref('')
-        const birthm = ref('')
-        const birthd = ref('')
-        const phonf = ref('')
-        const phonm = ref('')
-        const phone = ref('')
+    setup() {
         const passwordcheck = ref('')
         const pictureData = ref(null)
         const idc = ref(false)
         const passwordc =ref(false)
         const emailc = ref(false)
+        
         const state = reactive({
             form: {
                 id: '',
@@ -178,26 +172,13 @@ export default {
             duplicated : false,
         })
 
-        onMounted(() => {
-            console.log('signupplease');
-            idc.value = false
-            passwordc.value = false
-            emailc.value =false
-            state.form.id=''
-            state.form.password=''
-            state.form.name=''
-            state.form.gender=''
-            state.form.birthday=''
-            state.form.phone_number=''
-        })
-
         const idCheck = function() {
             state.duplicated = false;
         }
 
         const duplicated = async function() {
             if(state.form.id === ''){
-                state.duplicated = false;
+                idc.value = true
                 alert("아이디를 확인해주세요");
             } else {
                 const res = await checkDuplicated(state.form.id);
@@ -207,10 +188,10 @@ export default {
                 console.log(user);
 
                 if(user !== null) {
-                    state.duplicated = false;
+                    idc.value = true
                     alert("중복된 아이디입니다.");
                 } else {
-                    state.duplicated = true;
+                    idc.value = false
                     alert("사용 가능한 아이디입니다.");
                 }
             }
@@ -232,7 +213,7 @@ export default {
                 passwordc.value = false
             }
 
-            if (!passwordc.value && !emailc.value && state.duplicated) {
+            if (!passwordc.value && !emailc.value && !idc.value) {
                 try {
                     const formData = new FormData()
                     
@@ -284,7 +265,11 @@ export default {
             //Upload to server
         }
 
-        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, idCheck, upload, passwordcheck, duplicated}
+        const upid = function () {
+            idc.value = false
+        }
+
+        return { state, Signin, idc, passwordc, emailc, upemail, uppassword, pictureData, idCheck, upload, passwordcheck, duplicated, upid}
      },
     
 };
