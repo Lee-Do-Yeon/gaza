@@ -97,7 +97,8 @@ import ListItem from "@/components/map/list/ListItem";
 import axios from "axios";
 import UserVideo from "@/openvidu/UserVideo";
 import { OpenVidu } from "openvidu-browser";
-
+import { mapState } from "vuex";
+const accountStore = "accountStore";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
 // const APPLICATION_SERVER_URL = "http://localhost:8080";
@@ -151,6 +152,9 @@ export default {
             popular_marker_list: [],
             popular_list: [],
         };
+    },
+    computed: {
+        ...mapState([accountStore, "isGuide"]),
     },
     created() {
         console.log(this.roomId);
@@ -790,6 +794,12 @@ export default {
             this.OpenVidu.publisher = undefined;
             this.OpenVidu.subscribers = [];
             this.OpenVidu.OV = undefined;
+
+            if(this.isGuide == "US01"){
+                // 저장 후 종료.
+                this.insertToDB();
+                console.log("가이드라서 디비에 저장했음");
+            }
 
             // Remove beforeunload listener
             window.removeEventListener("beforeunload", this.leaveSession);
