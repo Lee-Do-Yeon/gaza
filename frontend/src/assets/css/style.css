@@ -1027,7 +1027,8 @@ section {
 }
 
 .theme_two_box_img img {
-    width: 100%;
+    width: 330px;
+    height: 220px;
 }
 
 .theme_two_box_img .discount_tab {
