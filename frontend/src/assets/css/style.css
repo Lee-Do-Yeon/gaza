@@ -3696,7 +3696,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 
 .news_item_img img {
-    width: 100%;
+    width: 450px;
+    height: 280px;
 }
 
 .news_item_content {
