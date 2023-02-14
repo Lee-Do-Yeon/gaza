@@ -82,7 +82,7 @@
                                             <div class="d-flex justify-content-end">
                                                 <button
                                                     class="btn btn_theme btn-lg"
-                                                    @click="createConsulting(res.reservationId)"
+                                                    @click="createConsulting(res.reservationId, res.guidePk)"
                                                 >
                                                     상담 시작
                                                 </button>
@@ -158,7 +158,7 @@ export default {
               alert("예약 데이터 업데이트에 실패하였습니다.");
             });
         },
-        async createConsulting(reservationId) {
+        async createConsulting(reservationId, guidePk) {
             console.log("아이디: " + reservationId);
             await this.createMapRoom(reservationId);
             console.log("세션 아이디: " + this.mySessionId);
@@ -168,6 +168,7 @@ export default {
                     roomId: this.mySessionId,
                     reservationId: reservationId,
                     guideId: this.userId,
+                    guidePk: guidePk,
                     userName: this.userId, // 원래 이름인데 일단 아이디로.
                 },
             });
