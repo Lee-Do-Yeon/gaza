@@ -103,7 +103,7 @@
 
                                                 <button
                                                     class="btn btn_theme btn-lg"
-                                                    @click="enterConsulting(res.reservationId)"
+                                                    @click="enterConsulting(res.reservationId, res.guideId, res.guidePk)"
                                                 >
                                                     입장
                                                 </button>
@@ -217,7 +217,7 @@ export default {
             });
         };
         const roomId = ref();
-        const enterConsulting = async function (reservationId) {
+        const enterConsulting = async function (reservationId, guideId, guidePk) {
             await api({
                 url: `/books/consulting/`+"?reservationId="+ reservationId,
                 method: "GET",
@@ -225,12 +225,13 @@ export default {
                 roomId.value = response.data;
             });
             console.log("룸아이디 "+roomId.value);
-            const routeData = router.push({
+            const routeData = router.resolve({
                 name: "mapdetail",
                 params: {
                     roomId: roomId.value,
                     reservationId: reservationId,
-                    guideId: loginID,
+                    guideId: guideId,
+                    guidePk: guidePk,
                     userName: loginID,
                 },
             });
