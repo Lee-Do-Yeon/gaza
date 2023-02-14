@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class ReservationResponse {
     @ApiModelProperty(name="가이드 사진")
     String picture;
-
     int guidePk;
     int reservationId;
     String guideName;
