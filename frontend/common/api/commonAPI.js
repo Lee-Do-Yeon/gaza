@@ -54,6 +54,11 @@ const reviewss = (userId) => api.get(`/api/reviews/user/${userId}`);
 //유저 정보수정
 const updateUser = (payload, accessToken) => api.put('/api/users/', payload, {headers: {Authorization: accessToken, "Content-Type": "multipart/form-data"}});
 
+//유저 삭제
+const deleteUser = (accessToken) => api.delete('/api/users/',  {headers: {Authorization: accessToken}}).then((res)=>{
+    console.log(res);
+});
+
 //리뷰 등록
 const uploadReview =(payload) => api.post('/api/reviews', payload)
 
@@ -138,8 +143,10 @@ const guideLocationRegister = payload => api.post('/api/guides/location', payloa
 const userBookGuide = (userId) => api.get(`/api/books/user/${userId}`)
 
 
+
 //공통 코드 목록 조회
 const codeList = (description) => api.get(`/api/codes`, {params:{name: description}});
 
 
 export { reviewss, locdel, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema, checkDuplicated , codeList};
+
