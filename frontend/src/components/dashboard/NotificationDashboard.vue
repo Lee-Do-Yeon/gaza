@@ -220,7 +220,7 @@ export default {
         const enterConsulting = async function (reservationId) {
             const roomId = "";
             api({
-                url: `/books/consulting/${reservationId}`,
+                url: `/books/consulting/`+"?reservationId="+ this.reservationId,
                 method: "GET",
             }).then((response) => {
                 roomId = response.data;
