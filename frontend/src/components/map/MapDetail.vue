@@ -100,6 +100,7 @@ import { OpenVidu } from "openvidu-browser";
 import { mapState } from "vuex";
 const accountStore = "accountStore";
 axios.defaults.headers.post["Content-Type"] = "application/json";
+
 const APPLICATION_SERVER_URL = "https://i8c207.p.ssafy.io/api";
 // const APPLICATION_SERVER_URL = "http://localhost:8080";
 
@@ -342,6 +343,7 @@ export default {
 
             // 키워드로 장소를 검색합니다
             const keyword = this.guideCountry + " " + this.guideCity + " 관광명소";
+            console.log("키워드 장소 검색 : "+keyword);
             ps.keywordSearch(keyword, placesSearchCB);
 
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
@@ -723,6 +725,24 @@ export default {
             }
         },
 
+        // [Function] 여행 완료로 변경하기.
+        async changeState() {
+            console.log("changeState "+this.reservationId);
+            await axios
+                .put(
+                    APPLICATION_SERVER_URL + `/books/${this.reservationId}`,
+                    JSON.stringify({"status":"RE01"}),
+                    {headers: {"Content-Type": 'application/json',}}
+                )
+                .then(({ data }) => {
+                    let msg = "변경 처리시 문제가 발생했습니다.";
+                    if (data === "Success") {
+                        msg = "변경이 완료되었습니다.";
+                    }
+                    alert(msg);
+                });
+        },
+
         // -----------------------------------------------------------------------------------
 
         // ------------------------------------ OpenVidu ------------------------------------
@@ -813,11 +833,12 @@ export default {
             if(this.isGuide == "US1"){
                 // 저장 후 종료.
                 this.insertToDB();
+                this.changeState();
             }
 
             // Remove beforeunload listener
             window.removeEventListener("beforeunload", this.leaveSession);
-            window.close();
+            // window.close();
         },
 
         updateMainVideoStreamManager(stream) {
