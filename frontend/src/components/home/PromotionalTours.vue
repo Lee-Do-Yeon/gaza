@@ -33,7 +33,7 @@
                     <p><span class="review_rating">
                         <span v-for="lang in guide.language" :key="lang">#{{ lang }}</span>
                     </span> <span class="review_count">
-                      <span v-for="theme in guide.thema" :key="theme" >#{{ theme }}</span>
+                      <span v-for="theme in guide.thema" :key="theme" ><span v-if="theme != null">#{{ theme }}</span></span>
                     </span></p>
                     <h3>{{guide.price}} <span>Price starts from</span></h3>
                   </div>
