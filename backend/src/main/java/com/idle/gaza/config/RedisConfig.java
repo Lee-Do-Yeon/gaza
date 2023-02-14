@@ -1,6 +1,7 @@
 
 package com.idle.gaza.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @Configuration
 public class RedisConfig {
@@ -48,7 +50,6 @@ public class RedisConfig {
 
 
     /* pub/sub 메시지를 처리하는 리스너 설정 */
-    @Bean
     public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory){
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
@@ -56,6 +57,7 @@ public class RedisConfig {
     }
 
 
+    @Qualifier("RedisTemplate")
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
