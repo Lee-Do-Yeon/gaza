@@ -13,7 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -30,6 +30,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Api(value = "예약 API", tags = {"Reservation"})
 @RestController
 @RequestMapping("/books")
+@Slf4j
 public class ReservationController {
     @Autowired
     ReservationService reservationService;
@@ -77,6 +78,8 @@ public class ReservationController {
     @PutMapping("/{reservationId}")
     @ApiOperation(value = "예약 상태 변경", notes = "예약 상태를 변경한다.")
     public ResponseEntity<? extends BaseResponseBody> changeReservationState(@PathVariable @ApiParam(value="예약 PK", required = true) int reservationId, @RequestBody Map<String, String> statusMap){
+log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 상태 변경 " + statusMap.get("status"));
+
         try{
             reservationService.changeReservationState(reservationId, statusMap.get("status"));
         }catch (Exception e){
