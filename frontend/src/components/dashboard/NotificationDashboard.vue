@@ -248,7 +248,7 @@ export default {
             state,
             reservation,
             getreservation,
-            4,
+            getDate,
             router,
             movereview,
             download,
