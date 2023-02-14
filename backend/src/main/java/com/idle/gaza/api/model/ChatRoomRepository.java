@@ -25,8 +25,8 @@ public class ChatRoomRepository {
     private final RedisMessageListenerContainer redisMessageListenerContainer;
 
     //redis
-    //@Qualifier("RedisTemplate")
-    private final RedisTemplate<String, String> redisTemplate;
+    @Qualifier("RedisTemplate")
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private HashOperations<String, String, ConsultingRoom> hashChatRoom;
     private static final String CHAT_ROOMS = "CHAT_ROOM";
