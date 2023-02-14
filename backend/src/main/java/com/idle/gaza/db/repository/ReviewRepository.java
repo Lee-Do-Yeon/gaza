@@ -18,7 +18,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     @Query(value = "select * from review where reservation_id in (select reservation_id from reservation where guide_id = :guideId)", nativeQuery = true)
     List<Review> findReviewsByGuide(@Param("guideId") int guideId);
 
-    @Query(value = "select * from review where reservation_id in (select reservation_id from reservation where guide_id = (select user_id from guide where guide_id = :guideId))", nativeQuery = true)
+    @Query(value = "select * from review where reservation_id in (select reservation_id from reservation where guide_id = (select guide_id from guide where user_id = :guideId))", nativeQuery = true)
     List<Review> findReviewsByGuideId(@Param("guideId") String guideId);
 
     
