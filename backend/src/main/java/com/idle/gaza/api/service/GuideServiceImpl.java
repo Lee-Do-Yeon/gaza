@@ -422,7 +422,7 @@ public class GuideServiceImpl implements GuideService {
         Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
         if (existGuide.isPresent()) return 0;
 
-
+        /*
         Guide newGuide = Guide.builder()
                 .user(user.get())
                 .picture(guide.getPicture())
@@ -435,8 +435,14 @@ public class GuideServiceImpl implements GuideService {
                 .closeTimeStart(LocalTime.parse(guide.getTimeStart()))
                 .closeTimeEnd(LocalTime.parse(guide.getTimeEnd()))
                 .build();
+        */
+        Guide newGuide = Guide.builder()
+                .user(user.get())
+                .build();
 
         guideRepository.save(newGuide);
+        
+
         return 1;
     }
 
