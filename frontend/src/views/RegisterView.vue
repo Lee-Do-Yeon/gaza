@@ -1,7 +1,7 @@
 <template>
     <div>
-        <RegisterBanner />
-
+        <!-- <RegisterBanner /> -->
+        <div style="padding-top: 10px;"></div>
         <CommonAuthorThree />
     </div>
 </template>
