@@ -115,6 +115,7 @@ export default {
             userName: this.$route.params.userName,
             reservationId: this.$route.params.reservationId,
             guideId: this.$route.params.guideId,
+            guidePk: this.$route.params.guidePk,
             // --------채팅 데이터-----------
             msg: "",
             messages: [],
@@ -541,9 +542,9 @@ export default {
         },
         // [Function] 현재 가이드의 국가와 도시를 가져오는 함수.
         async getCity() {
-            console.log("getCity("+this.guideId+") call.");
+            console.log("getCity("+this.guidePk+") call.");
             await axios
-                .get(APPLICATION_SERVER_URL + `/guides/${this.guideId}`)
+                .get(APPLICATION_SERVER_URL + `/guides/${this.guidePk}`)
                 .then((res) => {
                     this.guideCity = res.data.city;
                     this.guideCountry = res.data.country;
