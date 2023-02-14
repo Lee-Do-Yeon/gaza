@@ -149,4 +149,4 @@ const codeList = (description) => api.get(`/api/codes`, {params:{name: descripti
 
 
 export { reviewss, locdel, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema, checkDuplicated , codeList};
->>>>>>> c7d63d7cfa8e1c55092bf82dd06f2ac6a2a01d2e
+
