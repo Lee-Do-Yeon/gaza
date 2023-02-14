@@ -76,6 +76,20 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
+    public List<ReviewResponse> getReviewsByGuideId(String guideId) {
+        List<Review> reviews = reviewRepository.findReviewsByGuideId(guideId);
+        List<ReviewResponse> reviewRes = new ArrayList<>(reviews.size());
+        for(int i=0; i<reviews.size(); i++){
+            Review review = reviews.get(i);
+            ReviewResponse res = new ReviewResponse(review.getReservationId().getUserId().getId(),
+                    review.getReservationId().getGuideId().getGuideId(),
+                    review.getReviewId(), review.getContent(), review.getCreatedDate(), review.getScore());
+            reviewRes.add(res);
+        }
+        return reviewRes;
+    }
+
+    @Override
     public Optional<Review> getReviewById(int reviewId) {
         return reviewRepository.findById(reviewId);
     }

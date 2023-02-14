@@ -61,8 +61,11 @@
                                         <button to="/" class="btn btn_navber" v-else-if="isGuide == 'US3'" disabled>가이드 심사중</button>
                                         <router-link to="/become-vendor" class="btn btn_navber" v-else >가이드로 가입하기</router-link>
                                     </div>
+                                    <div class="option-item" v-if="isGuide == 'US4'">
+                                        <router-link to="/admin" class="btn btn_navber" v-if="isGuide == 'US4'">어드민 페이지</router-link>
+                                    </div>
                                     <div class="option-item" v-if="!islogin">
-                                        <router-link to="/login" class="btn btn_navber">Login</router-link>
+                                        <router-link to="/login" class="btn btn_navber">로그인</router-link>
                                     </div>
                                     <div class="option-item" v-if="islogin">
                                         <router-link to="/" @click="clickLogout" class="btn btn_navber">로그아웃</router-link>
