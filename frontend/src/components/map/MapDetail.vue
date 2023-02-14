@@ -334,24 +334,31 @@ export default {
             var ps = new kakao.maps.services.Places();
 
             // 키워드로 장소를 검색합니다
-            ps.keywordSearch(
-                this.guideCountry + " " + this.guideCity + " 관광명소",
-                placesSearchCB
-            );
+            const keyword = this.guideCountry + " " + this.guideCity + " 관광명소";
+            ps.keywordSearch(keyword, placesSearchCB);
 
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
             function placesSearchCB(data, status, pagination) {
                 if (status === kakao.maps.services.Status.OK) {
-                    if (data.length < 300) {
+                    for (var i = 0; i < data.length; i++) {
+                        displayMarker(data[i]);
+                    }
+                    popular_list_index += data.leghth;
+
+                    if (pagination.hasNextPage) {
+                        pagination.nextPage();
                         for (var i = 0; i < data.length; i++) {
                             displayMarker(data[i]);
                         }
                         popular_list_index += data.leghth;
-                    } else {
-                        for (var i = 0; i < 300; i++) {
+                    }
+
+                    if (pagination.hasNextPage) {
+                        pagination.nextPage();
+                        for (var i = 0; i < data.length; i++) {
                             displayMarker(data[i]);
                         }
-                        popular_list_index += 300;
+                        popular_list_index += data.leghth;
                     }
                 }
             }
@@ -538,6 +545,22 @@ export default {
                 });
             });
         },
+        // [Function] 주소를 이용해서 이름을 얻는 함수.
+        getPlaceName(address) {
+            // 장소 검색 객체를 생성합니다
+            var ps = new kakao.maps.services.Places();
+
+            return new Promise((resolve, reject) => {
+                ps.keywordSearch(address, function (data, status, pagination) {
+                    if (status === kakao.maps.services.Status.OK) {
+                        console.log("찍은 주소 이름은 : " + data[0].place_name);
+                        resolve(data[0].place_name);
+                    } else {
+                        reject(status);
+                    }
+                });
+            });
+        },
         // [Function] 좌표에 대한 마커를 생성하는 함수.
         setMarker(lat, lng, markerImage) {
             var markerPosition = new kakao.maps.LatLng(lat, lng);
@@ -555,7 +578,7 @@ export default {
             var name;
 
             if (clickRecommend == false && clickPopular == false) {
-                name = address;
+                name = await this.getPlaceName(address);
             }
             if (clickRecommend == false && clickPopular == true) {
                 name = this.popular_list[index].name;
@@ -564,12 +587,12 @@ export default {
                 name = this.recommend_location_list[index].name;
             }
 
-            console.log(name);
+            console.log("name: " + name);
             this.stompClient.send(
                 "/pub/map/route",
                 JSON.stringify({
                     roomId: this.roomId,
-                    name: index != -1 ? name : address,
+                    name: name,
                     address: address,
                     latitude: this.clickLat,
                     longitude: this.clickLng,

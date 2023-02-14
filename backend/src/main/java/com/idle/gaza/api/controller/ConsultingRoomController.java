@@ -1,8 +1,10 @@
 package com.idle.gaza.api.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import com.idle.gaza.api.model.ChatRoomRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/map")
+@Log4j2
 public class ConsultingRoomController {
 
 //	private final MapRoomRepository mapRoomRepository;
@@ -54,17 +57,21 @@ public class ConsultingRoomController {
 
 
 	@PostMapping("/session")
-	public void setSession(@RequestBody String sessionId, @RequestBody int reservationId){
-		System.out.println(sessionId);
+	public ResponseEntity<?> setSession(@RequestBody Map<String, String> maps){
+		String sessionId = maps.get("sessionId");
+		String key = maps.get("reservationId");
 
-		String key = String.valueOf(reservationId);
 		httpSession.setAttribute(key, sessionId);
+		log.info("key= " +httpSession.getAttribute(key) );
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@GetMapping("/session/{reservationId}")
-	public ResponseEntity<?> getSession(@PathVariable int reservationId){
-		String key = String.valueOf(reservationId);
-		return new ResponseEntity<>(httpSession.getAttribute(key), HttpStatus.OK);
+	@GetMapping("/session")
+	public ResponseEntity<?> getSession(@RequestParam String reservationId){
+		String key = reservationId;
+		//log.info("key" +httpSession.getAttribute(key) );
+		Object value = httpSession.getAttribute(key);
+		return new ResponseEntity<>(value, HttpStatus.OK);
 	}
 
 
