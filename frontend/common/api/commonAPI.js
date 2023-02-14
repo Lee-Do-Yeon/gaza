@@ -121,8 +121,9 @@ const deleteThema = (loginId, themaId) => api.delete(`/api/guides/thema?loginId=
 
 // 가이드 추천장소 삭제
 
-// const locdel = (loginId,recommendId) => api.delete(`/api/guides/location?loginId=${loginId}&recommendId=${recommendId}/`);
 const locdel = (loginId,recommendId) => api.delete(`/api/guides/location`, {params: {loginId: loginId, recommendId : recommendId}});
+
+
 
 //추천 장소 등록
 const guideLocationRegister = payload => api.post('/api/guides/location', payload, {
@@ -136,4 +137,4 @@ const guideLocationRegister = payload => api.post('/api/guides/location', payloa
 //유저 예약 조회
 const userBookGuide = (userId) => api.get(`/api/books/user/${userId}`)
 
-export { reviewss,locdel, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema, checkDuplicated};
+export { reviewss, locdel, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema, checkDuplicated};
