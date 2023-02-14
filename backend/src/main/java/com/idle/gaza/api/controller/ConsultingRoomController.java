@@ -62,14 +62,16 @@ public class ConsultingRoomController {
 		String key = maps.get("reservationId");
 
 		httpSession.setAttribute(key, sessionId);
+		log.info("key= " +httpSession.getAttribute(key) );
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping("/session")
 	public ResponseEntity<?> getSession(@RequestParam String reservationId){
 		String key = reservationId;
-		log.info("key" +httpSession.getAttribute(key) );
-		return new ResponseEntity<>(httpSession.getAttribute(key), HttpStatus.OK);
+		//log.info("key" +httpSession.getAttribute(key) );
+		Object value = httpSession.getAttribute(key);
+		return new ResponseEntity<>(value, HttpStatus.OK);
 	}
 
 

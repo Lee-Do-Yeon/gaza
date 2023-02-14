@@ -4,6 +4,7 @@ import com.idle.gaza.api.pubsub.RedisSubscriber;
 import com.idle.gaza.db.entity.ConsultingRoom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -24,7 +25,8 @@ public class ChatRoomRepository {
     private final RedisMessageListenerContainer redisMessageListenerContainer;
 
     //redis
-    private final RedisTemplate<String, Object> redisTemplate;
+    //@Qualifier("RedisTemplate")
+    private final RedisTemplate<String, String> redisTemplate;
 
     private HashOperations<String, String, ConsultingRoom> hashChatRoom;
     private static final String CHAT_ROOMS = "CHAT_ROOM";
