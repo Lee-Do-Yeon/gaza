@@ -173,7 +173,7 @@ export default {
 
         const getDateTime = (date) => {
             const DAT = new Date(date);
-            return DAT.getFullYear() + "년 " + (DAT.getMonth() + 1) + "월 " + DAT.getDate() + "일 " + DAT.getHours() + "시 " + DAT.getMinutes()3 + "분";
+            return DAT.getFullYear() + "년 " + (DAT.getMonth() + 1) + "월 " + DAT.getDate() + "일 " + DAT.getHours() + "시 " + DAT.getMinutes() + "분";
         }
         const store = useStore();
         const router = useRouter();
