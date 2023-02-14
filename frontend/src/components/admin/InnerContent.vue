@@ -16,7 +16,7 @@
                     <td><a :href="getFileUrl(user).idFile"><img src="../../assets/img/admin/file.png" alt=""></a></td>
                     <td><a :href="getFileUrl(user).certificateResidence"><img src="../../assets/img/admin/file.png" alt=""></a></td>
                     <td><a :href="getFileUrl(user).certificate"><img src="../../assets/img/admin/file.png" alt=""></a></td>
-                    <td><button type="button" class="btn btn-outline-info" @click="allow()">승인</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button type="button" class="btn btn-outline-info" @click="reject()">거절</button></td>
+                    <td><button type="button" class="btn btn-outline-info" @click="allow(user.id)">승인</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button type="button" class="btn btn-outline-info" @click="reject()">거절</button></td>
                 </tr>
             </tbody>
         </table>
@@ -49,14 +49,14 @@ export default {
             }
         }
 
-        const allow = function () {
+        const allow = function (id) {
             console.log("신청 승인");
-            store.dispatch('adminStore/allowGuideRequest');
+            store.dispatch('adminStore/allowGuideRequest', id);
         }
 
-        const reject = function () {
+        const reject = function (id) {
             console.log("신청 거부");
-            store.dispatch('adminStore/rejectGuideRequest');
+            store.dispatch('adminStore/rejectGuideRequest', id);
         }
 
         return {
