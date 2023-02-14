@@ -205,6 +205,7 @@ public class GuideServiceImpl implements GuideService {
                     .name(location.getName())
                     .longitude(location.getLongitude())
                     .categoryCode(location.getCategoryCode())
+                    .picture(location.getPicture())
                     .latitude(location.getLatitude())
                     .build();
             newLocList.add(loc);
@@ -383,14 +384,16 @@ public class GuideServiceImpl implements GuideService {
         List<LocationResponse> locationRes = new ArrayList<>(locations.size());
         for (int i = 0; i < locations.size(); i++) {
             GuideRecommendLocation location = locations.get(i);
-            LocationResponse res = new LocationResponse(
-                    location.getRecommendId(),
-                    location.getName(),
-                    location.getAddress(),
-                    location.getCategoryCode(),
-                    location.getLatitude(),
-                    location.getLongitude()
-            );
+            LocationResponse res = LocationResponse
+                    .builder()
+                    .locationId(location.getRecommendId())
+                    .address(location.getAddress())
+                    .name(location.getName())
+                    .categoryCode(location.getCategoryCode())
+                    .longitude(location.getLongitude())
+                    .latitude(location.getLatitude())
+                    .picture(location.getPicture())
+                    .build();
             locationRes.add(res);
         }
         return locationRes;
