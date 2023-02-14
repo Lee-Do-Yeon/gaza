@@ -222,7 +222,7 @@
                 <div class="flight_Search_boxed date_flex_area">
                   <div class="Journey_date">
                     <form v-on:submit="register_date">
-                      <input type="date" v-model="date_info" />
+                      <input type="date" v-model="date_info"  style="margin-bottom: 30px;"/>
                       <button class="btn btn_theme btn_sm me-1 mb-2">
                         submit
                       </button>
@@ -237,7 +237,7 @@
             <div class="col-lg-4 ms-5">
               <form v-on:submit.prevent="impossibleTime">
                 <h5 style="color: #15d4cd">Pick a time</h5>
-                <div class="tour_details_boxed">
+                <div class="tour_details_boxed"  style="margin-bottom: 30px;">
                   <h5>시작시간</h5>
                   <input type="time" v-model="startTime" />
                   <h5>종료 시간</h5>

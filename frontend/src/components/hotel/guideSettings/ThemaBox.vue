@@ -5,7 +5,7 @@
     </div>
     <div class="news_item_boxed">
     <form id="profile_form_area" @submit.prevent="themaRegister">
-        <select class="form-select" aria-label="Default select example" v-model="thema">
+        <select class="form-select" aria-label="Default select example" v-model="thema"  style="margin-bottom: 30px;">
             <option v-for="(idx) in codeNameList" :value="idx.description">{{idx.description}}</option>
         </select>
         <button class="btn btn_theme btn_sm">submit</button>
