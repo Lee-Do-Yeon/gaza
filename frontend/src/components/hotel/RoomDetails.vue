@@ -172,12 +172,15 @@
                       <div class="col-lg-20">
                         <div class="form-group">
                           <label for="f-one-liner">카테고리</label>
-                          <input
+                          <!-- <input
                             type="text"
                             class="form-control"
                             id="f-one-liner"
                             v-model="location.info.categoryName"
-                          />
+                          /> -->
+                          <select class="form-select" aria-label="Default select example" v-model="location.info.categoryName">
+                            <option v-for="(idx) in codeNameList" :value="idx.description">{{idx.description}}</option>
+                        </select>
                         </div>
                       </div>
 
@@ -261,6 +264,7 @@ import {
   registerDate,
   guideLangRegister,
   guideLocationRegister,
+  codeList
 } from "../../../common/api/commonAPI.js";
 import LanguageBox from "@/components/hotel/guideSettings/LanguageBox";
 import ThemaBox from "@/components/hotel/guideSettings/ThemaBox";
@@ -281,6 +285,8 @@ export default {
 
     const startTime = ref();
     const endTime = ref();
+
+    const codeNameList = ref();
 
     //가이드 마이페이지 정보
     const guide = reactive({
@@ -328,6 +334,10 @@ export default {
       const loginId = store.getters["accountStore/getUserId"];
 
       getInfo(loginId); //수정을 위해 미리 가이드 정보 띄워놓기
+
+      const param = "추천장소분류";
+      getCodeList(param);
+
     });
 
     //상담 불가능 시간대 설정
@@ -411,6 +421,14 @@ export default {
       guideLocationRegister(payload); //call axios
     };
 
+
+    //코드 목록 리스트
+    const getCodeList = async(lang) =>{
+      const response = await codeList(lang);
+      codeNameList.value = response.data;
+      console.log(codeNameList.value);
+    };
+
     return {
       impossibleTime,
       store,
@@ -432,6 +450,8 @@ export default {
       guideFile,
       pictureData2,
       guideLocationRegister,
+      codeNameList,
+      getCodeList
     };
   },
 };
