@@ -2,13 +2,11 @@
   <div>
     <button
       @click="modalToggle"
-      data-bs-toggle="modal"
-      data-bs-target="#exampleModal"
       class="btn btn_theme ms-2"
     >
       회원탈퇴
     </button>
-  
+
     <div
       ref="modal"
       class="modal fade"
@@ -34,7 +32,7 @@
               회원탈퇴 하시겠습니까?
             </h3>
             <div class="logout_approve_button">
-              <button data-bs-dismiss="modal" class="btn btn_theme btn_md">
+              <button data-bs-dismiss="modal" class="btn btn_theme btn_md" @click="del" router-link to="/">
                 네
               </button>
               <button
@@ -52,6 +50,10 @@
   </div>
 </template>
 <script>
+import {  onMounted } from "vue";
+import { deleteUser } from "../../../common/api/commonAPI";
+import { useStore } from "vuex";
+import router from '@/router';
 export default {
   name: "withdraw",
   data() {
@@ -67,6 +69,21 @@ export default {
         ? body.classList.add("modal-open")
         : body.classList.remove("modal-open");
     },
+  },
+  setup() {
+    const store = useStore();
+
+
+    const del = () => {
+      const accessToken = 'Bearer ' +store.getters["accountStore/getAccessToken"];
+      console.log(accessToken);
+      deleteUser(accessToken);
+      store.commit("accountStore/logOutData");
+      router.push({name: 'home'})
+    };
+    return {
+      del,
+    };
   },
 };
 </script>
