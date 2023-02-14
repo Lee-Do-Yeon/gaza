@@ -77,83 +77,46 @@
 </template>
 <script>
 import axios from "@/api/http";
-import { mapState } from "vuex";
-import { reactive } from "vue";
 import { useStore } from "vuex";
-import { ref } from "vue";
-import {
-  locdel,
-} from "../../../common/api/commonAPI.js";
+import { ref,onMounted } from "vue";
+import { locdel } from "../../../common/api/commonAPI.js";
 import { LanguageBox } from "@/components/hotel/guideSettings/LanguageBox";
-const accountStore = "accountStore";
 export default {
   name: "GuideInfoDelete",
-  components: {
-    LanguageBox,
-  },
-  computed: {
-    ...mapState(accountStore, ["userId"]),
-  },
-  created() {
-    this.showList(this.userId);
-  },
-  data() {
-    return {
-      recommendLoc: [],
-    };
-  },
-  //   추천장소 조회
-  methods: {
-    showList(guideId) {
-      axios.get(`/guides/location/${guideId}`).then((res) => {
-        this.recommendLoc = res.data;
-        console.log(this.recommendLoc);
-      });
-    },
-  },
   setup() {
+    const recommendLoc = ref([]);
+
     const store = useStore();
 
-    const date_info = ref(null);
-    const pictureData = ref(null);
-    const pictureData2 = ref(null);
-
-    const startTime = ref();
-    const endTime = ref();
-
-    //가이드 마이페이지 정보
-    const guide = reactive({
-      info: {
-        city: "",
-        country: "",
-        introduction: "",
-        onlineIntroduction: "",
-        price: 0,
-      },
+    const getvalue = () => {
+      const loginId = store.getters["accountStore/getUserId"];
+      axios.get(`guides/location/${loginId}`).then((res) => {
+        recommendLoc.value = res.data;
+      });
+    };
+    onMounted(() => {
+      getvalue();
     });
 
-    //가이드 추천 장소 등록
+    //가이드 추천 장소 삭제
     const locationdelete = function () {
       const loginId = store.getters["accountStore/getUserId"];
 
-      const payload = {
-        loginId: loginId,
-        recommendId: recommendLoc.locationId,
-      };
+      const recommendId= recommendLoc.value[0].locationId;
 
-      locdel(payload); //call axios
+      
+      locdel(JSON.stringify(loginId),JSON.stringify(recommendId));
+
+
+      
     };
 
+
     return {
+      recommendLoc,
       store,
-      guide,
-      date_info,
-      endTime,
-      startTime,
-      pictureData,
       locationdelete,
       location,
-      pictureData2,
     };
   },
 };
