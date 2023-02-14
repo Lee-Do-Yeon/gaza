@@ -77,6 +77,8 @@ public class ReservationController {
     @PutMapping("/{reservationId}")
     @ApiOperation(value = "예약 상태 변경", notes = "예약 상태를 변경한다.")
     public ResponseEntity<? extends BaseResponseBody> changeReservationState(@PathVariable @ApiParam(value="예약 PK", required = true) int reservationId, @RequestBody Map<String, String> statusMap){
+log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 상태 변경 " + statusMap.get("status"));
+
         try{
             reservationService.changeReservationState(reservationId, statusMap.get("status"));
         }catch (Exception e){
