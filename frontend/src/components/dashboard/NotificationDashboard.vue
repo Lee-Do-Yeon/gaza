@@ -76,7 +76,7 @@
                                             </div>
                                             <div>가이드 : {{ res.guideName }}</div>
                                             <div>인원 : {{ res.numberOfPeople }}</div>
-                                            <div>여행날짜 : {{ getDate(res.travelStartDate) }}</div>
+                                            <div>여행날짜 : {{ getDateTime(res.travelStartDate) }}</div>
                                             <div>
                                                 유아 동반 : {{ res.withChildren }} 장애 여부 :
                                                 {{ res.withDisabled }} 노약자 동반 :
@@ -168,8 +168,13 @@ export default {
 
         const getDate = (date) => {
             const DAT = new Date(date);
-            return DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay();
+            return DAT.getFullYear() + "년 " + (DAT.getMonth() + 1) + "월 " + DAT.getDate() + "일";
         };
+
+        const getDateTime = (date) => {
+            const DAT = new Date(date);
+            return DAT.getFullYear() + "년 " + (DAT.getMonth() + 1) + "월 " + DAT.getDate() + "일 " + DAT.getHours() + "시 " + DAT.getMinutes()3 + "분";
+        }
         const store = useStore();
         const router = useRouter();
 
@@ -192,6 +197,7 @@ export default {
             try {
                 const res = await reser(loginID);
                 reservation.value = res.data;
+                console.log(res.data);
             } catch (err) {
                 console.log(err);
             }
@@ -242,13 +248,14 @@ export default {
             state,
             reservation,
             getreservation,
-            getDate,
+            4,
             router,
             movereview,
             download,
             loginID,
             enterConsulting,
-            roomId
+            roomId,
+            getDateTime
         };
     },
 };
