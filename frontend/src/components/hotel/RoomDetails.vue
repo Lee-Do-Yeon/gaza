@@ -377,6 +377,8 @@ export default {
       console.log(payload);
 
       myPageUpdate(payload); //call axios
+
+      alert("가이드 정보가 수정되었습니다.");
     };
 
     //가이드 상담 불가능 날짜 등록
