@@ -55,6 +55,7 @@ Default CSS
 =================================================*/
 
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap');
 
 :root {
     --main-color: #15c4cb;
@@ -64,6 +65,7 @@ Default CSS
     --paragraph-color: #818090;
     --bg-color: #F3F6FD;
     --transition: .4s all ease-in-out;
+    --main-font: 'East Sea Dokdo', cursive;
 }
 
 html,
