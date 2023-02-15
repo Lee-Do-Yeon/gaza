@@ -12,7 +12,7 @@
               </li>
               <li>
                 <router-link to="/guideInfoDelete"
-                  >내 정보 삭제</router-link
+                  >추천 장소 관리</router-link
                 >
               </li>
               <li>
