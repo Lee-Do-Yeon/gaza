@@ -140,7 +140,7 @@ public class ReservationServiceImpl implements ReservationService {
         List<Integer> times = new ArrayList<>(timestamps.size());
         for(int i=0; i<timestamps.size(); i++){
             Timestamp time = timestamps.get(i);
-            Integer res = Integer.parseInt(time.toString().substring(0, 2));
+            Integer res = Integer.parseInt(time.toString().substring(11, 13));
             times.add(res);
         }
         return times;
