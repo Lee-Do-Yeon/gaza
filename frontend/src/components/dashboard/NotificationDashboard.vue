@@ -45,20 +45,23 @@
                                 >
                                     <h2 class="accordion-header" :id="'heading' + index">
                                         <button
-                                            class="accordion-button active d-flex justify-content-end"
+                                            class="accordion-button active d-flex justify-content-between"
                                             type="button"
                                             data-bs-toggle="collapse"
                                             :data-bs-target="'#collapse' + index"
                                             aria-expanded="true"
                                             :aria-controls="'collapse' + index"
                                         >
-                                            <div class="me-2">
-                                                {{ res.reservationId }}
+                                            <button type="button" :class="{ 'invisible': res.stateCode === 'RE02' }" class="btn btn-danger">상담 가능</button>
+                                            <div class="d-flex">
+                                                <div class="me-2">
+                                                    {{ res.reservationId }}
+                                                </div>
+                                                <div class="me-2">
+                                                    {{ res.guideName }}
+                                                </div>
+                                                <div>Date : {{ getDate(res.travelStartDate) }}</div>
                                             </div>
-                                            <div class="me-2">
-                                                {{ res.guideName }}
-                                            </div>
-                                            <div>Date : {{ getDate(res.travelStartDate) }}</div>
                                         </button>
                                     </h2>
                                     <div
@@ -278,7 +281,7 @@ export default {
 
         const reservation = ref([]);
         const res_wait = ref([]);
-        const res_completed = ([]);
+        const res_completed = ref([]);
         const getreservation = async () => {
             const loginID = store.getters["accountStore/getUserId"];
 
