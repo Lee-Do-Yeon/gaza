@@ -14,7 +14,7 @@ public class MyPageRequest {
 
     private String userId;
 
-    private String onlineIntroduction;
+    private String onelineIntroduction;
 
     private String introduction;
 
