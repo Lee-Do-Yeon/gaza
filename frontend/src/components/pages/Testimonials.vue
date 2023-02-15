@@ -11,7 +11,7 @@
               <div>
                 <div class="flight_Search_boxed date_flex_area">
                   <div class="Journey_date">
-                    <input type="date" name = "consult-date" v-model="state.info.consultingDate"/>
+                    <input type="date" name = "consult-date" @change="checkImpossibleTime" v-model="state.info.consultingDate"/>
                   </div>
                 </div>
               </div>
@@ -21,7 +21,8 @@
               <div class="reser_boxed">
                 <!--  data-bs-toggle="button" aria-pressed="false" autocomplete="off" -->
                 <div class="btn-group" role="group" v-for="index in 4" :key="index">
-                  <button type="button" id class="btn btn_theme btn_sm me-1 mb-2" :value=(index-1)*6+btn_index @click="setTime" v-for="btn_index in 6" :key="btn_index"> {{ ((index-1)*6+btn_index < 10) ? '0' + ((index-1)*6+btn_index) : (index-1)*6+btn_index }}</button>
+                  <button type="button" :class="{ 'disabled' : ((state.today===state.selectedDate) && ((index-1)*6+btn_index-1 <= state.now_hour)) || state.impossibleTime.includes((index-1)*6+btn_index-1)}"
+                   class="btn btn_theme btn_sm me-1 mb-2" :value=(index-1)*6+btn_index-1  @click="setTime" v-for="btn_index in 6" :key="btn_index"> {{ ((index-1)*6+btn_index-1 < 10) ? '0' + ((index-1)*6+btn_index-1) : (index-1)*6+btn_index-1 }}</button>
                 </div>
               </div>
             </div>
@@ -95,7 +96,7 @@
 import { onMounted, reactive } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
-import { reserve } from '../../../common/api/commonAPI.js'
+import { reserve, getImpossibleTime } from '../../../common/api/commonAPI.js'
 
 export default {
   setup() {
@@ -117,17 +118,49 @@ export default {
         travel_end_time:'',
         note:'',
       },
+      today: '',
+      selectedDate: '',
+      now_hour : '',
+      impossibleTime : [],
     })
 
     onMounted(() => {
       state.info.withDisabled=false
       state.info.withChildren=false
       state.info.withElderly=false
+    
+      var now_utc = Date.now() // 지금 날짜를 밀리초로
+      // getTimezoneOffset()은 현재 시간과의 차이를 분 단위로 반환
+      var timeOff = new Date().getTimezoneOffset()*60000; // 분단위를 밀리초로 변환
+      // new Date(now_utc-timeOff).toISOString()은 '2022-05-11T18:09:38.134Z'를 반환
+      var today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+      state.info.consultingDate = today;
+      state.selectedDate = today;
+      state.today = today
+      state.now_hour = new Date(now_utc-timeOff).toISOString().split("T")[1].split(":")[0];
+      const dates =  document.querySelectorAll('input[type="date"]');
+      dates.forEach((date) => {
+        date.setAttribute("min", today);
+      })
     })
 
+    const checkImpossibleTime = async function() {
+      state.selectedDate = event.currentTarget.value;
+      
+      try{
+        const res = await getImpossibleTime(route.params.guideId, event.currentTarget.value);
+        state.impossibleTime = res.data;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    
+    // .setAttribute("min", today);
+
     const setTime = function() {
-      state.info.consultingTime = event.currentTarget.value;
+      state.info.consultingTime = event.currentTarget.value < 10 ? '0' + event.currentTarget.value : event.currentTarget.value;
       focusBtn();
+      console.log(state.today + "   " + state.selectedDate);
     }
 
     const focusBtn = function() {
@@ -169,6 +202,7 @@ export default {
       setTime,
       reserveConsulting,
       focusBtn,
+      checkImpossibleTime,
     };
   },
 }
@@ -177,5 +211,10 @@ export default {
 .active{
   background-color: black;
   color: white;
+}
+button.disabled {
+  background-color: gray;
+  color: white;
+
 }
 </style>
