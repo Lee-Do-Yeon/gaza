@@ -324,6 +324,7 @@ export default {
             });
         };
         const roomId = ref();
+        const userName = store.getters["accountStore/getMyName"];
         const enterConsulting = async function (reservationId, guideId, guidePk) {
             await api({
                 url: `/books/consulting/`+"?reservationId="+ reservationId,
@@ -339,7 +340,7 @@ export default {
                     reservationId: reservationId,
                     guideId: guideId,
                     guidePk: guidePk,
-                    userName: loginID,
+                    userName: userName,
                 },
             });
             window.open(routeData.href, "_blank");
