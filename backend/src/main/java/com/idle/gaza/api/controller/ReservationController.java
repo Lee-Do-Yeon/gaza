@@ -68,7 +68,7 @@ public class ReservationController {
 
     @GetMapping("/guide/time")
     @ApiOperation(value = "불가능한 예약 시간 조회", notes = "회원은 불가능한 시간대를 확인 할 수 있다. 해당 날짜의 시간(오후 1시면 13. 이런 식으로) 리스트 리턴.")
-    public ResponseEntity<?> getImpossibleTime(@RequestParam("guideId") @ApiParam(value = "가이드의 유저 아이디(PK말고)", required = true) String guideId,
+    public ResponseEntity<?> getImpossibleTime(@RequestParam("guideId") @ApiParam(value = "가이드의 유저 아이디(PK말고)", required = true) int guideId,
                                                @RequestParam("selectedDate") @ApiParam(value = "선택한 날짜", required = true, example = "2023-02-01") String selectedDate){
         Date date = Date.valueOf(selectedDate);
         List<Integer> timeList = reservationService.getImpossibleTime(guideId, date);
