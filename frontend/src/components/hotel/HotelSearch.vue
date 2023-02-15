@@ -25,7 +25,7 @@
                 <div>{{ guideInfo.introduction }}</div>
               </div>
             </form>
-            <div class="d-flex mt-2 justify-content-end" v-if="isLogin || loginId == guideInfo.id">
+            <div class="d-flex mt-2 justify-content-end" v-if="loginId != guideInfo.id && isLogin">
               <router-link
                 :to="{ name: 'testimonials', params: { guideId: $route.params.guideId } }"
               >
@@ -204,7 +204,6 @@ export default {
 
       axios.get(`/guides/${guideId}`).then((res) => {
         guideInfo.value = res.data;
-        console.log("아이디 : " + res.data.id);
         recommendInfo.value = res.data.guideLocationList;
         themaInfo.value = res.data.thema;
       });

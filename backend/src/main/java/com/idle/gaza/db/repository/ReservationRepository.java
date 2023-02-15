@@ -19,8 +19,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     List<Reservation> findResevationsByGuide(@Param("guideId") String guideId);
     @Query(value="select * from reservation where user_id = (select user_id from user where id= :userId)", nativeQuery = true)
     List<Reservation> findResevationsByUser(@Param("userId") String userId);
-    @Query(value="SELECT consulting_date FROM reservation WHERE guide_id = (select guide_id from guide where user_id = (select user_id from user where id= :guideId)) AND DATE(consulting_date) = DATE(:selectedDate); ", nativeQuery = true)
-    List<Timestamp> getImpossibleTime(@Param("guideId") String guideId, @Param("selectedDate") Date selectedDate);
+    @Query(value="SELECT consulting_date FROM reservation WHERE guide_id = :guideId AND DATE(consulting_date) = DATE(:selectedDate); ", nativeQuery = true)
+    List<Timestamp> getImpossibleTime(@Param("guideId") int guideId, @Param("selectedDate") Date selectedDate);
 
 
     /* 해당 가이드의 예약 정보를 가져옴 */
