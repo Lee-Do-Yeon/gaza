@@ -8,6 +8,7 @@ const state = {
   signRegister: false,
   userId: null,
   isGuide: null,
+  myName: null,
 };
 
 const getters = {
@@ -31,6 +32,9 @@ const getters = {
   },
   getIsGuide: state => {
     return state.isGuide
+  },
+  getMyName: state => {
+    return state.myName
   },
 };
 
@@ -70,6 +74,9 @@ const mutations = {
   isItGuide: (state, data) => {
     state.isGuide = data
   },
+  setMyName: (state, data) => {
+    state.myName = data
+  },
 }
 
 const actions = {
@@ -88,6 +95,7 @@ const actions = {
         alert('로그인 성공')
         await commit("logInData", loginData.id)
         await commit("setToken", response.data)
+        await commit("setMyName", response.data.userName)
         await dispatch('GuideAction')
         router.push({name: "home"})
       } else {
