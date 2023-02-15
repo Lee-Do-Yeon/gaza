@@ -73,7 +73,7 @@
                                         <div class="accordion-body">
                                             <div>
                                                 <img
-                                                    src="../../assets/img/common/dashboard-user.png"
+                                                    :src="baseURL2+res.picture"
                                                     alt="img"
                                                 />
                                             </div>
@@ -154,7 +154,7 @@
                                         <div class="accordion-body">
                                             <div>
                                                 <img
-                                                    src="../../assets/img/common/dashboard-user.png"
+                                                    :src="baseURL2+res.picture"
                                                     alt="img"
                                                 />
                                             </div>
@@ -230,6 +230,10 @@ export default {
     setup() {
         const baseURL =
             "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/user/picture/";
+
+        const baseURL2 =
+        "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
+
 
         const state = reactive({
             info: {
@@ -347,6 +351,7 @@ export default {
         };
 
         return {
+            baseURL2,
             state,
             reservation,
             getreservation,
