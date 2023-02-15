@@ -54,9 +54,11 @@ public class GuideResponse {
 
     private List<LocationResponse> guideLocationList = new ArrayList<>();
 
+    private String id;
+
 
     @Builder
-    public GuideResponse(int guideId, int userId, String name, String picture, String country, String city, LocalTime closeTimeStart, LocalTime closeTimeEnd, Integer price, Integer license, String onelineIntroduction, String introduction, String gender, List<String> language, List<String> thema, List<ReservationResponse> reservationList, List<ReviewResponse> reviewList, List<DayOffResponse> dayOffList, List<LocationResponse> guideLocationList) {
+    public GuideResponse(int guideId, int userId, String name, String picture, String country, String city, LocalTime closeTimeStart, LocalTime closeTimeEnd, Integer price, Integer license, String onelineIntroduction, String introduction, String gender, List<String> language, List<String> thema, List<ReservationResponse> reservationList, List<ReviewResponse> reviewList, List<DayOffResponse> dayOffList, List<LocationResponse> guideLocationList, String id) {
         this.guideId = guideId;
         this.userId = userId;
         this.name = name;
@@ -76,6 +78,7 @@ public class GuideResponse {
         this.reviewList = reviewList;
         this.dayOffList = dayOffList;
         this.guideLocationList = guideLocationList;
+        this.id = id;
     }
 
 }
