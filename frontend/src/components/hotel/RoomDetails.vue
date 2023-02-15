@@ -412,7 +412,7 @@ export default {
         name:location.info.name
       }
 
-      console.log(locPicture)
+      //console.log(locPicture)
       const payload = {
         location: JSON.stringify(request),
         uploadFile: locPicture.value,
