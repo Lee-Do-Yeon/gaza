@@ -76,7 +76,7 @@
                                             </span>                                            
                                         </span>
                                     </p>
-                                    <h3>{{ tourInfo.introduction }} <span>{{ tourInfo.startForm }}</span></h3>
+                                    <p>{{ tourInfo.onelineIntroduction }} <span>{{ tourInfo.startForm }}</span></p>
                                 </div>
                             </div>
                         </div>
