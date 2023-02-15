@@ -63,7 +63,7 @@
                       <div class="row">
                         <div class="col-lg-20">
                           <div class="form-group">
-                            <label for="f-one-liner">One-liner</label>
+                            <label for="f-one-liner">한 줄 소개</label>
                             <input
                               type="text"
                               class="form-control"
@@ -294,7 +294,7 @@ export default {
         city: "",
         country: "",
         introduction: "",
-        onlineIntroduction: "",
+        onelineIntroduction: "",
         price: 0,
       },
     });
@@ -364,7 +364,7 @@ export default {
         city: info.city,
         country: info.country,
         introduction: info.introduction,
-        onlineIntroduction: info.onlineIntroduction,
+        onelineIntroduction: info.onelineIntroduction,
         price: info.price,
         userId: loginId,
       };
@@ -374,7 +374,11 @@ export default {
         picture: guideFile.value,
       };
 
+      console.log(payload);
+
       myPageUpdate(payload); //call axios
+
+      alert("가이드 정보가 수정되었습니다.");
     };
 
     //가이드 상담 불가능 날짜 등록
