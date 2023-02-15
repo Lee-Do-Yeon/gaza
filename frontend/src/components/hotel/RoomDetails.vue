@@ -268,7 +268,7 @@ import {
 } from "../../../common/api/commonAPI.js";
 import LanguageBox from "@/components/hotel/guideSettings/LanguageBox";
 import ThemaBox from "@/components/hotel/guideSettings/ThemaBox";
-
+import router from "@/router";
 
 export default {
   name: "RoomDetails",
@@ -331,6 +331,12 @@ export default {
     };
 
     onMounted(() => {
+      const isLogin = store.getters["accountStore/getIsLogin"];
+      if(isLogin == false){
+        alert("로그인 후 이용하세요");
+        router.push({name:"home"});
+      }
+
       const loginId = store.getters["accountStore/getUserId"];
 
       getInfo(loginId); //수정을 위해 미리 가이드 정보 띄워놓기

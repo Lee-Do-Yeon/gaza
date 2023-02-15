@@ -26,12 +26,31 @@
 <script>
 import { computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
+import { getUserInfo } from '../../../common/api/commonAPI';
+import router from "@/router";
 
 export default {
     setup() {
         const store = useStore();
 
+        const checkAdmin = async function(accessToken){
+            const userInfo = await getUserInfo(accessToken);
+            if(userInfo.state != 'US4'){//관리자가 아닌 경우 홈으로 리턴
+                alert("접근할 수 없는 계정입니다.");
+                router.push({name:"home"});
+            }
+        }
+
         onMounted(() => {
+            const token = store.getters["accountStore/getAccessToken"];
+            console.log(token)
+            if(token == null){
+                alert("로그인 후 이용하세요");
+                router.push({name:"home"});
+            }else{
+                checkAdmin(token);
+            }
+
             store.dispatch('adminStore/getRegisterGuideListAction');
         })
         
@@ -65,7 +84,8 @@ export default {
             registerGuideList,
             allow,
             reject,
-            getFileUrl
+            getFileUrl,
+            checkAdmin
         };
   },
 }

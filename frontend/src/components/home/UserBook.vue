@@ -66,6 +66,7 @@ export default {
       istemplate: true,
     })
 
+
     const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
 
     const bookedGuides = async function () {
@@ -84,12 +85,12 @@ export default {
       };
     }
 
-    onMounted(() => {
 
+    onMounted(() => {
       bookedGuides()
     })
 
-    return { state, baseURL }
+    return { state, baseURL}
   },
 };
 </script>
