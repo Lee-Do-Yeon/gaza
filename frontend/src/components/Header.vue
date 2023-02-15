@@ -131,7 +131,8 @@ export default {
         })
         
         const clickLogout = () => {
-            store.commit('accountStore/logOutData')
+            store.commit('accountStore/logOutData');
+            router.go({name:"home"});
         }
 
         onMounted(() => {
