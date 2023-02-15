@@ -61,7 +61,7 @@ export default {
 
     const state = reactive({
       form: {
-        swiperItems: null,
+        swiperItems: [],
       },
       istemplate: true,
     })
@@ -69,12 +69,19 @@ export default {
     const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
 
     const bookedGuides = async function () {
-      const userId = store.getters["accountStore/getUserId"]
-      const response = await userBookGuide(userId)
-      const isLogin = store.getters["accountStore/getIsLogin"]
-      const isBooked = (response.data.length == 0) ? false : true
-      state.istemplate = (isLogin && isBooked) ? true : false
-      state.form.swiperItems = response.data
+      const userId = store.getters["accountStore/getUserId"];
+      const response = await userBookGuide(userId);
+      const isLogin = store.getters["accountStore/getIsLogin"];
+      const isBooked = (response.data.length == 0) ? false : true;
+      state.istemplate = (isLogin && isBooked) ? true : false;
+
+      for(var i = 0; i<response.data.length; i++){
+        if(response.data[i].stateCode == 'RE01' || response.data[i].stateCode == 'RE04'){
+          continue;
+        }else{
+          state.form.swiperItems.push(response.data[i]);
+        };
+      };
     }
 
     onMounted(() => {
