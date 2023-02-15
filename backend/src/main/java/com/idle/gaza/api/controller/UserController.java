@@ -350,7 +350,7 @@ public class UserController {
 
         String id = tokenUtil.getUserIdFromToken(token);
 
-        if (idFileFile == null || certificateResidenceFile == null || certificateFile == null) {
+        if (idFileFile == null || certificateResidenceFile == null) {
             ApiResponse<Object> ar = ApiResponse.builder()
                     .result(null)
                     .resultCode(HttpStatus.NO_CONTENT.value())
@@ -372,13 +372,12 @@ public class UserController {
 
         //make upload folder
         String guideFileUploadPath = "/" + "guide_document" + "/";
+
         String idFileUploadPath = rootPath + guideFileUploadPath + "id_file" + "/";
         String certificateResidenceUploadPath = rootPath + guideFileUploadPath + "certificate_residence" + "/";
-        String certificateUploadPath = rootPath + guideFileUploadPath + "certificate" + "/";
 
         File idFileUploadFilePath = new File(rootPath, idFileUploadPath);
         File certificateResidenceUploadFilePath = new File(rootPath, certificateResidenceUploadPath);
-        File certificateUploadFilePath = new File(rootPath, certificateUploadPath);
 
         if (!idFileUploadFilePath.exists()) {
             idFileUploadFilePath.mkdirs();
@@ -388,23 +387,17 @@ public class UserController {
             certificateResidenceUploadFilePath.mkdirs();
         }
 
-        if (!certificateUploadFilePath.exists()) {
-            certificateUploadFilePath.mkdirs();
-        }
-
         String idFileFileName = idFileFile.getOriginalFilename();
         String certificateResidenceFileName = certificateResidenceFile.getOriginalFilename();
-        String certificateFileName = certificateFile.getOriginalFilename();
+
 
         UUID uuid = UUID.randomUUID();
         String idFileUploadFileName = uuid.toString() + "_" + idFileFileName;
         String certificateResidenceUploadFileName = uuid.toString() + "_" + certificateResidenceFileName;
-        String certificateUploadFileName = uuid.toString() + "_" + certificateFileName;
 
         try {
             s3Uploader.upload(idFileFile, idFileUploadPath + idFileUploadFileName);
             s3Uploader.upload(certificateResidenceFile, certificateResidenceUploadPath + certificateResidenceUploadFileName);
-            s3Uploader.upload(certificateFile, certificateUploadPath + certificateUploadFileName);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -413,11 +406,31 @@ public class UserController {
         GuideDocument guideDocument = GuideDocument.builder()
                 .idFile(idFileUploadFileName)
                 .certificateResidence(certificateResidenceUploadFileName)
-                .certificate(certificateUploadFileName)
                 .build();
 
+        if (certificateFile != null) {
+            String certificateUploadPath = rootPath + guideFileUploadPath + "certificate" + "/";
+
+            File certificateUploadFilePath = new File(rootPath, certificateUploadPath);
+
+            if (!certificateUploadFilePath.exists()) {
+                certificateUploadFilePath.mkdirs();
+            }
+
+            String certificateFileName = certificateFile.getOriginalFilename();
+
+            String certificateUploadFileName = uuid.toString() + "_" + certificateFileName;
+
+            try {
+                s3Uploader.upload(certificateFile, certificateUploadPath + certificateUploadFileName);
+                guideDocument.setCertificate(certificateUploadFileName);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+
         int insertResult = userService.registerGuide(id, guideDocument);
-        userService.changeState(id, "US2");
+        userService.changeState(id, "US3");
 
         if (insertResult == 0) {
             ApiResponse<Object> ar = ApiResponse.builder()

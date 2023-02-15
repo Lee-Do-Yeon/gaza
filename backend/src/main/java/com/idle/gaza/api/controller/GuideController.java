@@ -112,33 +112,35 @@ public class GuideController {
 
         log.info("guide " + guide.toString());
 
-        //파일이 존재한다면 기존 경로에서 파일 삭제
-        String originPictureName = guideService.findGuideProfilePicture(guide.getUserId());
+        if(multipartFile != null) {
+            //파일이 존재한다면 기존 경로에서 파일 삭제
+            String originPictureName = guideService.findGuideProfilePicture(guide.getUserId());
 
-        if (originPictureName != null) {
-            String originPicture = new String(rootPath + myPagePath + originPictureName);
-            log.info("exist file path = " + originPicture);
+            if (originPictureName != null) {
+                String originPicture = new String(rootPath + myPagePath + originPictureName);
+                log.info("exist file path = " + originPicture);
+
+                try {
+                    s3Uploader.deleteS3(originPictureName);
+                    log.info("delete file");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //파일 업로드
+            String uploadPath = rootPath + myPagePath;
+            String fileName = multipartFile.getOriginalFilename();
+
+            UUID uuid = UUID.randomUUID();
+            String uploadFileName = uuid.toString() + "_" + fileName;
 
             try {
-                s3Uploader.deleteS3(originPictureName);
-                log.info("delete file");
-            } catch (Exception e) {
-                e.printStackTrace();
+                s3Uploader.upload(multipartFile, uploadPath + uploadFileName);
+                guide.setPicture(uploadFileName);
+            } catch (IOException e) {
+                log.error(e.getMessage());
             }
-        }
-
-        //파일 업로드
-        String uploadPath = rootPath + myPagePath;
-        String fileName = multipartFile.getOriginalFilename();
-
-        UUID uuid = UUID.randomUUID();
-        String uploadFileName = uuid.toString() + "_" + fileName;
-
-        try {
-            s3Uploader.upload(multipartFile, uploadPath + uploadFileName);
-            guide.setPicture(uploadFileName);
-        } catch (IOException e) {
-            log.error(e.getMessage());
         }
 
         int result = guideService.setMyPage(guide);
