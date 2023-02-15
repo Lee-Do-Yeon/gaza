@@ -37,15 +37,12 @@ export default {
         const getThemaList = async (loginId) => {
             const res = await getGuideThema(loginId); //call axios
             thema_list.value = res.data;
-            console.log("getThemaList");
-            console.log(thema_list.value);
         };
 
         //테마 코드 조회
         const getCodeList = async(param)=>{
             const res = await codeList(param);
             codeNameList.value = res.data;
-            console.log(codeList)
         }
 
         onMounted(() => {
