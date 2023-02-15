@@ -55,7 +55,7 @@
                                             <div>
                                                 {{ res.userName }}
                                             </div>
-                                            <div>Date : {{ getDate(res.travelStartDate) }}</div>
+                                            <div>상담날짜 : {{ getDateTime(res.consultingDate) }}</div>
                                         </button>
                                     </h2>
                                     <div
@@ -109,9 +109,16 @@ export default {
         const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
         const getDate = (date) => {
             const DAT = new Date(date);
-            return DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay();
+            return DAT.getFullYear() + "년 " + (DAT.getMonth() + 1) + "월 " + DAT.getDate() + "일";
         };
+
+        const getDateTime = (date) => {
+            const DAT = new Date(date);
+            return DAT.getFullYear() + "년 " + (DAT.getMonth() + 1) + "월 " + DAT.getDate() + "일 " + DAT.getHours() + "시 " + DAT.getMinutes() + "분";
+        }
+
         return {
+            getDateTime,
             getDate,
             baseURL
         };
