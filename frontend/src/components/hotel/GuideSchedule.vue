@@ -124,7 +124,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(accountStore, ["userId"]),
+        ...mapState(accountStore, ["userId", "myName"]),
     },
     created() {
         this.showList(this.userId);
@@ -138,6 +138,7 @@ export default {
                 console.log(this.reservation);
             });
         },
+        
         async createMapRoom(reservationId) {
             var base = this;
             console.log("createMapRoom");
@@ -160,6 +161,7 @@ export default {
               alert("예약 데이터 업데이트에 실패하였습니다.");
             });
         },
+        
         async createConsulting(reservationId, guidePk) {
             console.log("아이디: " + reservationId);
             await this.createMapRoom(reservationId);
@@ -171,7 +173,7 @@ export default {
                     reservationId: reservationId,
                     guideId: this.userId,
                     guidePk: guidePk,
-                    userName: this.userId, // 원래 이름인데 일단 아이디로.
+                    userName: this.myName, // 원래 이름인데 일단 아이디로.
                 },
             });
             window.open(routeData.href, "_blank");
