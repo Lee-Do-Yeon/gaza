@@ -12,7 +12,7 @@
               </li>
               <li>
                 <router-link to="/guideInfoDelete"
-                  >내 정보 삭제</router-link
+                  >추천 장소 관리</router-link
                 >
               </li>
               <li>
@@ -416,7 +416,7 @@ export default {
         name:location.info.name
       }
 
-      console.log(locPicture)
+      //console.log(locPicture)
       const payload = {
         location: JSON.stringify(request),
         uploadFile: locPicture.value,
