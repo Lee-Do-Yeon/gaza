@@ -25,7 +25,7 @@
                 <div>{{ guideInfo.introduction }}</div>
               </div>
             </form>
-            <div class="d-flex mt-2 justify-content-end">
+            <div class="d-flex mt-2 justify-content-end" v-if="isLogin || loginId == guideInfo.id">
               <router-link
                 :to="{ name: 'testimonials', params: { guideId: $route.params.guideId } }"
               >
@@ -130,6 +130,7 @@ import "swiper/swiper-bundle.css";
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "@/api/http";
+import { useStore } from "vuex";
 
 export default {
 
@@ -139,6 +140,10 @@ export default {
   },
 
   setup() {
+    const store = useStore();
+    const isLogin = store.getters["accountStore/getIsLogin"];
+    const loginId = store.getters["accountStore/getUserId"];
+
     const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
     const baseURLregi = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/location/";
     const route = useRoute();
@@ -199,7 +204,7 @@ export default {
 
       axios.get(`/guides/${guideId}`).then((res) => {
         guideInfo.value = res.data;
-
+        console.log("아이디 : " + res.data.id);
         recommendInfo.value = res.data.guideLocationList;
         themaInfo.value = res.data.thema;
       });
@@ -226,6 +231,7 @@ export default {
     });
 
     return {
+      isLogin,
       getValue,
       limit,
       numberofpages,
@@ -244,7 +250,8 @@ export default {
       guideReview,
       isReview,
       baseURL,
-      baseURLregi
+      baseURLregi,
+      loginId
     };
   },
 };
