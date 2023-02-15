@@ -38,12 +38,8 @@
               <br />
               <h3 style="font-weight: bold">가이드의 추천 명소</h3>
 
-              <div class="row">
-                <div
-                  class="col-lg-4 col-md-6 col-sm-12 col-12"
-                  v-for="loc in recommendInfo"
-                  :key="loc.name"
-                >
+            <swiper :slides-per-view="4"  :space-between="20" :pagination="{ clickable: true }">
+              <swiper-slide v-for="loc in recommendInfo" :key="loc.name">
                   <div class="news_item_boxed">
                     <div class="news_item_img">
                       <img :src="baseURLregi+loc.picture" alt="img" height="280" width="450"/>
@@ -55,8 +51,9 @@
                       <p>{{ loc.address }}</p>
                     </div>
                   </div>
-                </div>
-              </div>
+              </swiper-slide>
+            </swiper>
+                
               <!--end 추천장소 -->
             </div>
           </div>
@@ -128,12 +125,19 @@
 
 <script>
 import { reviewss, guideDetail } from "../../../common/api/commonAPI";
-
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/swiper-bundle.css";
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "@/api/http";
 
 export default {
+
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+
   setup() {
     const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
     const baseURLregi = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/location/";
