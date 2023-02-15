@@ -135,7 +135,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Integer> getImpossibleTime(String guideId, Date selectedDate) {
+    public List<Integer> getImpossibleTime(int guideId, Date selectedDate) {
         List<Timestamp> timestamps = reservationRepository.getImpossibleTime(guideId, selectedDate);
         List<Integer> times = new ArrayList<>(timestamps.size());
         for(int i=0; i<timestamps.size(); i++){
