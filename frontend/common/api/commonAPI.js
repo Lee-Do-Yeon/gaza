@@ -60,7 +60,7 @@ const deleteUser = (accessToken) => api.delete('/api/users/',  {headers: {Author
 });
 
 //리뷰 등록
-const uploadReview =(payload) => api.post('/api/reviews', payload)
+const uploadReview = (payload) => api.post('/api/reviews', payload)
 
 const requestConfirmId = userid => api.get(`/api/users/${userid}`)
 
@@ -71,11 +71,8 @@ const reserve = payload => {
 }
 
 //상담 불가능 시간대 설정
-const registerTime = payload => {
-    console.log(payload)
-    
-    api.post('/api/guides/time', payload).then((res)=>{console.log(res)});
-}
+const getImpossibleTime = (guideId, today) =>  api.get(`/api/books/guide/time?guideId=${guideId}&selectedDate=${today}`);
+
 
 //가이드 마이페이지 수정
 const myPageUpdate = (payload) => {
@@ -148,5 +145,5 @@ const userBookGuide = (userId) => api.get(`/api/books/user/${userId}`)
 const codeList = (description) => api.get(`/api/codes`, {params:{name: description}});
 
 
-export { deleteUser,reviewss, locdel, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, registerTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema, checkDuplicated , codeList};
+export { deleteUser,reviewss, locdel, requestLogin, requestSignin, requestConfirm, requestConfirmId, reser, popularGuide, guideSearch, guideDetail,requestGuideRegisterList,uploadReview,updateUser, allowGuideRequest, rejectGuideRequest, reserve, getImpossibleTime, myPageUpdate, myPageShow, registerDate, getUserInfo, changePassword, themaGuide, guideLangRegister ,guideLocationRegister, userBookGuide, getGuideLang, deleteLanguage, getGuideThema, guideThemaRegister, deleteThema, checkDuplicated , codeList};
 
