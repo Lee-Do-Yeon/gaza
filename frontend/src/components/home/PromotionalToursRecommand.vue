@@ -66,13 +66,13 @@ export default {
       form: {
         swiperItems: null,
       },
-      themas: [ '힐링', '액티비티', '맛집', '유명관광지', '로컬관광지', '쇼핑', '식사', '관광', '숙박', '쇼핑', '체험' ]
+      themas: [ '힐링', '액티비티', '맛집', '유명관광지', '로컬관광지' ]
     })
 
     // const rand_0_10 = Math.floor(Math.random() * 11);
 
     const themaGuides = async function () {
-      const searchT = state.themas[Math.floor(Math.random() * 11)]
+      const searchT = state.themas[Math.floor(Math.random() * 5)]
       console.log(searchT);
       const response = await themaGuide(searchT)
       // console.log(response.data)
