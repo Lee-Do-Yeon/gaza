@@ -34,8 +34,9 @@ export default {
         const store = useStore();
 
         const checkAdmin = async function(accessToken){
-            const userInfo = await getUserInfo(accessToken);
-            if(userInfo.state != 'US4'){//관리자가 아닌 경우 홈으로 리턴
+            const userInfo = await getUserInfo("Bearer " + accessToken);
+            const state = userInfo.data.result.state;
+            if(state != 'US4'){//관리자가 아닌 경우 홈으로 리턴
                 alert("접근할 수 없는 계정입니다.");
                 router.push({name:"home"});
             }
@@ -43,7 +44,7 @@ export default {
 
         onMounted(() => {
             const token = store.getters["accountStore/getAccessToken"];
-            console.log(token)
+            
             if(token == null){
                 alert("로그인 후 이용하세요");
                 router.push({name:"home"});
