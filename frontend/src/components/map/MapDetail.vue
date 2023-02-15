@@ -680,8 +680,7 @@ export default {
                     if (data === "Success") {
                         msg = "등록이 완료되었습니다.";
                     }
-                    alert(msg);
-                    console.log(msg);
+                    // console.log(msg);
                 });
         },
 
@@ -739,7 +738,6 @@ export default {
                     if (data === "Success") {
                         msg = "변경이 완료되었습니다.";
                     }
-                    alert(msg);
                 });
         },
 
@@ -838,7 +836,7 @@ export default {
 
             // Remove beforeunload listener
             window.removeEventListener("beforeunload", this.leaveSession);
-            // window.close();
+            window.close();
         },
 
         updateMainVideoStreamManager(stream) {
