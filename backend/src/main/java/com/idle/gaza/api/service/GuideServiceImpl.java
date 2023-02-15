@@ -261,6 +261,7 @@ public class GuideServiceImpl implements GuideService {
                 .language(langList)
                 .thema(themaList)
                 .onelineIntroduction(existGuide.getOnlineIntroduction())
+                .id(existGuide.getUser().getId())
                 .build();
 
 

@@ -151,11 +151,12 @@ export default {
           reservationId : route.params.id
         });
         console.log(res.data);
-        // router.push(
-        //   {
-        //     name:"notification"
-        //   }
-        // )
+        alert("후기 작성이 완료되었습니다.");
+        router.push(
+          {
+            name:"notification"
+          }
+        )
       }catch(err){
 
         console.log(err);
