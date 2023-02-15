@@ -58,6 +58,7 @@
 </template>
 <script>
 import { useStore } from "vuex";
+import router from "@/router";
 
 export default {
   name: "LogoutBtn",
@@ -80,6 +81,11 @@ export default {
 
     const clickLogout = () => {
       store.commit("accountStore/logOutData");
+
+      if(store.getters["accountStore/getLogin"] == false){
+        router.push({name:"home"});
+      }
+      
     };
 
     return {
