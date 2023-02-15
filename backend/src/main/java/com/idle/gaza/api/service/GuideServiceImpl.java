@@ -625,8 +625,8 @@ public class GuideServiceImpl implements GuideService {
             updateGuide.setIntroduction(request.getIntroduction());
 
         }
-        if (request.getOnlineIntroduction() != null) {
-            updateGuide.setOnlineIntroduction(request.getOnlineIntroduction());
+        if (request.getOnelineIntroduction() != null) {
+            updateGuide.setOnlineIntroduction(request.getOnelineIntroduction());
         }
         if (request.getPrice() != 0) {
             updateGuide.setPrice(request.getPrice());
