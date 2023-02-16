@@ -85,7 +85,7 @@ export default {
     const getDate = (date) => {
       const DAT = new Date(date);
       return (
-        DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay()
+        DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDate()
       );
     };
 
