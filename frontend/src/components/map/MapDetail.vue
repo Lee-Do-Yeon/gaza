@@ -817,7 +817,7 @@ export default {
             window.addEventListener("beforeunload", this.leaveSession);
         },
 
-        leaveSession() {
+        async leaveSession() {
             // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
             if (this.OpenVidu.session) this.OpenVidu.session.disconnect();
 
@@ -830,8 +830,8 @@ export default {
 
             if(this.isGuide == "US1"){
                 // 저장 후 종료.
-                this.insertToDB();
-                this.changeState();
+                await this.insertToDB();
+                await this.changeState();
             }
 
             // Remove beforeunload listener
