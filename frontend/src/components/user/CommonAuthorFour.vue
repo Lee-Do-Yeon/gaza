@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control" placeholder="비밀번호를 입력해 주세요." v-model="state.form.password" required/>
-                                    <router-link to="/forgot-password">비밀번호 찾기</router-link>
+                                   
                                 </div>
                                 <div class="common_form_submit">
                                     <button class="btn btn_theme btn_md">로그인</button>

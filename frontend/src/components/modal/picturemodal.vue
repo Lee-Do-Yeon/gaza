@@ -35,7 +35,7 @@
 
             </h3>
             <div class="logout_approve_button">
-              <label data-bs-dismiss="modal" class="btn btn_theme btn_md" classfor="formFile">사진 선택</label>
+              <label data-bs-dismiss="modal" class="btn btn_theme btn_md" for="formFile">사진 선택</label>
               <input class="form-control" type="file" id="formFile" accept="image/*" @change="upload" ref="pictureData" style="display:none">
               <button
                 data-bs-dismiss="modal"

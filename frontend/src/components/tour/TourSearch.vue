@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="section_heading_center">
-                        <h2>{{ resultCount }}명의 가이드</h2>
+                        <h2>{{ route.params.searchitem }}검색결과 {{ resultCount }}명의 가이드</h2>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                                             params: { guideId: tourInfo.guideId  },
                                         }"
                                     >
-                                        <img src="@/assets/img/tab-img/hotel1.png" onerror="this.onerror=null; this.src='@/assets/img/tab-img/hotel1.png';"/>
+                                        <img :src="baseURL+tourInfo.picture" onerror="this.onerror=null; this.src='@/assets/img/tab-img/hotel1.png';"/>
                                     </router-link>
                                     <p><i class="fas fa-map-marker-alt"></i>{{ tourInfo.country }}</p>
                                 </div>
@@ -70,13 +70,13 @@
                                         <span class="review_rating">
                                             <span v-for="lang in tourInfo.language" :key="lang">#{{ lang }}</span>
                                         </span> 
-                                        <span class="review_count">                                            
+                                        <span class="review_count">                                    
                                             <span v-for="theme in tourInfo.thema" :key="theme" >
                                                 #{{ theme }}
                                             </span>                                            
                                         </span>
                                     </p>
-                                    <h3>{{ tourInfo.introduction }} <span>{{ tourInfo.startForm }}</span></h3>
+                                    <p>{{ tourInfo.onelineIntroduction }} <span>{{ tourInfo.startForm }}</span></p>
                                 </div>
                             </div>
                         </div>
@@ -134,6 +134,9 @@ export default {
     },
 
     setup(props, { emit }) {
+
+        const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
+
         const route = useRoute()
 
         const resultArray = ref([])
@@ -187,21 +190,21 @@ export default {
 
         watch (checkThema, (newVal, oldVal) => {
             if (checkThema.value.length == 0 && checkLanguage.value.length == 0) {
+                console.log(resultArray.value);
                 resultGuide.value = resultArray.value
+                console.log('zerovalue');
             } else {
                 const sResult = resultArray.value.filter(function(guide) {
                     const check = guide.thema.filter(x => checkThema.value.includes(x))
                     const check2 = guide.language.filter(x => checkLanguage.value.includes(x))
-                    
-                    console.log(check);
                     return check.length + check2.length > 0
                 })
-                console.log(sResult)
-                resultArray.value = sResult
+                resultGuide.value = sResult
             }
         })
 
         watch (checkLanguage, (newVal, oldVal) => {
+            // console.log(newVal);
             if (checkThema.value.length == 0 && checkLanguage.value.length == 0) {
                 resultGuide.value = resultArray.value
             } else {
@@ -210,14 +213,15 @@ export default {
                     const check2 = guide.language.filter(x => checkLanguage.value.includes(x))
                     
                     console.log(check);
+                    console.log(check2);
                     return check.length + check2.length > 0
                 })
                 console.log(sResult)
-                resultArray.value = sResult
+                resultGuide.value = sResult
             }
         })
 
-        return { findSearch, resultArray, resultCount, resultLanguage, resultThema, checkThema, checkLanguage, resultGuide }
+        return { findSearch, resultArray, resultCount, resultLanguage, resultThema, checkThema, checkLanguage, resultGuide, baseURL, route }
     }
 
 };

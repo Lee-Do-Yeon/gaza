@@ -46,15 +46,15 @@
               <div
                 class="col-lg-4 col-md-6 col-sm-12 col-12"
                 v-for="loc in recommendLoc"
-                :key="loc.name"
+                :key="loc.locationId"
               >
                 <div class="news_item_boxed">
                   <form
                     id="profile_form_area"
-                    v-on:submit.prevent="locationdelete"
+                    v-on:submit.prevent="locationdelete(loc.locationId)"
                   >
                     <div class="news_item_img">
-                      <img src="../../assets/img/news/news-1.png" alt="img" />
+                      <img :src="baseURL + loc.picture" alt="img" />
                     </div>
                     <div class="news_item_content">
                       <h3>
@@ -64,7 +64,7 @@
 
                       <!--end 추천장소 -->
                     </div>
-                    <button class="btn btn_theme btn_sm">Delete</button>
+                    <button class="btn btn_theme btn_sm" >Delete</button>
                   </form>
                 </div>
               </div>
@@ -84,6 +84,8 @@ import { LanguageBox } from "@/components/hotel/guideSettings/LanguageBox";
 export default {
   name: "GuideInfoDelete",
   setup() {
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/location/";
+
     const recommendLoc = ref([]);
 
     const store = useStore();
@@ -102,13 +104,9 @@ export default {
     });
 
     //가이드 추천 장소 삭제
-    const locationdelete = function () {
+    const locationdelete = function (recommendId) {
       const loginId = store.getters["accountStore/getUserId"];
-
-      const recommendId = recommendLoc.value[0].locationId;
-
       locdel(loginId, recommendId);
-
     };
 
     return {
@@ -116,6 +114,7 @@ export default {
       store,
       locationdelete,
       location,
+      baseURL
     };
   },
 };

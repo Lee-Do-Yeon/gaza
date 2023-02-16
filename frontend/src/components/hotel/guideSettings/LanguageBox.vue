@@ -5,12 +5,9 @@
     </div>
     <div class="news_item_boxed">
     <form id="profile_form_area" @submit.prevent="langRegister">
-        <input
-        type="text"
-        id="lang"
-        v-model="language"
-        placeholder="사용 가능 언어 입력"
-        />
+        <select class="form-select" aria-label="Default select example" v-model="language" style="margin-bottom: 30px;">
+            <option v-for="(idx) in codeNameList" :value="idx.description">{{idx.description}}</option>
+        </select>
         <button class="btn btn_theme btn_sm">submit</button>
     </form>
     </div>
@@ -20,7 +17,7 @@
 <script>
 import { useStore } from "vuex";
 import { onMounted, ref } from "vue";
-import { guideLangRegister, getGuideLang, deleteLanguage } from "@/../common/api/commonAPI.js";
+import { guideLangRegister, getGuideLang, deleteLanguage , codeList } from "@/../common/api/commonAPI.js";
 import ListItem from "@/components/hotel/guideSettings/ListItem";
 
 export default {
@@ -32,6 +29,8 @@ export default {
         const store = useStore();
         const language = ref();
 
+        const codeNameList = ref();
+
         const loginId = store.getters["accountStore/getUserId"];
 
         //가이드 언어 조회
@@ -42,8 +41,21 @@ export default {
             console.log(language_list.value);
         };
 
+        
+        //언어 코드 목록 조회
+        const getCodeList = async(lang) =>{
+            const response = await codeList(lang);
+            codeNameList.value = response.data;
+            console.log(codeNameList.value);
+        }
+
+
         onMounted(() => {
             getLangList(loginId);
+
+            const param = "언어";
+            getCodeList(param);
+
         });
 
         //가이드 사용 가능한 언어 등록
@@ -73,7 +85,9 @@ export default {
             langRegister,
             store,
             language_list,
-            deleteLang
+            deleteLang,
+            codeNameList,
+            getCodeList
         };
     },
 }

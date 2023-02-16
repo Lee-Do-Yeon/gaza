@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class ReservationResponse {
     @ApiModelProperty(name="가이드 사진")
     String picture;
+    int guidePk;
     int reservationId;
     String guideName;
     String guideId;
@@ -37,7 +38,8 @@ public class ReservationResponse {
 
 
     @Builder
-    public ReservationResponse(String userName, String picture, int reservationId, String guideName, String guideId, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, LocalDateTime consultingDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, String stateCode, String sessionId) {
+    public ReservationResponse(int guidePk, String userName, String picture, int reservationId, String guideName, String guideId, int numberOfPeople, int withChildren, int withElderly, int withDisabled, String note, LocalDateTime consultingDate, LocalDateTime travelStartDate, LocalDateTime travelEndDate, String stateCode, String sessionId) {
+        this.guidePk = guidePk;
         this.userName = userName;
         this.picture = picture;
         this.reservationId = reservationId;

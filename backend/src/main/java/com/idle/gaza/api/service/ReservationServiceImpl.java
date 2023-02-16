@@ -85,6 +85,7 @@ public class ReservationServiceImpl implements ReservationService {
         for(int i=0; i<reservations.size(); i++){
             Reservation reservation = reservations.get(i);
             ReservationResponse res = new ReservationResponse(
+                    reservation.getGuideId().getGuideId(),
                     reservation.getUserId().getName(),
                     reservation.getGuideId().getPicture(),
                     reservation.getReservationId(),
@@ -112,6 +113,7 @@ public class ReservationServiceImpl implements ReservationService {
         for(int i=0; i<reservations.size(); i++){
             Reservation reservation = reservations.get(i);
             ReservationResponse res = new ReservationResponse(
+                    reservation.getGuideId().getGuideId(),
                     reservation.getUserId().getName(),
                     reservation.getGuideId().getPicture(),
                     reservation.getReservationId(),
@@ -133,12 +135,12 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Integer> getImpossibleTime(String guideId, Date selectedDate) {
+    public List<Integer> getImpossibleTime(int guideId, Date selectedDate) {
         List<Timestamp> timestamps = reservationRepository.getImpossibleTime(guideId, selectedDate);
         List<Integer> times = new ArrayList<>(timestamps.size());
         for(int i=0; i<timestamps.size(); i++){
             Timestamp time = timestamps.get(i);
-            Integer res = Integer.parseInt(time.toString().substring(0, 2));
+            Integer res = Integer.parseInt(time.toString().substring(11, 13));
             times.add(res);
         }
         return times;
@@ -173,6 +175,17 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.setStateCode(status);
             reservationRepository.save(reservation);
         }
+    }
+
+    @Override
+    public String getConsulting(int reservationId) {
+        String sessionId = null;
+        Optional<Reservation> oReservation = reservationRepository.findById(reservationId);
+        if(oReservation.isPresent()) {
+            Reservation reservation = oReservation.get();
+            sessionId = reservation.getSessionId();
+        }
+        return sessionId;
     }
 
 }

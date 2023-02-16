@@ -14,6 +14,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @Configuration
+//@EnableRedisHttpSession
 public class RedisConfig {
     @Value("${redis.host}")
     private String redisHost;
@@ -33,7 +34,7 @@ public class RedisConfig {
     }
 
     @Bean(name="redisTemplate")
-    public RedisTemplate<String, String> redisTemplate() {
+        public RedisTemplate<String, String> redisTemplate() {
         // redisTemplate를 받아와서 set, get, delete를 사용
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         /**
@@ -57,14 +58,14 @@ public class RedisConfig {
     }
 
 
-//    @Qualifier("RedisTemplate")
-//    @Bean
-//    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-//        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setConnectionFactory(connectionFactory);
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
-//        return redisTemplate;
-//    }
+    @Qualifier("RedisTemplate")
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
+        return redisTemplate;
+    }
 
 }

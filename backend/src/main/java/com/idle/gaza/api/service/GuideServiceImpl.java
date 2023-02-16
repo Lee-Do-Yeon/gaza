@@ -205,6 +205,7 @@ public class GuideServiceImpl implements GuideService {
                     .name(location.getName())
                     .longitude(location.getLongitude())
                     .categoryCode(location.getCategoryCode())
+                    .picture(location.getPicture())
                     .latitude(location.getLatitude())
                     .build();
             newLocList.add(loc);
@@ -260,6 +261,7 @@ public class GuideServiceImpl implements GuideService {
                 .language(langList)
                 .thema(themaList)
                 .onelineIntroduction(existGuide.getOnlineIntroduction())
+                .id(existGuide.getUser().getId())
                 .build();
 
 
@@ -383,14 +385,16 @@ public class GuideServiceImpl implements GuideService {
         List<LocationResponse> locationRes = new ArrayList<>(locations.size());
         for (int i = 0; i < locations.size(); i++) {
             GuideRecommendLocation location = locations.get(i);
-            LocationResponse res = new LocationResponse(
-                    location.getRecommendId(),
-                    location.getName(),
-                    location.getAddress(),
-                    location.getCategoryCode(),
-                    location.getLatitude(),
-                    location.getLongitude()
-            );
+            LocationResponse res = LocationResponse
+                    .builder()
+                    .locationId(location.getRecommendId())
+                    .address(location.getAddress())
+                    .name(location.getName())
+                    .categoryCode(location.getCategoryCode())
+                    .longitude(location.getLongitude())
+                    .latitude(location.getLatitude())
+                    .picture(location.getPicture())
+                    .build();
             locationRes.add(res);
         }
         return locationRes;
@@ -419,7 +423,7 @@ public class GuideServiceImpl implements GuideService {
         Optional<Guide> existGuide = guideRepository.findGuideByUser(user.get().getUserId());
         if (existGuide.isPresent()) return 0;
 
-
+        /*
         Guide newGuide = Guide.builder()
                 .user(user.get())
                 .picture(guide.getPicture())
@@ -432,8 +436,14 @@ public class GuideServiceImpl implements GuideService {
                 .closeTimeStart(LocalTime.parse(guide.getTimeStart()))
                 .closeTimeEnd(LocalTime.parse(guide.getTimeEnd()))
                 .build();
+        */
+        Guide newGuide = Guide.builder()
+                .user(user.get())
+                .build();
 
         guideRepository.save(newGuide);
+        
+
         return 1;
     }
 
@@ -616,8 +626,8 @@ public class GuideServiceImpl implements GuideService {
             updateGuide.setIntroduction(request.getIntroduction());
 
         }
-        if (request.getOnlineIntroduction() != null) {
-            updateGuide.setOnlineIntroduction(request.getOnlineIntroduction());
+        if (request.getOnelineIntroduction() != null) {
+            updateGuide.setOnlineIntroduction(request.getOnelineIntroduction());
         }
         if (request.getPrice() != 0) {
             updateGuide.setPrice(request.getPrice());

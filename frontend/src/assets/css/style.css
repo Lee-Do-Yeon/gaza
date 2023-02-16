@@ -55,6 +55,7 @@ Default CSS
 =================================================*/
 
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap');
 
 :root {
     --main-color: #15c4cb;
@@ -64,6 +65,7 @@ Default CSS
     --paragraph-color: #818090;
     --bg-color: #F3F6FD;
     --transition: .4s all ease-in-out;
+    --main-font: 'East Sea Dokdo', cursive;
 }
 
 html,
@@ -1028,6 +1030,7 @@ section {
 
 .theme_two_box_img img {
     width: 100%;
+    height: 220px;
 }
 
 .theme_two_box_img .discount_tab {
@@ -3696,6 +3699,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 
 .news_item_img img {
     width: 100%;
+    height: 280px;
 }
 
 .news_item_content {

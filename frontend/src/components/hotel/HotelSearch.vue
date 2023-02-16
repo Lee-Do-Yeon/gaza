@@ -6,17 +6,16 @@
           <div class="tour_details_leftside_wrapper">
             <div class="tour_details_heading_wrapper">
               <div>
-                <h3>
-                  <img src="../../assets/img/banner/guide_profile.jpg" />
-                </h3>
               </div>
             </div>
             <hr />
             <form class="d-flex">
               <img
                 style="border-radius: 50%"
-                src="../../assets/img/common/dashboard-user.png"
+                :src="baseURL+guideInfo.picture"
                 alt="img"
+                height="100"
+                width="100"
               />
               <div class="ms-3">
                 <h3>{{ guideInfo.name }}</h3>
@@ -26,7 +25,7 @@
                 <div>{{ guideInfo.introduction }}</div>
               </div>
             </form>
-            <div class="d-flex mt-2 justify-content-end">
+            <div class="d-flex mt-2 justify-content-end" v-if="loginId != guideInfo.id && isLogin">
               <router-link
                 :to="{ name: 'testimonials', params: { guideId: $route.params.guideId } }"
               >
@@ -39,15 +38,11 @@
               <br />
               <h3 style="font-weight: bold">가이드의 추천 명소</h3>
 
-              <div class="row">
-                <div
-                  class="col-lg-4 col-md-6 col-sm-12 col-12"
-                  v-for="loc in recommendInfo"
-                  :key="loc.name"
-                >
+            <swiper :slides-per-view="4"  :space-between="20" :pagination="{ clickable: true }">
+              <swiper-slide v-for="loc in recommendInfo" :key="loc.name">
                   <div class="news_item_boxed">
                     <div class="news_item_img">
-                      <img src="../../assets/img/news/news-1.png" alt="img" />
+                      <img :src="baseURLregi+loc.picture" alt="img" height="280" width="450"/>
                     </div>
                     <div class="news_item_content">
                       <h3>
@@ -56,8 +51,9 @@
                       <p>{{ loc.address }}</p>
                     </div>
                   </div>
-                </div>
-              </div>
+              </swiper-slide>
+            </swiper>
+                
               <!--end 추천장소 -->
             </div>
           </div>
@@ -129,13 +125,27 @@
 
 <script>
 import { reviewss, guideDetail } from "../../../common/api/commonAPI";
-
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/swiper-bundle.css";
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "@/api/http";
+import { useStore } from "vuex";
 
 export default {
+
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+
   setup() {
+    const store = useStore();
+    const isLogin = store.getters["accountStore/getIsLogin"];
+    const loginId = store.getters["accountStore/getUserId"];
+
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
+    const baseURLregi = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/location/";
     const route = useRoute();
     const review = ref([]);
     const numberofreviews = ref(0);
@@ -194,7 +204,6 @@ export default {
 
       axios.get(`/guides/${guideId}`).then((res) => {
         guideInfo.value = res.data;
-
         recommendInfo.value = res.data.guideLocationList;
         themaInfo.value = res.data.thema;
       });
@@ -221,6 +230,7 @@ export default {
     });
 
     return {
+      isLogin,
       getValue,
       limit,
       numberofpages,
@@ -237,7 +247,10 @@ export default {
       recommendInfo,
       themaInfo,
       guideReview,
-      isReview
+      isReview,
+      baseURL,
+      baseURLregi,
+      loginId
     };
   },
 };
