@@ -258,7 +258,6 @@ import { onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { ref } from "vue";
 import {
-  registerTime,
   myPageUpdate,
   myPageShow,
   registerDate,
