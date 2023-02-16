@@ -191,7 +191,7 @@ export default {
 
     const getDate = ( date ) => {
       const DAT = new Date(date)
-      return DAT.getFullYear() +'-'+(DAT.getMonth()+1) +'-' +DAT.getDay()
+      return DAT.getFullYear() +'-'+(DAT.getMonth()+1) +'-' +DAT.getDate()
     }
 
     const filter_date=() => {
