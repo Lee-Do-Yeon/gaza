@@ -55,7 +55,7 @@
                                             <div>
                                                 {{ res.userName }}
                                             </div>
-                                            <div>Date : {{ getDate(res.travelStartDate) }}</div>
+                                            <div>상담날짜 : {{ getDateTime(res.consultingDate) }}</div>
                                         </button>
                                     </h2>
                                     <div
@@ -67,7 +67,7 @@
                                         <div class="accordion-body">
                                             <div>
                                                 <img
-                                                    src="../../assets/img/common/dashboard-user.png"
+                                                    :src="baseURL+res.picture"
                                                     alt="img"
                                                 />
                                             </div>
@@ -82,7 +82,7 @@
                                             <div class="d-flex justify-content-end">
                                                 <button
                                                     class="btn btn_theme btn-lg"
-                                                    @click="createConsulting(res.reservationId)"
+                                                    @click="createConsulting(res.reservationId, res.guidePk)"
                                                 >
                                                     상담 시작
                                                 </button>
@@ -106,12 +106,21 @@ const accountStore = "accountStore";
 export default {
     name: "GuideSchedule",
     setup() {
+        const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
         const getDate = (date) => {
             const DAT = new Date(date);
-            return DAT.getFullYear() + "-" + (DAT.getMonth() + 1) + "-" + DAT.getDay();
+            return DAT.getFullYear() + "년 " + (DAT.getMonth() + 1) + "월 " + DAT.getDate() + "일";
         };
+
+        const getDateTime = (date) => {
+            const DAT = new Date(date);
+            return DAT.getFullYear() + "년 " + (DAT.getMonth() + 1) + "월 " + DAT.getDate() + "일 " + DAT.getHours() + "시 " + DAT.getMinutes() + "분";
+        }
+
         return {
+            getDateTime,
             getDate,
+            baseURL
         };
     },
 
@@ -122,7 +131,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(accountStore, ["userId"]),
+        ...mapState(accountStore, ["userId", "myName"]),
     },
     created() {
         this.showList(this.userId);
@@ -136,6 +145,7 @@ export default {
                 console.log(this.reservation);
             });
         },
+        
         async createMapRoom(reservationId) {
             var base = this;
             console.log("createMapRoom");
@@ -150,18 +160,16 @@ export default {
                 });
             // 세션 아이디 저장.
             await axios
-                .post("/map/session", JSON.stringify({
-                    reservationId: reservationId+"",
-                    sessionId: base.mySessionId
-                }))
-                .then((data) => {
-                    console.log("예약 " + reservationId + " - " + base.mySessionId + " 저장");
-                })
-                .catch(() => {
-                    alert("세션 저장에 실패하였습니다.");
-                });
+            .patch("/books/consulting/create?reservationId="+ reservationId+"&sessionId="+base.mySessionId)
+            .then((data) => {
+              console.log("예약 테이블에 세션 아이디 추가. " + base.mySessionId);
+            })
+            .catch(() => {
+              alert("예약 데이터 업데이트에 실패하였습니다.");
+            });
         },
-        async createConsulting(reservationId) {
+        
+        async createConsulting(reservationId, guidePk) {
             console.log("아이디: " + reservationId);
             await this.createMapRoom(reservationId);
             console.log("세션 아이디: " + this.mySessionId);
@@ -171,7 +179,8 @@ export default {
                     roomId: this.mySessionId,
                     reservationId: reservationId,
                     guideId: this.userId,
-                    userName: this.userId, // 원래 이름인데 일단 아이디로.
+                    guidePk: guidePk,
+                    userName: this.myName, // 원래 이름인데 일단 아이디로.
                 },
             });
             window.open(routeData.href, "_blank");

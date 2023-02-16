@@ -3,6 +3,7 @@ package com.idle.gaza.api.pubsub;
 import com.idle.gaza.api.model.ChatMessage;
 import com.idle.gaza.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RedisPublisher {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    @Qualifier("RedisTemplate")
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     public void publish(ChannelTopic topic, ChatMessage message) {

@@ -16,7 +16,7 @@
                     <td><a :href="getFileUrl(user).idFile"><img src="../../assets/img/admin/file.png" alt=""></a></td>
                     <td><a :href="getFileUrl(user).certificateResidence"><img src="../../assets/img/admin/file.png" alt=""></a></td>
                     <td><a :href="getFileUrl(user).certificate"><img src="../../assets/img/admin/file.png" alt=""></a></td>
-                    <td><button type="button" class="btn btn-outline-info" @click="allow()">승인</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button type="button" class="btn btn-outline-info" @click="reject()">거절</button></td>
+                    <td><button type="button" class="btn btn-outline-info" @click="allow(user.id)">승인</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button type="button" class="btn btn-outline-info" @click="reject()">거절</button></td>
                 </tr>
             </tbody>
         </table>
@@ -26,12 +26,32 @@
 <script>
 import { computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
+import { getUserInfo } from '../../../common/api/commonAPI';
+import router from "@/router";
 
 export default {
     setup() {
         const store = useStore();
 
+        const checkAdmin = async function(accessToken){
+            const userInfo = await getUserInfo("Bearer " + accessToken);
+            const state = userInfo.data.result.state;
+            if(state != 'US4'){//관리자가 아닌 경우 홈으로 리턴
+                alert("접근할 수 없는 계정입니다.");
+                router.push({name:"home"});
+            }
+        }
+
         onMounted(() => {
+            const token = store.getters["accountStore/getAccessToken"];
+            
+            if(token == null){
+                alert("로그인 후 이용하세요");
+                router.push({name:"home"});
+            }else{
+                checkAdmin(token);
+            }
+
             store.dispatch('adminStore/getRegisterGuideListAction');
         })
         
@@ -49,14 +69,15 @@ export default {
             }
         }
 
-        const allow = function () {
+        const allow = function (id) {
             console.log("신청 승인");
-            store.dispatch('adminStore/allowGuideRequest');
+            console.log(id);
+            store.dispatch('adminStore/allowGuideRequest', id);
         }
 
-        const reject = function () {
+        const reject = function (id) {
             console.log("신청 거부");
-            store.dispatch('adminStore/rejectGuideRequest');
+            store.dispatch('adminStore/rejectGuideRequest', id);
         }
 
         return {
@@ -64,7 +85,8 @@ export default {
             registerGuideList,
             allow,
             reject,
-            getFileUrl
+            getFileUrl,
+            checkAdmin
         };
   },
 }

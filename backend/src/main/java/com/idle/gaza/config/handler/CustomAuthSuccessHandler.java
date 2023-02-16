@@ -64,6 +64,7 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
             jsonObject.put("accessToken", accessToken);
             String refreshToken = tokenUtil.generateJwtToken(user, TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND, TokenUtil.REFRESH_TOKEN_NAME);
             jsonObject.put("refreshToken", refreshToken);
+            jsonObject.put("userName", user.getName());
 
             RedisUtil.setDataExpire(refreshToken, user.getId(), TokenUtil.REFRESH_TOKEN_VALIDATION_SECOND);
         }

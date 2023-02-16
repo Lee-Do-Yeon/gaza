@@ -21,15 +21,14 @@
                     <router-link :to="{
                       name: 'hotel-details',
                       params: { guideId: guide.guideId },
-                  }"><img src="../../assets/img/tab-img/hotel1.png" alt="img"></router-link>
-                    <p><i class="fas fa-map-marker-alt"></i>{{ guide.country }}, {{ guide.city }}</p>
+                  }"><img :src="baseURL+guide.picture" alt="img"></router-link>
                   </div>
                   <div class="theme_two_box_content">
                     <h4><router-link :to="{
                         name: 'hotel-details',
                         params: { guideId: guide.guideId  },
                       }"
-                      >{{ guide.name }}</router-link></h4>
+                      >{{ guide.name }} <p><i class="fas fa-map-marker-alt"></i>{{ guide.country }}, {{ guide.city }}</p></router-link></h4>
                     <p><span class="review_rating">
                         <span v-for="lang in guide.language" :key="lang">#{{ lang }}</span>
                     </span> <span class="review_count">
@@ -67,24 +66,26 @@ export default {
       form: {
         swiperItems: null,
       },
-      themas: [ '힐링', '액티비티', '맛집', '유명관광지', '로컬관광지', '쇼핑', '식사', '관광', '숙박', '쇼핑', '체험' ]
+      themas: [ '힐링', '액티비티', '맛집', '유명관광지', '로컬관광지' ]
     })
 
     // const rand_0_10 = Math.floor(Math.random() * 11);
 
     const themaGuides = async function () {
-      const searchT = state.themas[Math.floor(Math.random() * 11)]
+      const searchT = state.themas[Math.floor(Math.random() * 5)]
       console.log(searchT);
       const response = await themaGuide(searchT)
       // console.log(response.data)
       state.form.swiperItems = response.data
     }
 
+    const baseURL = "https://s3.ap-northeast-2.amazonaws.com/ssafy.common.gaza//gaza/guide/mypage/";
+    
     onMounted(() => {
       themaGuides()
     })
 
-    return { themaGuides, state}
+    return { themaGuides, state, baseURL}
   },
 };
 </script>

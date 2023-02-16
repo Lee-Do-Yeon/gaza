@@ -5,12 +5,9 @@
     </div>
     <div class="news_item_boxed">
     <form id="profile_form_area" @submit.prevent="themaRegister">
-        <input
-        type="text"
-        id="thema"
-        v-model="thema"
-        placeholder="테마 입력"
-        />
+        <select class="form-select" aria-label="Default select example" v-model="thema"  style="margin-bottom: 30px;">
+            <option v-for="(idx) in codeNameList" :value="idx.description">{{idx.description}}</option>
+        </select>
         <button class="btn btn_theme btn_sm">submit</button>
     </form>
     </div>
@@ -20,7 +17,7 @@
 <script>
 import { useStore } from "vuex";
 import { onMounted, ref } from "vue";
-import { guideThemaRegister, getGuideThema, deleteThema } from "@/../common/api/commonAPI.js";
+import { guideThemaRegister, getGuideThema, deleteThema , codeList} from "@/../common/api/commonAPI.js";
 import ListItem2 from "@/components/hotel/guideSettings/ListItem2";
 
 export default {
@@ -34,16 +31,25 @@ export default {
 
         const loginId = store.getters["accountStore/getUserId"];
 
+        const codeNameList = ref();
+
         //가이드 테마 조회
         const getThemaList = async (loginId) => {
             const res = await getGuideThema(loginId); //call axios
             thema_list.value = res.data;
-            console.log("getThemaList");
-            console.log(thema_list.value);
         };
+
+        //테마 코드 조회
+        const getCodeList = async(param)=>{
+            const res = await codeList(param);
+            codeNameList.value = res.data;
+        }
 
         onMounted(() => {
             getThemaList(loginId);
+
+            const param = "테마";
+            getCodeList(param);
         });
 
         //테마 등록
@@ -65,7 +71,9 @@ export default {
             themaRegister,
             store,
             thema_list,
-            delThema
+            delThema,
+            codeNameList,
+            getCodeList
         };
     },
 }

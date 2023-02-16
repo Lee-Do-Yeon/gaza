@@ -12,7 +12,7 @@
               </li>
               <li>
                 <router-link to="/guideInfoDelete"
-                  >내 정보 삭제</router-link
+                  >추천 장소 관리</router-link
                 >
               </li>
               <li>
@@ -63,7 +63,7 @@
                       <div class="row">
                         <div class="col-lg-20">
                           <div class="form-group">
-                            <label for="f-one-liner">One-liner</label>
+                            <label for="f-one-liner">한 줄 소개</label>
                             <input
                               type="text"
                               class="form-control"
@@ -172,12 +172,15 @@
                       <div class="col-lg-20">
                         <div class="form-group">
                           <label for="f-one-liner">카테고리</label>
-                          <input
+                          <!-- <input
                             type="text"
                             class="form-control"
                             id="f-one-liner"
                             v-model="location.info.categoryName"
-                          />
+                          /> -->
+                          <select class="form-select" aria-label="Default select example" v-model="location.info.categoryName">
+                            <option v-for="(idx) in codeNameList" :value="idx.description">{{idx.description}}</option>
+                        </select>
                         </div>
                       </div>
 
@@ -219,7 +222,7 @@
                 <div class="flight_Search_boxed date_flex_area">
                   <div class="Journey_date">
                     <form v-on:submit="register_date">
-                      <input type="date" v-model="date_info" />
+                      <input type="date" v-model="date_info"  style="margin-bottom: 30px;"/>
                       <button class="btn btn_theme btn_sm me-1 mb-2">
                         submit
                       </button>
@@ -234,7 +237,7 @@
             <div class="col-lg-4 ms-5">
               <form v-on:submit.prevent="impossibleTime">
                 <h5 style="color: #15d4cd">Pick a time</h5>
-                <div class="tour_details_boxed">
+                <div class="tour_details_boxed"  style="margin-bottom: 30px;">
                   <h5>시작시간</h5>
                   <input type="time" v-model="startTime" />
                   <h5>종료 시간</h5>
@@ -261,10 +264,11 @@ import {
   registerDate,
   guideLangRegister,
   guideLocationRegister,
+  codeList
 } from "../../../common/api/commonAPI.js";
 import LanguageBox from "@/components/hotel/guideSettings/LanguageBox";
 import ThemaBox from "@/components/hotel/guideSettings/ThemaBox";
-
+import router from "@/router";
 
 export default {
   name: "RoomDetails",
@@ -282,13 +286,15 @@ export default {
     const startTime = ref();
     const endTime = ref();
 
+    const codeNameList = ref();
+
     //가이드 마이페이지 정보
     const guide = reactive({
       info: {
         city: "",
         country: "",
         introduction: "",
-        onlineIntroduction: "",
+        onelineIntroduction: "",
         price: 0,
       },
     });
@@ -325,9 +331,19 @@ export default {
     };
 
     onMounted(() => {
+      const isLogin = store.getters["accountStore/getIsLogin"];
+      if(isLogin == false){
+        alert("로그인 후 이용하세요");
+        router.push({name:"home"});
+      }
+
       const loginId = store.getters["accountStore/getUserId"];
 
       getInfo(loginId); //수정을 위해 미리 가이드 정보 띄워놓기
+
+      const param = "추천장소분류";
+      getCodeList(param);
+
     });
 
     //상담 불가능 시간대 설정
@@ -354,7 +370,7 @@ export default {
         city: info.city,
         country: info.country,
         introduction: info.introduction,
-        onlineIntroduction: info.onlineIntroduction,
+        onelineIntroduction: info.onelineIntroduction,
         price: info.price,
         userId: loginId,
       };
@@ -364,7 +380,11 @@ export default {
         picture: guideFile.value,
       };
 
+      console.log(payload);
+
       myPageUpdate(payload); //call axios
+
+      alert("가이드 정보가 수정되었습니다.");
     };
 
     //가이드 상담 불가능 날짜 등록
@@ -402,13 +422,21 @@ export default {
         name:location.info.name
       }
 
-      console.log(locPicture)
+      //console.log(locPicture)
       const payload = {
         location: JSON.stringify(request),
         uploadFile: locPicture.value,
       };
 
       guideLocationRegister(payload); //call axios
+    };
+
+
+    //코드 목록 리스트
+    const getCodeList = async(lang) =>{
+      const response = await codeList(lang);
+      codeNameList.value = response.data;
+      console.log(codeNameList.value);
     };
 
     return {
@@ -432,6 +460,8 @@ export default {
       guideFile,
       pictureData2,
       guideLocationRegister,
+      codeNameList,
+      getCodeList
     };
   },
 };

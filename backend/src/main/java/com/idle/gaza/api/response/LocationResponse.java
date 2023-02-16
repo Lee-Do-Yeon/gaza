@@ -18,14 +18,16 @@ public class LocationResponse {
     private String categoryCode;
     private String latitude;
     private String longitude;
+    private String picture;
 
     @Builder
-    public LocationResponse(int locationId, String name, String address, String categoryCode, String latitude, String longitude) {
+    public LocationResponse(int locationId, String name, String address, String categoryCode, String latitude, String longitude, String picture) {
         this.locationId = locationId;
         this.name = name;
         this.address = address;
         this.categoryCode = categoryCode;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.picture = picture;
     }
 }
