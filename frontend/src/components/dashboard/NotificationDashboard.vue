@@ -116,25 +116,27 @@
                                 </div>
                             </div>
                         </div>
+
+                        
                         <div class="notification_top_heading">
                             <h3>상담 완료</h3>
                         </div>
                         <div class="notification_wrapper">
-                            <div class="accordion" id="accordionExample">
+                            <div class="accordion" >
                                 <div
                                     v-for="(res, index) in res_completed"
                                     :key="res.id"
                                     class="accordion-item"
                                 >
-                                    <h2 class="accordion-header" :id="'heading' + index">
+                                    <h2 class="accordion-header" :id="'heading2' + index">
                                         <button
                                             :class="{ 'review': res.stateCode === 'RE01' }"
                                             class="accordion-button active d-flex justify-content-end"
                                             type="button"
                                             data-bs-toggle="collapse"
-                                            :data-bs-target="'#collapse' + index"
+                                            :data-bs-target="'#collapse2' + index"
                                             aria-expanded="true"
-                                            :aria-controls="'collapse' + index"
+                                            :aria-controls="'collapse2' + index"
                                         >
                                             <div class="me-2">
                                                 {{ res.reservationId }}
@@ -146,9 +148,9 @@
                                         </button>
                                     </h2>
                                     <div
-                                        :id="'collapse' + index"
+                                        :id="'collapse2' + index"
                                         class="accordion-collapse collapse"
-                                        :aria-labelledby="'heading' + index"
+                                        :aria-labelledby="'heading2' + index"
                                         data-bs-parent="#accordionExample"
                                     >
                                         <div class="accordion-body">
