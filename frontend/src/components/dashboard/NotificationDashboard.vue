@@ -184,13 +184,6 @@
                                                 >
                                                     후기작성
                                                 </button>
-
-                                                <button
-                                                    class="btn btn_theme btn-lg"
-                                                    @click="enterConsulting(res.reservationId, res.guideId, res.guidePk)"
-                                                >
-                                                    입장
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
