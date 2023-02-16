@@ -39,7 +39,7 @@
                         <div class="notification_wrapper">
                             <div class="accordion" id="accordionExample">
                                 <div
-                                    v-for="(res, index) in reservation"
+                                    v-for="(res, index) in res_wait"
                                     :key="res.id"
                                     class="accordion-item"
                                 >
@@ -92,6 +92,58 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="notification_top_heading">
+                            <h3>상담 완료</h3>
+                        </div>
+                        <div class="notification_wrapper">
+                            <div class="accordion" id="accordionExample">
+                                <div
+                                    v-for="(res, index) in res_completed"
+                                    :key="res.id"
+                                    class="accordion-item"
+                                >
+                                    <h2 class="accordion-header" :id="'heading' + index">
+                                        <button
+                                            class="accordion-button active d-flex justify-content-between"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            :data-bs-target="'#collapse' + index"
+                                            aria-expanded="true"
+                                            :aria-controls="'collapse' + index"
+                                        >
+                                            <div>
+                                                {{ res.userName }}
+                                            </div>
+                                            <div>상담날짜 : {{ getDateTime(res.consultingDate) }}</div>
+                                        </button>
+                                    </h2>
+                                    <div
+                                        :id="'collapse' + index"
+                                        class="accordion-collapse collapse"
+                                        :aria-labelledby="'heading' + index"
+                                        data-bs-parent="#accordionExample"
+                                    >
+                                        <div class="accordion-body">
+                                            <div>
+                                                <img
+                                                    :src="baseURL+res.picture"
+                                                    alt="img"
+                                                />
+                                            </div>
+                                            <div>인원 : {{ res.numberOfPeople }}</div>
+                                            <div>여행날짜 : {{ getDate(res.travelStartDate) }}</div>
+                                            <div>
+                                                유아 동반 : {{ res.withChildren }} 장애 여부 :
+                                                {{ res.withDisabled }} 노약자 동반 :
+                                                {{ res.withElderly }}
+                                            </div>
+                                            <div>특이사항 : {{ res.note }}</div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,6 +179,8 @@ export default {
     data() {
         return {
             reservation: [],
+            res_wait: [],
+            res_completed: [],
             mySessionId: "",
         };
     },
@@ -141,8 +195,16 @@ export default {
         showList(guideId) {
             //상담 일정을 가져옴
             axios.get(`/books/guide/${guideId}`).then((res) => {
-                this.reservation = res.data;
-                console.log(this.reservation);
+                const reservations = res.data;
+
+                reservations.forEach((r) => {
+                    if(r.stateCode === 'RE01' || r.stateCode === 'RE04') {
+                        this.res_completed.push(r);
+                    } else {
+                        this.res_wait.push(r);
+                    }
+                })
+                
             });
         },
         

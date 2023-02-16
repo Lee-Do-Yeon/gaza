@@ -60,7 +60,7 @@
                                                 <div class="me-2">
                                                     {{ res.guideName }}
                                                 </div>
-                                                <div>Date : {{ getDate(res.travelStartDate) }}</div>
+                                                <div>상담날짜 : {{ getDate(res.consultingDate) }}</div>
                                             </div>
                                         </button>
                                     </h2>
@@ -144,7 +144,7 @@
                                             <div class="me-2">
                                                 {{ res.guideName }}
                                             </div>
-                                            <div>Date : {{ getDate(res.travelStartDate) }}</div>
+                                            <div>상담날짜 : {{ getDate(res.consultingDate) }}</div>
                                         </button>
                                     </h2>
                                     <div
