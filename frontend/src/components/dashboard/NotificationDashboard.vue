@@ -60,7 +60,7 @@
                                                 <div class="me-2">
                                                     {{ res.guideName }}
                                                 </div>
-                                                <div>Date : {{ getDate(res.travelStartDate) }}</div>
+                                                <div>상담날짜 : {{ getDate(res.consultingDate) }}</div>
                                             </div>
                                         </button>
                                     </h2>
@@ -142,7 +142,7 @@
                                             <div class="me-2">
                                                 {{ res.guideName }}
                                             </div>
-                                            <div>Date : {{ getDate(res.travelStartDate) }}</div>
+                                            <div>상담날짜 : {{ getDate(res.consultingDate) }}</div>
                                         </button>
                                     </h2>
                                     <div
@@ -183,13 +183,6 @@
                                                     v-if="res.stateCode == 'RE01'"
                                                 >
                                                     후기작성
-                                                </button>
-
-                                                <button
-                                                    class="btn btn_theme btn-lg"
-                                                    @click="enterConsulting(res.reservationId, res.guideId, res.guidePk)"
-                                                >
-                                                    입장
                                                 </button>
                                             </div>
                                         </div>
